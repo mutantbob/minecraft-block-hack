@@ -1,0 +1,95 @@
+
+newmtl unknown
+
+Ka 0.4 0.2 0.4
+Kd 0.2 0.4 0.2
+illum 2
+
+newmtl bt1
+
+Ka 1 0 0.5
+Kd 0 0.5 0
+illum 2
+map_Ka textures/blocks/stone.png
+map_Kd textures/blocks/stone.png
+
+newmtl bt2_top
+
+Ka 0 1 0
+Kd 0 1 0
+illum 2
+map_Ka textures/blocks/grass_top.tga
+map_Kd textures/blocks/grass_top.tga
+
+newmtl bt2
+
+Ka 0 1 0
+Kd 0 1 0
+illum 2
+map_Ka textures/blocks/grass_side.png
+map_Kd textures/blocks/grass_side.png
+
+newmtl bt3
+
+Ka 0 1 0
+Kd 0 1 0
+illum 2
+map_Ka textures/blocks/dirt.png
+map_Kd textures/blocks/dirt.png
+
+
+newmtl bt8
+Ka 0.1 0.1 0.1
+Kd 0.2 0.2 0.2
+illum 2
+map_Ka -s 1 16 textures/blocks/water.png
+map_Kd -s 1 16 textures/blocks/water.png
+
+newmtl bt9
+Ka 0.1 0.1 0.5
+Kd 0.2 0.5 0.2
+illum 2
+map_Ka  textures/blocks/water.png
+map_Kd textures/blocks/water.png
+
+
+newmtl bt17
+Ka 0.6 0 0.4
+Kd 0.6 0 0.4
+illum 2
+map_Ka textures/blocks/tree_side.png
+map_Kd textures/blocks/tree_side.png
+
+
+newmtl bt17_top
+Ka 0.6 0 0.4
+Kd 0.6 0 0.4
+illum 2
+map_Ka textures/blocks/tree_top.png
+map_Kd textures/blocks/tree_top.png
+
+
+newmtl bt18
+Ka 0 0.7 0
+Kd 0 0.8 0
+illum 2
+map_Ka textures/blocks/leaves.png
+map_Kd textures/blocks/leaves.png
+
+
+newmtl bt78
+
+Ka 0 1 1
+Kd 0 1 1
+illum 2
+map_Ka  textures/blocks/snow.png
+map_Kd  textures/blocks/snow.png
+
+
+newmtl bt98
+
+Ka 0.7 0.7 0.7
+Ka 0.7 0.7 0.7
+illum 2
+map_Ka textures/blocks/stonebricksmooth.png
+map_Kd textures/blocks/stonebricksmooth.png
