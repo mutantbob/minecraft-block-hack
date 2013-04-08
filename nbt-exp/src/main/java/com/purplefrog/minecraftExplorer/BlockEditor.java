@@ -32,6 +32,9 @@ public class BlockEditor
     {
         Anvil.Section s = getSection(x, y, z);
 
+        if (s==null) {
+            throw new NullPointerException("There is no chunk/section at "+x+","+y+","+z+", and I don't know how to invoke the terrain generator.  You're going to have to log on to minecraft and visit that location before I can edit it.");
+        }
         s.getBlocks().set(x,y,z, bt);
     }
 
