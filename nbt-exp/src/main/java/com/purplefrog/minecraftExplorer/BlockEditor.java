@@ -337,7 +337,8 @@ public class BlockEditor
                 continue;
             int pos = 0;
             NibbleCube skyLight = section.getSkyLight();
-            byte[] blocks = section.getBlocks_();
+            ByteCube blocks = section.getBlocks();
+
             for (int y=15; y>=0; y--){
                 for (int z=0; z<16; z++) {
                     for (int x=0; x<16; x++, pos++) {
@@ -345,7 +346,7 @@ public class BlockEditor
                         skyLight.set(x,y,z, occluded[skyPtr] ? 0:15);
                         if (!occluded[skyPtr]) {
 
-                            int bt = blocks[pos];
+                            int bt = blocks.get(x,y,z);
                             if (!BlockDatabase.transparent(bt))
                                 occluded[skyPtr] = true;
                         }
