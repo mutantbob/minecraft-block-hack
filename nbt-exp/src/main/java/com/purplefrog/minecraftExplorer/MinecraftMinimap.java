@@ -217,7 +217,7 @@ public class MinecraftMinimap
         int[] topBlockType = new int[16*16];
         int[] ya = new int[16*16];
         for (Anvil.Section section : sections) {
-            byte[] blocks_ = section.getBlocks();
+            byte[] blocks_ = section.getBlocks_();
             int y0 = section.getY();
             int ptr=0;
             for (int y=0; y<16; y++) {

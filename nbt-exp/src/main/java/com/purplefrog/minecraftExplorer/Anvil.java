@@ -28,8 +28,15 @@ public class Anvil
 
         int i=0;
         while (i<keys.length) {
+            if (null==cursor) {
+                System.out.println("Debug");
+            }
             Tag t = cursor.getValue().get(keys[i]);
             i++;
+
+            if (t==null) {
+                System.out.println("Debug");
+            }
             if (i>= keys.length) {
                 return t;
             } else if (t instanceof CompoundTag) {
@@ -59,10 +66,15 @@ public class Anvil
 
     public Section getSectionFor(int y)
     {
+        return getSectionForChunkY(y >> 4);
+    }
+
+    public Section getSectionForChunkY(int chunkY)
+    {
         for (Tag tag : getSections_().getValue()) {
             Section s = new Section((CompoundTag) tag);
 
-            if (s.getY() == y>>4) {
+            if (s.getY() == chunkY) {
                 return s;
             }
         }
@@ -70,7 +82,7 @@ public class Anvil
         return null;
     }
 
-    public Section getOrCreateSectionFor(int y)
+    public Section getOrCreateSectionForRaw(int y)
     {
         Section rval = getSectionFor(y);
         if (null==rval) {
@@ -112,9 +124,24 @@ public class Anvil
             return tag.getValue().get(propName);
         }
 
-        public byte[] getBlocks()
+        public byte[] getBlocks_()
         {
             return ((ByteArrayTag) getProp("Blocks")).getValue();
+        }
+
+        public NibbleCube getBlockLight()
+        {
+            return new NibbleCube(((ByteArrayTag)getProp("BlockLight")).getValue());
+        }
+
+        public NibbleCube getSkyLight()
+        {
+            return new NibbleCube(((ByteArrayTag)getProp("SkyLight")).getValue());
+        }
+
+        public ByteCube getBlocks()
+        {
+            return new ByteCube(getBlocks_());
         }
     }
 }
