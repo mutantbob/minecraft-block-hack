@@ -1,7 +1,6 @@
 package com.purplefrog.minecraftExplorer;
 
 import com.purplefrog.jwavefrontobj.*;
-import javafx.geometry.*;
 
 import java.io.*;
 
