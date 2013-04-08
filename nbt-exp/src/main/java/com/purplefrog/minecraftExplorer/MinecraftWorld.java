@@ -1,7 +1,7 @@
 package com.purplefrog.minecraftExplorer;
 
+import com.mojang.nbt.*;
 import net.minecraft.world.chunk.storage.*;
-import org.jnbt.*;
 
 import java.io.*;
 
@@ -32,8 +32,7 @@ public class MinecraftWorld
         if (null==dis)
             return null;
 
-        NBTInputStream nis = new NBTInputStream(dis, true);
-        return nis.readTag();
+        return NbtIo.read(dis);
     }
 
     public RegionFile getRegionFile(int chunkX, int chunkZ)

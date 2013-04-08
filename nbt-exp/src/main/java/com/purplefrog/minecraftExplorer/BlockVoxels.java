@@ -1,7 +1,7 @@
 package com.purplefrog.minecraftExplorer;
 
+import com.mojang.nbt.*;
 import org.apache.log4j.*;
-import org.jnbt.*;
 
 import java.io.*;
 

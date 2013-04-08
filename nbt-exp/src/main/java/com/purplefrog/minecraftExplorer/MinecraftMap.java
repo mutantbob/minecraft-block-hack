@@ -1,6 +1,6 @@
 package com.purplefrog.minecraftExplorer;
 
-import org.jnbt.*;
+import com.mojang.nbt.*;
 
 import javax.swing.*;
 import java.awt.*;

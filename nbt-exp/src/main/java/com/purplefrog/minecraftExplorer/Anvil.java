@@ -1,6 +1,6 @@
 package com.purplefrog.minecraftExplorer;
 
-import org.jnbt.*;
+import com.mojang.nbt.*;
 
 import java.util.*;
 
@@ -51,7 +51,7 @@ public class Anvil
 
     public List<Section> getSections()
     {
-        ListTag sections = getSections_();
+        ListTag<?> sections = getSections_();
         ArrayList<Section> rval = new ArrayList<Section>();
         for (Tag tag : sections.getValue()) {
             rval.add(new Section((CompoundTag) tag));
@@ -59,7 +59,7 @@ public class Anvil
         return rval;
     }
 
-    private ListTag getSections_()
+    private ListTag<?> getSections_()
     {
         return (ListTag) Anvil.deref(root, "Level", "Sections");
     }
@@ -87,8 +87,8 @@ public class Anvil
         Section rval = getSectionFor(y);
         if (null==rval) {
 
-            TreeMap<String, Tag> map = new TreeMap<String, Tag>();
-            CompoundTag tag = new CompoundTag(null, map);
+            CompoundTag tag = new CompoundTag(null);
+            Map<String, Tag> map = tag.getValue();
             map.put("Blocks", new ByteArrayTag("Blocks", new byte[16*16*16]));
             map.put("Y", new ByteTag("Y", (byte) (y>>4)));
             map.put("Data", new ByteArrayTag("Data", new byte[16*16*8]));
@@ -116,7 +116,7 @@ public class Anvil
 
         public byte getY()
         {
-            return ((ByteTag) getProp("Y")).getValue();
+            return ((ByteTag) getProp("Y")).data;
         }
 
         private Tag getProp(String propName)
@@ -126,17 +126,17 @@ public class Anvil
 
         public byte[] getBlocks_()
         {
-            return ((ByteArrayTag) getProp("Blocks")).getValue();
+            return ((ByteArrayTag) getProp("Blocks")).data;
         }
 
         public NibbleCube getBlockLight()
         {
-            return new NibbleCube(((ByteArrayTag)getProp("BlockLight")).getValue());
+            return new NibbleCube(((ByteArrayTag) getProp("BlockLight")).data);
         }
 
         public NibbleCube getSkyLight()
         {
-            return new NibbleCube(((ByteArrayTag)getProp("SkyLight")).getValue());
+            return new NibbleCube(((ByteArrayTag) getProp("SkyLight")).data);
         }
 
         public ByteCube getBlocks()

@@ -1,7 +1,5 @@
 package com.purplefrog.minecraftExplorer;
 
-import org.jnbt.*;
-
 import java.io.*;
 
 /**

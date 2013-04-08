@@ -1,7 +1,7 @@
 package com.purplefrog.minecraftExplorer;
 
+import com.mojang.nbt.*;
 import net.minecraft.world.chunk.storage.*;
-import org.jnbt.*;
 
 import java.io.*;
 
@@ -53,10 +53,7 @@ public class Exp1
 
         DataInputStream is1 = rf.getChunkDataInputStream(0, 0);
 
-
-        NBTInputStream i = new NBTInputStream(is1, false);
-
-        Tag t = i.readTag();
+        Tag t = NbtIo.read(is1);
         System.out.println(t);
     }
 
@@ -89,9 +86,7 @@ public class Exp1
 
         InputStream i9 = new FileInputStream(f);
 
-        NBTInputStream i = new NBTInputStream(i9);
-
-        Tag t = i.readTag();
+        Tag t = NbtIo.read(f);
 
         System.out.println(t);
     }

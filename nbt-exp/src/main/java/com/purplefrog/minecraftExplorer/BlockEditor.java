@@ -1,8 +1,8 @@
 package com.purplefrog.minecraftExplorer;
 
-import javafx.geometry.*;
+import com.mojang.nbt.*;
+import com.purplefrog.jwavefrontobj.*;
 import net.minecraft.world.chunk.storage.*;
-import org.jnbt.*;
 
 import java.awt.*;
 import java.io.*;
@@ -68,11 +68,7 @@ public class BlockEditor
             RegionFile rf = world.getRegionFile(chunkXz.x, chunkXz.y);
 
             CompoundTag tag = en.getValue();
-            ByteArrayOutputStream ostr = new ByteArrayOutputStream();
-            NBTOutputStream o2 = new NBTOutputStream(ostr, false);
-            o2.writeTag(tag);
-            o2.close();
-            byte[] chunkBytes = ostr.toByteArray();
+            byte[] chunkBytes = NbtIo.deflate(tag);
             System.out.println("chunk "+chunkXz+" ["+chunkBytes.length+"]");
             rf.write(chunkXz.x&0x1f, chunkXz.y&0x1f, chunkBytes, chunkBytes.length);
         }

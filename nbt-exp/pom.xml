@@ -85,6 +85,12 @@
         </dependency>
 
         <dependency>
+            <groupId>com.purplefrog</groupId>
+            <artifactId>jnbtlib</artifactId>
+            <version>0.9-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
             <version>1.2.14</version>
