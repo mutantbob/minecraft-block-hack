@@ -26,4 +26,14 @@ public class ByteCube
     {
         return get_(BlockVoxels.encodePos(x,y,z));
     }
+
+    public void set(int x, int y, int z, int bt)
+    {
+        set_(BlockVoxels.encodePos(x,y,z), bt);
+    }
+
+    private void set_(int pos, int bt)
+    {
+        data[pos] = (byte) bt;
+    }
 }

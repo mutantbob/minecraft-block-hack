@@ -217,13 +217,13 @@ public class MinecraftMinimap
         int[] topBlockType = new int[16*16];
         int[] ya = new int[16*16];
         for (Anvil.Section section : sections) {
-            byte[] blocks_ = section.getBlocks_();
+            ByteCube blocks_ = section.getBlocks();
             int y0 = section.getY();
             int ptr=0;
             for (int y=0; y<16; y++) {
                 for (int z=0; z<16; z++) {
                     for (int x=0; x<16; x++, ptr++) {
-                        byte blockType = blocks_[ptr];
+                        int blockType = blocks_.get_(ptr);
                         if (BlockDatabase.transparent(blockType))
                             continue;
                         int o2 = x + 16 * z;

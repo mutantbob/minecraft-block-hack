@@ -41,8 +41,7 @@ public class BlockVoxels
             if (s0==null)
                 return -1;
 
-            int pos = encodePos(x, y, z);
-            return s0.getBlocks_()[pos];
+            return s0.getBlocks().get(x,y,z);
 
         } catch (IOException e) {
             logger.debug("malfunction getting chunk", e);

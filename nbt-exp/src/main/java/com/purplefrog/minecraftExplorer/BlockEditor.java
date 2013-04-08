@@ -32,8 +32,7 @@ public class BlockEditor
     {
         Anvil.Section s = getSection(x, y, z);
 
-
-        s.getBlocks_()[BlockVoxels.encodePos(x,y,z)] = bt;
+        s.getBlocks().set(x,y,z, bt);
     }
 
     protected Anvil.Section getSection(int x, int y, int z)
@@ -299,13 +298,13 @@ public class BlockEditor
     public void scanChunkForRelight(Anvil anvil, Point chunkPos)
     {
         for (Anvil.Section section : anvil.getSections()) {
-            byte[] blocks = section.getBlocks_();
+            ByteCube blocks = section.getBlocks();
             int pos=0;
             for (int y=0; y<16; y++) {
                 for (int z=0; z<16; z++) {
                     for (int x=0; x<16; x++, pos++) {
 //                            int pos = BlockVoxels.encodePos(x,y,z);
-                        int light = BlockDatabase.lightLevel(blocks[pos]);
+                        int light = BlockDatabase.lightLevel(blocks.get_(pos));
                         if (light>0) {
                             if (false) {
                                 updateLightMultiblock(x, y, z, light, chunkPos.x, section.getY(), chunkPos.y);

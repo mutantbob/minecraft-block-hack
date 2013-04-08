@@ -13,9 +13,9 @@ public class BlockDatabase
 {
     public static Map<Integer, int[]> unknownBlockTypes = new TreeMap<Integer, int[]>();
 
-    public static int lightLevel(byte block)
+    public static int lightLevel(int blockType)
     {
-        switch (block) {
+        switch (blockType) {
             case 10: // lava
             case 11: // lava
             case 124: // glowstone lamp

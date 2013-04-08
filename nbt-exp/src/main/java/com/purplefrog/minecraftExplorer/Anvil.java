@@ -141,6 +141,9 @@ public class Anvil
 
         public ByteCube getBlocks()
         {
+             // XXX this ignores the "Add" tag,
+             // which will become important when minecraft,
+             // or an add-on exceeds 256 block types.
             return new ByteCube(getBlocks_());
         }
     }
