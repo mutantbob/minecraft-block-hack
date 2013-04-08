@@ -29,6 +29,13 @@ public class ChunkTagCache
         return getForChunk(x >> 4, z >> 4);
     }
 
+    public CompoundTag maybeGetForChunk(int chunkX, int chunkZ)
+        throws IOException
+    {
+        Point key = new Point(chunkX, chunkZ);
+        return cache.get(key);
+    }
+
     public CompoundTag getForChunk(int chunkX, int chunkZ)
         throws IOException
     {
