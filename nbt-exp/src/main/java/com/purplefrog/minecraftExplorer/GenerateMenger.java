@@ -25,6 +25,7 @@ public class GenerateMenger
 
         BlockEditor editor = new BlockEditor(world);
 
+        System.out.println("generating Menger Sponge geometry");
         int m5 = 3 * 3 * 3 * 3 * 3;
         for (int x = 0; x< m5; x++) {
             for (int y = 0; y< m5; y++) {
@@ -36,6 +37,17 @@ public class GenerateMenger
                 }
             }
         }
+
+        {
+            System.out.println("relighting");
+
+            long start = System.currentTimeMillis();
+            editor.relight();
+            long elapsed = System.currentTimeMillis() - start;
+            System.out.println("lighting pass: "+elapsed+" ms");
+        }
+
+        System.out.println("saving");
 
         editor.save();
     }
@@ -53,8 +65,14 @@ public class GenerateMenger
         int y9 = y%9;
         int z9 = z%9;
 
-        int shellType = (x1+y1+z1)%2 ==0 ? 41:57;
-        int floorType = 49;
+        int shellType = (x1+y1+z1)%2 ==0 ?
+            41:57 // gold and diamond
+//            9:11 // water and lava
+            ;
+        int floorType =
+            49 // obsidian
+//            20 // glass
+            ;
 
         if (x9==0 || x9==8 || y9==0 || y9==8 || z9==0 || z9==8) {
             if (isGap(x9,y9,z9))

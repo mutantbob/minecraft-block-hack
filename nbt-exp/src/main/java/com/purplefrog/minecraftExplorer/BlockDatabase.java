@@ -13,6 +13,20 @@ public class BlockDatabase
 {
     public static Map<Integer, int[]> unknownBlockTypes = new TreeMap<Integer, int[]>();
 
+    public static int lightLevel(byte block)
+    {
+        switch (block) {
+            case 10: // lava
+            case 11: // lava
+            case 124: // glowstone lamp
+                return 15;
+            case 50: // torch
+                return 14;
+            default:
+                return 0;
+        }
+    }
+
     enum TransparencyClass
     {
         Solid,
@@ -30,8 +44,8 @@ public class BlockDatabase
         TransparencyClass.Solid,   // 5
         TransparencyClass.Widget,
         TransparencyClass.Solid,
-        TransparencyClass.Solid,
-        TransparencyClass.Solid,
+        TransparencyClass.Water,
+        TransparencyClass.Water,
 
         TransparencyClass.Solid,   // 10
         TransparencyClass.Solid,
