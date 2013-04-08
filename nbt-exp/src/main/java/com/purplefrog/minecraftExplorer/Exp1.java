@@ -19,32 +19,64 @@ public class Exp1
     {
         File saveDir = new File("/home/thoth/.minecraft/saves/menger-5");
 
+        exp3(saveDir);
+    }
+
+    private static void exp3(File saveDir)
+        throws IOException
+    {
+        MinecraftWorld w = new MinecraftWorld(saveDir);
+
+        ChunkTagCache cc = new ChunkTagCache(w);
+
+        CompoundTag t = cc.getForRaw(-312, 128);
+
+        Anvil anvil = new Anvil(t);
+        NibbleCube sl = anvil.getSectionFor(0).getSkyLight();
+
+        System.out.println(t);
+
+        System.out.println(dumpLightMap(sl));
+
+
+//            System.out.println("\n\n\n\n\n\n\n\n");
+//            System.out.println(cc.getForRaw( 100, 0));
+    }
+
+    private static void exp2(File saveDir)
+        throws IOException
+    {
         File  f;
         f = new File(saveDir, "region/r.-1.0.mca");
 
-        if (true) {
-            MinecraftWorld w = new MinecraftWorld(saveDir);
+        RegionFile rf = new RegionFile(f);
 
-            ChunkTagCache cc = new ChunkTagCache(w);
-
-            CompoundTag t = cc.getForRaw(-100, 100);
-
-            System.out.println(t);
-
-            System.out.println("\n\n\n\n\n\n\n\n");
-            System.out.println(cc.getForRaw( 100, 0));
-        }else {
-            RegionFile rf = new RegionFile(f);
-
-            DataInputStream is1 = rf.getChunkDataInputStream(0, 0);
+        DataInputStream is1 = rf.getChunkDataInputStream(0, 0);
 
 
+        NBTInputStream i = new NBTInputStream(is1, false);
 
-            NBTInputStream i = new NBTInputStream(is1, false);
+        Tag t = i.readTag();
+        System.out.println(t);
+    }
 
-            Tag t = i.readTag();
-            System.out.println(t);
+    public static StringBuilder dumpLightMap(NibbleCube sl)
+    {
+        StringBuilder buf = new StringBuilder();
+        for (int y=0; y<16; y++) {
+            buf.append("y="+y+"\n");
+            for (int z=0; z<16; z++) {
+                for (int x=0; x<16; x++) {
+                    int i = sl.get(x, y, z);
+                    String padded = i+" ";
+                    while (padded.length()<3)
+                        padded = " "+padded;
+                    buf.append(padded);
+                }
+                buf.append("\n");
+            }
         }
+        return buf;
     }
 
     public static void exp1(File saveDir)
