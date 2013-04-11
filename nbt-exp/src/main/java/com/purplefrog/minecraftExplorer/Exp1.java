@@ -17,7 +17,7 @@ public class Exp1
     public static void main(String[] argv)
         throws IOException
     {
-        File saveDir = new File("/home/thoth/.minecraft/saves/menger-5");
+        File saveDir = GenerateMaze1.pickSaveDir();
 
         exp3(saveDir);
     }
@@ -36,7 +36,7 @@ public class Exp1
 
         System.out.println(t);
 
-        System.out.println(dumpLightMap(sl));
+//        System.out.println(dumpLightMap(sl));
 
 
 //            System.out.println("\n\n\n\n\n\n\n\n");

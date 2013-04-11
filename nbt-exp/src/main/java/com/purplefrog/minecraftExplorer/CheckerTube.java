@@ -16,7 +16,7 @@ public class CheckerTube
         throws IOException
     {
 
-        File saveDir = new File(System.getProperty("user.home"), ".minecraft/saves/menger-5");
+        File saveDir = GenerateMaze1.pickSaveDir();
 
         BlockEditor editor = new BlockEditor(new MinecraftWorld(saveDir));
 

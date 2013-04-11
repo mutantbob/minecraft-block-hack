@@ -30,7 +30,7 @@ public class GenerateMaze1
 
 
 
-        File saveDir = new File(System.getProperty("user.home"), ".minecraft/saves/menger-5");
+        File saveDir = pickSaveDir();
 
         BlockEditor editor = new BlockEditor(new MinecraftWorld(saveDir));
 
@@ -108,6 +108,11 @@ public class GenerateMaze1
         editor.relight();
 
         editor.save();
+    }
+
+    public static File pickSaveDir()
+    {
+        return new File(System.getProperty("user.home"), ".minecraft/saves/menger-5");
     }
 
     public static void buildWallColumn(BlockEditor editor, int x, int y, int z, boolean hasWall, int[] wallShape)

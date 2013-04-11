@@ -16,7 +16,7 @@ public class GenerateMenger
         throws IOException
     {
         File saveDir;
-        saveDir = new File("/home/thoth/.minecraft/saves/menger-5");
+        saveDir = GenerateMaze1.pickSaveDir();
 
 
         MinecraftWorld world = new MinecraftWorld(saveDir);

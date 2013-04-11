@@ -18,7 +18,7 @@ public class MapThingy
     {
 
         File saveDir;
-        saveDir = new File("/home/thoth/.minecraft/saves/menger-5");
+        saveDir = GenerateMaze1.pickSaveDir();
         //saveDir = new File("/home/dvds/thoth/minecraft-backups/minecraft-4/world");
 
         JFrame fr = new JFrame("minecraft map thingy");
