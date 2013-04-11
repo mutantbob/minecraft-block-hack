@@ -27,7 +27,7 @@ public class BlockEditor
         chunkTagCache = new ChunkTagCache(this.world);
     }
 
-    public void setBlock(int x, int y, int z, byte bt)
+    public void setBlock(int x, int y, int z, int bt)
         throws IOException
     {
         Anvil.Section s = getSection(x, y, z);
@@ -36,6 +36,18 @@ public class BlockEditor
             throw new NullPointerException("There is no chunk/section at "+x+","+y+","+z+", and I don't know how to invoke the terrain generator.  You're going to have to log on to minecraft and visit that location before I can edit it.");
         }
         s.getBlocks().set(x,y,z, bt);
+    }
+
+    public void setBlock(int x, int y, int z, BlockPlusData block)
+        throws IOException
+    {
+        Anvil.Section s = getSection(x, y, z);
+
+        if (s==null) {
+            throw new NullPointerException("There is no chunk/section at "+x+","+y+","+z+", and I don't know how to invoke the terrain generator.  You're going to have to log on to minecraft and visit that location before I can edit it.");
+        }
+        s.getBlocks().set(x,y,z, block.blockType);
+        s.getData().set(x,y,z, block.data);
     }
 
     protected Anvil.Section getSection(int x, int y, int z)

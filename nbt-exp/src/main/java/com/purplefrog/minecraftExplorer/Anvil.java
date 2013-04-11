@@ -146,5 +146,15 @@ public class Anvil
              // or an add-on exceeds 256 block types.
             return new ByteCube(getBlocks_());
         }
+
+        public NibbleCube getData()
+        {
+            return new NibbleCube(getData_().data);
+        }
+
+        private ByteArrayTag getData_()
+        {
+            return ((ByteArrayTag)getProp("Data"));
+        }
     }
 }
