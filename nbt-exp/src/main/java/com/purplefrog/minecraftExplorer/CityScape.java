@@ -28,11 +28,13 @@ public class CityScape
         int y0=79;
         int z0 =100;
 
+        int excavationLimit = 8;
+        int y1 = y0+excavationLimit+2;
+
         {
             int y9 = y0 - 5;
             editor.fillCube(0, x0, y9, z0, 200, 250- y9, 200);
         }
-
 
         for (int u=0; u+1<ss.nStreets; u++) {
             for (int v=0; v+1<ss.nAvenues; v++) {
@@ -40,7 +42,7 @@ public class CityScape
                 r.x += x0;
                 r.y += z0;
 
-                randomBuilding(editor, r, y0+ss.meadow.elevation, rand);
+                randomBuilding(editor, r, y1+ss.meadow.elevation, rand);
 
                 if (false ) {
                     // lapis rectangle for debugging
@@ -53,7 +55,13 @@ public class CityScape
             }
         }
 
-        ss.render(editor, x0, y0, z0);
+        ss.render(editor, x0, y1, z0);
+
+
+        {
+            FloatingIsland island = new FloatingIsland(ss.xSize(), ss.zSize(), excavationLimit, 4);
+            island.renderClicheWithLamps(editor, x0, y0, z0, y1);
+        }
 
         editor.relight();
 
