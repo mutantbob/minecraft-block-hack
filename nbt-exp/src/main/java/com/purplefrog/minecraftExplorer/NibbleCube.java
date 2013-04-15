@@ -66,4 +66,24 @@ public class NibbleCube
             data[i]=0;
         }
     }
+
+    @Override
+    public String toString()
+    {
+        StringBuilder rval = new StringBuilder();
+
+        int pos=0;
+        for (int y=0; y<16; y++) {
+            rval.append("y="+y+" [\n");
+            for (int z=0; z<16; z++) {
+                for (int x=0; x<16; x++, pos++) {
+                    rval.append((int)get_(pos)+", ");
+                }
+                rval.append("\n");
+            }
+            rval.append("]\n");
+        }
+
+        return rval.toString();
+    }
 }
