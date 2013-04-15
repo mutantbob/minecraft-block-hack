@@ -16,7 +16,7 @@ public class CheckerTube
         throws IOException
     {
 
-        File saveDir = GenerateMaze1.pickSaveDir();
+        File saveDir = WorldPicker.pickSaveDir();
 
         BlockEditor editor = new BlockEditor(new MinecraftWorld(saveDir));
 

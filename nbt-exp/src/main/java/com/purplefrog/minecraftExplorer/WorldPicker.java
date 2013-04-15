@@ -1,5 +1,7 @@
 package com.purplefrog.minecraftExplorer;
 
+import java.io.*;
+
 /**
  * Created with IntelliJ IDEA.
  * User: thoth
@@ -9,4 +11,8 @@ package com.purplefrog.minecraftExplorer;
  */
 public class WorldPicker
 {
+    public static File pickSaveDir()
+    {
+        return new File(System.getProperty("user.home"), ".minecraft/saves/menger-5");
+    }
 }

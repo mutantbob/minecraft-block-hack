@@ -17,7 +17,7 @@ public class Exp1
     public static void main(String[] argv)
         throws IOException
     {
-        File saveDir = GenerateMaze1.pickSaveDir();
+        File saveDir = WorldPicker.pickSaveDir();
 
         exp3(saveDir);
     }
