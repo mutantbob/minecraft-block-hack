@@ -12,11 +12,67 @@ import java.util.*;
  */
 public class FloatingIsland
 {
+
+    public final int excavationLimit;
+    public DepthMap bottom;
+    protected final boolean[] lampMap;
+
+    public FloatingIsland(int xSize, int zSize, int excavationLimit)
+    {
+        this.excavationLimit = excavationLimit;
+        bottom = computeDepthMap(xSize, zSize, this.excavationLimit);
+
+        lampMap = computeLampSpots(bottom);
+
+    }
+
     public static void main(String[] argv)
         throws IOException
     {
+        FloatingIsland island = new FloatingIsland(100, 50, 9);
 
-        DepthMap bottom = new DepthMap(100, 50);
+
+        File saveDir = WorldPicker.pickSaveDir();
+
+        BlockEditor editor = new BlockEditor(new MinecraftWorld(saveDir));
+
+        int x0= 81;
+        int z0= 81;
+        int y0 = 100;
+
+        island.renderClicheWithLamps(editor, x0, y0, z0, y0 + island.excavationLimit+3);
+
+        editor.relight();
+
+        editor.save();
+    }
+
+    public void renderClicheWithLamps(BlockEditor editor, int x0, int y0, int z0, int y2)
+        throws IOException
+    {
+
+        render(editor, x0, y0, z0, y2, 0, 1, 89);
+    }
+
+    public void render(BlockEditor editor, int x0, int y0, int z0, int y2, int airType, int ceilingType, int lampType)
+        throws IOException
+    {
+        for (int x=0; x<bottom.w; x++) {
+            for (int z=0; z<bottom.h; z++) {
+                int k = (int) bottom.get(x, z);
+                for (int y= 0; y+y0< y2; y++) {
+
+                    int bt = (lampMap[z*bottom.w+x]&& y==k) ? lampType : y >= k ? ceilingType : airType;
+
+                    editor.setBlock(x+x0,y+y0,z+z0, bt);
+                }
+            }
+        }
+    }
+
+    public static DepthMap computeDepthMap(int xSize, int zSize, int excavationLimit)
+    {
+        DepthMap bottom = new DepthMap(xSize, zSize);
 
         Random rand = new Random();
 
@@ -33,7 +89,7 @@ public class FloatingIsland
                 break;
             }
 
-            excavateCone(bottom, rand, rc.x, rc.y);
+            excavateCone(bottom, rand, rc.x, rc.y, excavationLimit);
 
             if (false)
                 break;
@@ -47,47 +103,55 @@ public class FloatingIsland
                 System.out.println();
             }
 
-            return;
+            return null;
         }
+        return bottom;
+    }
 
-
-
-
-        File saveDir = WorldPicker.pickSaveDir();
-
-        BlockEditor editor = new BlockEditor(new MinecraftWorld(saveDir));
-
-        int x0= 80;
-        int z0= 80;
-        int y0 = 100;
+    public static boolean[] computeLampSpots(DepthMap bottom)
+    {
+        boolean [] lampMap = new boolean[bottom.w*bottom.h];
 
         for (int x=0; x<bottom.w; x++) {
             for (int z=0; z<bottom.h; z++) {
-                int k = (int) bottom.get(x, z);
-                for (int y= 0; y<12; y++) {
-                    editor.setBlock(x+x0,y+y0,z+z0, y>k?2:0);
+                if (localPeak(bottom, x,z, 3)) {
+                    lampMap[z*bottom.w + x] = true;
                 }
             }
         }
-
-        editor.relight();
-
-        editor.save();
+        return lampMap;
     }
 
-    public static void excavateCone(DepthMap bottom, Random rand, int cx, int cy)
+    public static boolean localPeak(DepthMap bottom, int x, int z, int radius)
     {
-        int wallaby = rand.nextInt(9)+1;
+        float y=bottom.get(x,z);
+        for (int a=Math.max(0, x- radius); a<bottom.w && a<=x+ radius; a++) {
+            for (int b=Math.max(0, z- radius); b<bottom.h && b<=z+ radius; b++) {
+                if (a==0 && b==0)
+                    continue;
+                if (bottom.get(a,b) < y)
+                    return false;
+            }
+        }
+
+        return true;
+    }
+
+    public static void excavateCone(DepthMap bottom, Random rand, int cx, int cy, int excavationLimit)
+    {
+        int wallaby = rand.nextInt(excavationLimit)+1;
         System.out.println("cone[" +wallaby+"] @" +cx+ "," + cy);
         int hippo = wallaby*4;
         DepthMap cone = new DepthMap(hippo*2+1, hippo*2+1);
         sloppyCone(cone, rand, hippo, hippo, wallaby);
 
-        for (int y=hippo-4; y<=hippo+4; y++) {
-            for (int x=hippo-4; x<=hippo+4; x++) {
-                System.out.print(cone.get(x,y)+" ");
+        if (false) {
+            for (int y=hippo-4; y<=hippo+4; y++) {
+                for (int x=hippo-4; x<=hippo+4; x++) {
+                    System.out.print(cone.get(x,y)+" ");
+                }
+                System.out.println();
             }
-            System.out.println();
         }
 
         for (int x=Math.max(0, hippo-cx); x<Math.min(cone.w, bottom.w +hippo-cx) ; x++) {
