@@ -204,7 +204,7 @@ public class BlockEditor
         for (int y=0; y<16; y++) {
             for (int z=0; z<16; z++) {
                 for (int x=0; x<16; x++) {
-                    if (false && ! BlockDatabase.transparent(blocks.get(x,y,z)))
+                    if (!notFromSolid && ! BlockDatabase.transparent(blocks.get(x,y,z)))
                         continue; // skip this solid block
 
                     int s0 = light.get(x,y,z);
