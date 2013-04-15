@@ -40,7 +40,11 @@ public class FloatingIsland
         int z0= 81;
         int y0 = 100;
 
-        island.renderClicheWithLamps(editor, x0, y0, z0, y0 + island.excavationLimit+3);
+        if (false) {
+            island.renderClicheWithLamps(editor, x0, y0, z0, y0 + island.excavationLimit+3);
+        } else {
+            island.render(editor, x0, y0, z0, y0 + island.excavationLimit + 3, new DoomChipCookie());
+        }
 
         editor.relight();
 
@@ -57,12 +61,19 @@ public class FloatingIsland
     public void render(BlockEditor editor, int x0, int y0, int z0, int y2, int airType, int ceilingType, int lampType)
         throws IOException
     {
+        BlockChooser chooser = new BlockChooser(airType,  ceilingType, lampType);
+        render(editor, x0, y0, z0, y2, chooser);
+    }
+
+    public void render(BlockEditor editor, int x0, int y0, int z0, int y2, BlockChooser chooser)
+        throws IOException
+    {
         for (int x=0; x<bottom.w; x++) {
             for (int z=0; z<bottom.h; z++) {
                 int k = (int) bottom.get(x, z);
                 for (int y= 0; y+y0< y2; y++) {
 
-                    int bt = (lampMap[z*bottom.w+x]&& y==k) ? lampType : y >= k ? ceilingType : airType;
+                    int bt = chooser.choose(lampMap[z * bottom.w + x] && y == k, y >= k);
 
                     editor.setBlock(x+x0,y+y0,z+z0, bt);
                 }
@@ -263,6 +274,57 @@ public class FloatingIsland
         public void set(int x, int y, double val)
         {
             data[y*w+x] = (float) val;
+        }
+    }
+
+    public static class BlockChooser
+    {
+
+        public final int airType;
+        public final int ceilingType;
+        public final int lampType;
+
+        public BlockChooser(int airType, int ceilingType, int lampType)
+        {
+
+            this.airType = airType;
+            this.ceilingType = ceilingType;
+            this.lampType = lampType;
+        }
+
+        public int choose(boolean lampSpot, boolean above)
+        {
+            return lampSpot ? lampType : above ? ceilingType : airType;
+        }
+    }
+
+    public static class DoomChipCookie
+        extends BlockChooser
+    {
+        Random rand = new Random();
+
+        public DoomChipCookie(int airType, int ceilingType, int lampType)
+        {
+            super(airType, ceilingType, lampType);
+        }
+
+        public DoomChipCookie()
+        {
+            super(0, 1, 98);
+        }
+
+        @Override
+        public int choose(boolean lampSpot, boolean above)
+        {
+            if (lampSpot)
+                return lampType;
+            if (above) {
+                if (rand.nextInt(20)==0)
+                    return 46;
+                else
+                    return ceilingType;
+            }
+            return airType;
         }
     }
 }

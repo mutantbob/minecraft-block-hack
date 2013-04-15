@@ -60,7 +60,7 @@ public class CityScape
 
         {
             FloatingIsland island = new FloatingIsland(ss.xSize(), ss.zSize(), excavationLimit, 4);
-            island.renderClicheWithLamps(editor, x0, y0, z0, y1);
+            island.render(editor, x0, y0, z0, y1, new FloatingIsland.DoomChipCookie());
         }
 
         editor.relight();
