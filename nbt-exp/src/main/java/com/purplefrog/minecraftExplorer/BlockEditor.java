@@ -429,8 +429,74 @@ public class BlockEditor
         for (int x=0; x<dx; x++) {
             for (int y=0; y<dy; y++) {
                 for (int z=0; z<dz; z++) {
-                    setBlock(x+x0, y+y0, z+z0, blockType);
+                    setBlock(x + x0, y + y0, z + z0, blockType);
                 }
+            }
+        }
+    }
+
+    public void fillCubeByCorners(BlockTemplate template, int x1, int y1, int z1, int x2, int y2, int z2)
+        throws IOException
+    {
+        for (int x=x1; x<x2; x++) {
+            for (int y=y1; y<y2; y++) {
+                for (int z=z1; z<z2; z++) {
+                    setBlock(x, y, z, template.getBlock(x - x1, y - y1, z - z1));
+                }
+            }
+        }
+    }
+
+    public void drawBorderedRectangle(int x1, int y0, int z1, int x2, int z2, BlockTemplate north, BlockTemplate south, BlockTemplate east, BlockTemplate west, BlockTemplate meadow)
+        throws IOException
+    {
+        for (int x=0; x+x1 < x2; x++) {
+            for (int z=0; z+z1 < z2; z++) {
+
+                int n=2;
+                int d=1;
+                ColumnRef col=null;
+
+                if (null != west) {
+                    n = x;
+                    d = west.depth;
+                    col = west.referenceColumn(z, x);
+                }
+
+                if (null != east) {
+                    int n2 = x2-(x+x1)-1;
+                    int d2 = east.depth;
+                    if ( n2*d <= n*d2) {
+                        col = east.referenceColumn(z, n2);
+                        n = n2;
+                        d = d2;
+                    }
+                }
+
+                if (null != south) {
+                    int n2 = z2-(z+z1)-1;
+                    int d2 = south.depth;
+                    if ( n2*d <= n*d2) {
+                        col = south.referenceColumn(x,n2);
+                        n = n2;
+                        d = d2;
+                    }
+                }
+
+                if (null != north) {
+                    int n2 = z;
+                    int d2 = north.depth;
+                    if ( n2*d <= n*d2) {
+                        col = north.referenceColumn(x,z);
+                        n = n2;
+                        d = d2;
+                    }
+                }
+
+                if (n>=d)
+                    col = meadow.referenceColumn(x,z);
+
+                col.renderColumn(this, x+x1, y0, z+z1);
             }
         }
     }
