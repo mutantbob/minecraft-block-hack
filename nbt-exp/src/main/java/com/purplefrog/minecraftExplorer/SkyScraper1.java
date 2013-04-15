@@ -11,33 +11,57 @@ import java.io.*;
  */
 public class SkyScraper1
 {
-    public int uCells=5;
-    public int vCells=7;
-    public int nFloors=10;
-    public int floorHeight=4;
-    public int[] column={42,42,42,42};
+    public int uCells;
+    public int vCells;
+    public int nFloors;
+    public int floorHeight;
+    public int[] column;
 
-    WindowShape window1 = new WindowShape(3, new Object[]{
-        89, 89,
-        102, 102,
-        102, 102,
-        102, 102,
-    });
+    WindowShape window1;
 
-    public final BlockPlusData chiseledStone = new BlockPlusData(98, 3);
-
-    WindowShape window2 = new WindowShape(4, new Object[]{
-        chiseledStone, chiseledStone, chiseledStone,
-        102, 102,102,
-        102, 102,102,
-        102, 102,102,
-    });
+    WindowShape window2;
 
     public int floorType=1;
+
+    public SkyScraper1(int uCells, int vCells, int nFloors, int[] column, WindowShape northWall, WindowShape eastWall)
+    {
+        this.uCells = uCells;
+        this.vCells = vCells;
+        this.nFloors = nFloors;
+        this.column = column;
+        this.window1 = northWall;
+        this.window2 = eastWall;
+
+        floorHeight = Math.max(this.column.length,
+            Math.max(this.window1.height(), this.window2.height()));
+    }
+
+    public static SkyScraper1 cliche1()
+    {
+        WindowShape window1 = new WindowShape(3,
+            89, 89,
+            102, 102,
+            102, 102,
+            102, 102
+        );
+
+        BlockPlusData cs = BlockDatabase.chiseledStone;
+        WindowShape window2 = new WindowShape(5, new Object[]{
+            cs, cs, cs,cs,
+            102, 102, 102, 102,
+            102, 102, 102, 102,
+            new BlockPlusData(109,7), 102, 102, new BlockPlusData(109, 6),
+        });
+
+        return new SkyScraper1(5, 7, 10, new int[]{42, 42, 42, 42}, window1, window2);
+
+    }
+
 
     public void render(BlockEditor editor, int x0, int y0, int z0)
         throws IOException
     {
+        int y2 = y0 + nFloors * floorHeight;
         {
             int z2 = z0 + vCells * cellWidthV();
             for (int u=0; u<uCells; u++) {
@@ -46,6 +70,8 @@ public class SkyScraper1
                 exteriorWallColumn(editor, x, y0, z2);
                 exteriorWindowStack(editor, x, y0, z0, 1, 0, window1);
                 exteriorWindowStack(editor, x, y0, z2, 1, 0, window1);
+                roofTrim(editor, x, y2, z0, 1,0, window1);
+                roofTrim(editor, x, y2, z2, 1,0, window1);
             }
         }
 
@@ -57,6 +83,8 @@ public class SkyScraper1
                 exteriorWallColumn(editor, x2, y0, z);
                 exteriorWindowStack(editor, x0, y0, z, 0, 1, window2);
                 exteriorWindowStack(editor, x2, y0, z, 0, 1, window2);
+                roofTrim(editor, x0, y2, z, 0, 1, window2);
+                roofTrim(editor, x2, y2, z, 0, 1, window2);
             }
         }
 
@@ -91,6 +119,25 @@ public class SkyScraper1
         }
     }
 
+    /**
+     * <p>&lt;x0,y0,z0&gt; determines the start point of the roof trim.
+     *
+     * <p>&lt;dx,dz&gt; determines the orientation of the roof line.
+     *
+     * @param wShape the bottom row, combined with {@link #column}[0] will be used as the shape of the trim.
+     * @throws IOException
+     */
+    public void roofTrim(BlockEditor editor, int x0, int y0, int z0, int dx, int dz, WindowShape wShape)
+        throws IOException
+    {
+        editor.setBlock(x0, y0, z0, column[0]);
+        for (int u=1; u<wShape.cellWidth; u++) {
+            editor.setBlock(x0+u*dx, y0, z0+u*dz, wShape.blocks[u-1]);
+        }
+        int u=wShape.cellWidth;
+        editor.setBlock(x0+u*dx, y0, z0+u*dz, column[0]);
+    }
+
     public void exteriorWindow(BlockEditor editor, int x0, int y0, int z0, int dx, int dz, WindowShape wShape)
         throws IOException
     {
@@ -98,6 +145,8 @@ public class SkyScraper1
         for (int v=0; ptr< wShape.blocks.length; v++) {
             for (int u=1; u<wShape.cellWidth; u++, ptr++)
             {
+                if (ptr >= wShape.blocks.length)
+                    throw new ArrayIndexOutOfBoundsException();
                 editor.setBlock(x0+u*dx, y0+v, z0+u*dz, wShape.blocks[ptr]);
             }
         }
@@ -111,6 +160,8 @@ public class SkyScraper1
             int y1 = y + c * floorHeight;
 
             for (int y2 = 0; y2<floorHeight; y2++) {
+                if (y2 >= column.length)
+                    throw new ArrayIndexOutOfBoundsException(y2);
                 editor.setBlock(x,y1+y2,z, column[y2]);
             }
         }
@@ -119,9 +170,9 @@ public class SkyScraper1
     public static void main(String[] argv)
         throws IOException
     {
-        SkyScraper1 q = new SkyScraper1();
+        SkyScraper1 q = cliche1();
 
-        File saveDir = GenerateMaze1.pickSaveDir();
+        File saveDir = WorldPicker.pickSaveDir();
 
         BlockEditor editor = new BlockEditor(new MinecraftWorld(saveDir));
 
@@ -135,6 +186,16 @@ public class SkyScraper1
         editor.relight();
 
         editor.save();
+    }
+
+    public int xDimension()
+    {
+        return uCells * window1.cellWidth +1;
+    }
+
+    public int zDimension()
+    {
+        return vCells * window2.cellWidth +1;
     }
 
 
@@ -156,6 +217,25 @@ public class SkyScraper1
                 }
             }
             this.cellWidth = cellWidth;
+
+            if (blocks.length != (cellWidth -1)* height())
+                throw new IllegalArgumentException("blocks.length=" +blocks.length+ " is not an even multiple of "+(cellWidth-1));
+        }
+
+        public WindowShape(int cellWidth, int... blocks)
+        {
+            this.cellWidth = cellWidth;
+
+            this.blocks = new BlockPlusData[blocks.length];
+            for (int i = 0; i < blocks.length; i++) {
+                this.blocks[i] = new BlockPlusData(blocks[i], 0);
+
+            }
+        }
+
+        public int height()
+        {
+            return blocks.length / (cellWidth-1);
         }
     }
 }
