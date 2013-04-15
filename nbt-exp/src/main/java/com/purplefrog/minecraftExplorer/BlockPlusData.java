@@ -17,4 +17,9 @@ public class BlockPlusData
         this.blockType = blockType;
         this.data = data;
     }
+
+    public BlockPlusData(int blockType)
+    {
+        this(blockType,0);
+    }
 }
