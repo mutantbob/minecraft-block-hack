@@ -25,7 +25,7 @@ public class CityScape
 
 
         int x0=200;
-        int y0=80;
+        int y0=79;
         int z0 =100;
 
         {
