@@ -423,6 +423,18 @@ public class BlockEditor
         }
     }
 
+    public void fillCube(int blockType, int x0, int y0, int z0, int dx, int dy, int dz)
+        throws IOException
+    {
+        for (int x=0; x<dx; x++) {
+            for (int y=0; y<dy; y++) {
+                for (int z=0; z<dz; z++) {
+                    setBlock(x+x0, y+y0, z+z0, blockType);
+                }
+            }
+        }
+    }
+
     public interface GetLightingCube
     {
         public NibbleCube getLightLevels(Anvil.Section s);
