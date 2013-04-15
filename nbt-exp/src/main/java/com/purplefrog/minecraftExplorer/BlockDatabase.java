@@ -35,6 +35,7 @@ public class BlockDatabase
         Transparent,
         Water,
         Widget,
+        OpaqueFunky,
     }
 
     public static TransparencyClass[] TRANSPARENCY_CLASS = {
@@ -96,7 +97,7 @@ public class BlockDatabase
         TransparencyClass.Widget,   // 50
         TransparencyClass.Widget,
         TransparencyClass.Widget,
-        TransparencyClass.Widget,
+        TransparencyClass.OpaqueFunky,
         TransparencyClass.Solid,
         TransparencyClass.Solid,   // 55
         TransparencyClass.Solid,
@@ -111,7 +112,7 @@ public class BlockDatabase
         TransparencyClass.Widget,
         TransparencyClass.Widget,   // 65
         TransparencyClass.Widget,
-        TransparencyClass.Widget,
+        TransparencyClass.OpaqueFunky,
         TransparencyClass.Widget,
         TransparencyClass.Widget,
 
@@ -137,7 +138,7 @@ public class BlockDatabase
         TransparencyClass.Solid,
         TransparencyClass.Solid,
 
-        TransparencyClass.Solid,   // 90
+        TransparencyClass.Widget,   // 90
         TransparencyClass.Solid,
         TransparencyClass.Widget,
         TransparencyClass.Widget,
@@ -156,16 +157,16 @@ public class BlockDatabase
         TransparencyClass.Widget,   // 105
         TransparencyClass.Widget,
         TransparencyClass.Widget,
-        TransparencyClass.Widget,
-        TransparencyClass.Widget,
+        TransparencyClass.OpaqueFunky,
+        TransparencyClass.OpaqueFunky,
 
         TransparencyClass.Solid,   // 110
         TransparencyClass.Widget,
         TransparencyClass.Solid,
         TransparencyClass.Widget,
-        TransparencyClass.Widget,
+        TransparencyClass.OpaqueFunky,
         TransparencyClass.Widget,   // 115
-        TransparencyClass.Widget,
+        TransparencyClass.OpaqueFunky,
         TransparencyClass.Widget,
         TransparencyClass.Widget,
         TransparencyClass.Widget,
@@ -176,18 +177,18 @@ public class BlockDatabase
         TransparencyClass.Solid,
         TransparencyClass.Solid,
         TransparencyClass.Solid,   // 125
+        TransparencyClass.OpaqueFunky,
         TransparencyClass.Widget,
-        TransparencyClass.Widget,
-        TransparencyClass.Widget,
+        TransparencyClass.OpaqueFunky,
         TransparencyClass.Solid,
 
         TransparencyClass.Solid,   // 130
         TransparencyClass.Widget,
         TransparencyClass.Widget,
         TransparencyClass.Solid,
-        TransparencyClass.Widget,
-        TransparencyClass.Widget,   // 135
-        TransparencyClass.Widget,
+        TransparencyClass.OpaqueFunky,
+        TransparencyClass.OpaqueFunky,   // 135
+        TransparencyClass.OpaqueFunky,
         TransparencyClass.Solid,
         TransparencyClass.Widget,
         TransparencyClass.Widget,
@@ -209,7 +210,7 @@ public class BlockDatabase
         TransparencyClass.Solid,
         TransparencyClass.Widget,
         TransparencyClass.Solid,   // 155
-        TransparencyClass.Widget,
+        TransparencyClass.OpaqueFunky,
         TransparencyClass.Widget,
         TransparencyClass.Solid,
 
