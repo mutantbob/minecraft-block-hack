@@ -103,6 +103,12 @@ public class Anvil
         return rval;
     }
 
+    public IntSquare getHeightMap()
+    {
+        Tag t = deref(root, "Level", "HeightMap");
+        return new IntSquare(((IntArrayTag)t).data);
+    }
+
     public static class Section
     {
 

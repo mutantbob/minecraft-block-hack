@@ -158,10 +158,10 @@ public class BlockEditor
     public void lightingOverpass(Set<Point3D> notFinished, Point3D sCoord, Anvil.Section s)
     {
         boolean dirty = false;
-        while (oneLightingPass(s.getSkyLight(), s.getBlocks())) {
+        while (oneLightingPass(s.getSkyLight(), s.getBlocks(), true)) {
             dirty = true;
         }
-        while (oneLightingPass(s.getBlockLight(), s.getBlocks())) {
+        while (oneLightingPass(s.getBlockLight(), s.getBlocks(), false)) {
             dirty = true;
         }
 
@@ -198,67 +198,54 @@ public class BlockEditor
             strideY, strideX, strideZ, 15, 0, blocks, lightFlavor);
     }
 
-    public boolean oneLightingPass(NibbleCube light, ByteCube blocks)
+    public boolean oneLightingPass(NibbleCube light, ByteCube blocks, boolean notFromSolid)
     {
-        boolean dirty = false;
+        boolean[] dirty = { false };
         for (int y=0; y<16; y++) {
             for (int z=0; z<16; z++) {
                 for (int x=0; x<16; x++) {
-                    if (! BlockDatabase.transparent(blocks.get(x,y,z)))
+                    if (false && ! BlockDatabase.transparent(blocks.get(x,y,z)))
                         continue; // skip this solid block
 
                     int s0 = light.get(x,y,z);
                     int newS = s0;
                     if (x>0) {
-                        int sw = light.get(x-1, y, z) -1;
-                        if (sw>newS) {
-                            newS = sw;
-                            dirty = true;
-                        }
+                        newS = maybeUpdateLight(light, x-1, y, z, newS, dirty, blocks, notFromSolid);
                     }
                     if (y>0) {
-                        int sd = light.get(x, y-1, z) -1;
-                        if (sd> newS) {
-                            newS = sd;
-                            dirty = true;
-                        }
+                        newS = maybeUpdateLight(light, x, y-1, z, newS, dirty, blocks, notFromSolid);
                     }
-
                     if (z>0) {
-                        int sn = light.get(x, y, z-1) -1;
-                        if (sn> newS) {
-                            newS = sn;
-                            dirty = true;
-                        }
+                        newS = maybeUpdateLight(light, x, y, z-1, newS, dirty, blocks, notFromSolid);
                     }
                     if (x<15) {
-                        int se = light.get(x+1, y, z) -1;
-                        if (se>newS) {
-                            newS = se;
-                            dirty = true;
-                        }
+                        newS = maybeUpdateLight(light, x+1, y, z, newS, dirty, blocks, notFromSolid);
                     }
                     if (y<15) {
-                        int su = light.get(x, y+1, z) -1;
-                        if (su> newS) {
-                            newS = su;
-                            dirty = true;
-                        }
+                        newS = maybeUpdateLight(light, x, y+1, z, newS, dirty, blocks, notFromSolid);
                     }
-
                     if (z<15) {
-                        int ss = light.get(x, y, z+1) -1;
-                        if (ss> newS) {
-                            newS = ss;
-                            dirty = true;
-                        }
+                        newS = maybeUpdateLight(light, x, y, z+1, newS, dirty, blocks, notFromSolid);
                     }
 
                     light.set(x, y, z, newS);
                 }
             }
         }
-        return dirty;
+        return dirty[0];
+    }
+
+    public static int maybeUpdateLight(NibbleCube light, int x, int y, int z, int currLight, boolean[] dirty, ByteCube blocks, boolean notFromSolid)
+    {
+        if (notFromSolid && !BlockDatabase .transparent(blocks.get(x,y,z)))
+            return currLight;
+
+        int sw = light.get(x, y, z) -1;
+        if (sw>currLight) {
+            currLight = sw;
+            dirty[0] = true;
+        }
+        return currLight;
     }
 
     /**
@@ -340,6 +327,8 @@ public class BlockEditor
             }
         }
 
+        IntSquare heightMap = anvil.getHeightMap();
+
         boolean[] occluded = new boolean[16*16];
         for (int cy = highest; cy>=0; cy--) {
             Anvil.Section section = anvil.getSectionForChunkY(cy);
@@ -357,8 +346,11 @@ public class BlockEditor
                         if (!occluded[skyPtr]) {
 
                             int bt = blocks.get(x,y,z);
-                            if (!BlockDatabase.transparent(bt))
+                            if (!BlockDatabase.transparent(bt)) {
+                                int adj = 1; // XXX still trying to figure out what to do.
+                                heightMap.set(x,cy*16 + y +adj,z);
                                 occluded[skyPtr] = true;
+                            }
                         }
 
                     }
