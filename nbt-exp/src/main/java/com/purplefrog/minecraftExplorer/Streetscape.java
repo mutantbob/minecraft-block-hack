@@ -19,12 +19,15 @@ public class Streetscape
     public final RoadSpec[] avenueSegments;
     public final int nStreets;
     public final int nAvenues;
-    public  BlockPlusData pavement=new BlockPlusData(44, 3);
-    public BlockTemplate meadow = new BlockTemplate(2);
+    public  BlockPlusData cobblestoneSlab =new BlockPlusData(44, 3);
+    public BlockTemplate meadow = new BlockTemplate(1,1,2, 3,2);
 
 
     public Streetscape(int nStreets, int nAvenues)
     {
+        BlockTemplate sidewalk = new BlockTemplate(1,2,2, 3, 3, 43, 43);
+        BlockTemplate pavement = new BlockTemplate(1, 1, 2, new BlockPlusData(3), cobblestoneSlab);
+
         this.nStreets = nStreets;
         this.nAvenues = nAvenues;
 
@@ -32,14 +35,13 @@ public class Streetscape
         Arrays.fill(streetWidths, 5);
 
         streetSegments = new RoadSpec[nStreets * (nAvenues-1)];
-        BlockTemplate sidewalk = new BlockTemplate(43);
-        Arrays.fill(streetSegments, new RoadSpec(5, new BlockTemplate(pavement), sidewalk, sidewalk));
+        Arrays.fill(streetSegments, new RoadSpec(5, pavement, sidewalk, sidewalk));
 
         avenueWidths = new int[nAvenues];
         Arrays.fill(avenueWidths, 3);
 
         avenueSegments = new RoadSpec[(nStreets-1)*nAvenues];
-        Arrays.fill(avenueSegments, new RoadSpec(3, new BlockTemplate(pavement), sidewalk, sidewalk) );
+        Arrays.fill(avenueSegments, new RoadSpec(3, pavement, sidewalk, sidewalk) );
     }
 
     public void randomClosures(int count)
@@ -165,7 +167,7 @@ public class Streetscape
         } else {
             for (int x=x1; x<x2; x++) {
                 for (int b=0; b<avenueWidths[v]; b++) {
-                    editor.setBlock(x, y, z + b, pavement);
+                    editor.setBlock(x, y, z + b, cobblestoneSlab);
                 }
             }
         }
@@ -185,7 +187,7 @@ public class Streetscape
     {
         for (int a=0; a<streetWidths[u]; a++) {
             for (int b=0; b<avenueWidths[v]; b++) {
-                editor.setBlock(x+a,y,z+b, pavement);
+                editor.setBlock(x+a,y,z+b, cobblestoneSlab);
             }
         }
     }
