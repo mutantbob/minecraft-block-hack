@@ -85,8 +85,8 @@ public class Streetscape
         }
 
         {
-            int farEast = xForIntersection(nStreets-1) + 10; // XXX
-            int farSouth = zForIntersection(nAvenues - 1) + 10;
+            int farEast = xSize();
+            int farSouth = zSize();
             for (int u=0; u<=nStreets; u++) {
                 for (int v=0; v<=nAvenues; v++) {
                     RoadSpec west;
@@ -121,6 +121,16 @@ public class Streetscape
                 }
             }
         }
+    }
+
+    public int zSize()
+    {
+        return zForIntersection(nAvenues - 1) + 10;  // XXX
+    }
+
+    public int xSize()
+    {
+        return xForIntersection(nStreets-1) + 10;  // XXX
     }
 
     public int zOfNorthSideOfAvenue(RoadSpec avenue, int v)
