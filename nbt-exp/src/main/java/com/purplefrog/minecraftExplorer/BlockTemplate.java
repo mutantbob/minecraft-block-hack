@@ -28,6 +28,22 @@ public class BlockTemplate
         this.blocks = blocks;
     }
 
+    public BlockTemplate(int width, int depth, int elevation, int... blocks)
+    {
+        this.width = width;
+        this.depth = depth;
+        this.elevation = elevation;
+
+        if (blocks.length != width*depth*elevation)
+            throw new IllegalArgumentException(blocks.length+" != "+width+"*"+depth+"*"+elevation);
+
+        this.blocks = new BlockPlusData[blocks.length];
+
+        for (int i = 0; i < blocks.length; i++) {
+            this.blocks[i] = new BlockPlusData(blocks[i]);
+        }
+    }
+
     public BlockTemplate(int blockType)
     {
         this(new BlockPlusData(blockType));
