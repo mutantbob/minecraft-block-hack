@@ -11,6 +11,7 @@ import java.util.*;
  */
 public class BlockDatabase
 {
+    public final static BlockPlusData chiseledStone = new BlockPlusData(98, 3);
     public static Map<Integer, int[]> unknownBlockTypes = new TreeMap<Integer, int[]>();
 
     public static int lightLevel(int blockType)
@@ -18,6 +19,7 @@ public class BlockDatabase
         switch (blockType) {
             case 10: // lava
             case 11: // lava
+            case 89: // glowstone ore
             case 124: // glowstone lamp
                 return 15;
             case 50: // torch
