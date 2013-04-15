@@ -17,19 +17,19 @@ public class FloatingIsland
     public DepthMap bottom;
     protected final boolean[] lampMap;
 
-    public FloatingIsland(int xSize, int zSize, int excavationLimit)
+    public FloatingIsland(int xSize, int zSize, int excavationLimit, int lampExclusionRadius)
     {
         this.excavationLimit = excavationLimit;
         bottom = computeDepthMap(xSize, zSize, this.excavationLimit);
 
-        lampMap = computeLampSpots(bottom);
+        lampMap = computeLampSpots(bottom, lampExclusionRadius);
 
     }
 
     public static void main(String[] argv)
         throws IOException
     {
-        FloatingIsland island = new FloatingIsland(100, 50, 9);
+        FloatingIsland island = new FloatingIsland(100, 50, 9, 3);
 
 
         File saveDir = WorldPicker.pickSaveDir();
@@ -108,13 +108,13 @@ public class FloatingIsland
         return bottom;
     }
 
-    public static boolean[] computeLampSpots(DepthMap bottom)
+    public static boolean[] computeLampSpots(DepthMap bottom, int exclusionRadius)
     {
         boolean [] lampMap = new boolean[bottom.w*bottom.h];
 
         for (int x=0; x<bottom.w; x++) {
             for (int z=0; z<bottom.h; z++) {
-                if (localPeak(bottom, x,z, 3)) {
+                if (localPeak(bottom, x,z, exclusionRadius)) {
                     lampMap[z*bottom.w + x] = true;
                 }
             }
