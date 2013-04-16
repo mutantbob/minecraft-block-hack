@@ -55,7 +55,7 @@ public class FloatingIsland
         throws IOException
     {
 
-        render(editor, x0, y0, z0, y2, 0, 1, 89);
+        render(editor, x0, y0, z0, y2, new BlockChooser());
     }
 
     public void render(BlockEditor editor, int x0, int y0, int z0, int y2, int airType, int ceilingType, int lampType)
@@ -284,6 +284,11 @@ public class FloatingIsland
         public final int ceilingType;
         public final int lampType;
 
+        public BlockChooser()
+        {
+            this(0,1,89);
+        }
+
         public BlockChooser(int airType, int ceilingType, int lampType)
         {
 
@@ -310,7 +315,7 @@ public class FloatingIsland
 
         public DoomChipCookie()
         {
-            super(0, 1, 98);
+            super(0, 1, 89);
         }
 
         @Override
