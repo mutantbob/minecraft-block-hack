@@ -29,7 +29,7 @@ public class MoriaColumns
     public static void main(String[] argv)
         throws IOException
     {
-        BlockEditor editor = new BlockEditor(new MinecraftWorld(WorldPicker.pickSaveDir()));
+        BasicBlockEditor editor = new AnvilBlockEditor(new MinecraftWorld(WorldPicker.pickSaveDir()));
 
         WormWorld.Bounds bounds = new WormWorld.Bounds(1, 85, 1, 75, 110, 90);
 
@@ -41,7 +41,7 @@ public class MoriaColumns
         editor.save();
     }
 
-    public void render(BlockEditor editor, WormWorld.Bounds bounds)
+    public void render(BasicBlockEditor editor, WormWorld.Bounds bounds)
         throws IOException
     {
 
@@ -67,7 +67,7 @@ public class MoriaColumns
 
     }
 
-    public void drawColumn(BlockEditor editor, int x, int y1, int z, int y2)
+    public void drawColumn(BasicBlockEditor editor, int x, int y1, int z, int y2)
         throws IOException
     {
         BlockTemplate foot = new BlockTemplate(1, 1, 1, new BlockPlusData(109, 2));

@@ -21,7 +21,7 @@ public class GenerateMenger
 
         MinecraftWorld world = new MinecraftWorld(saveDir);
 
-        BlockEditor editor = new BlockEditor(world);
+        BlockEditor editor = new AnvilBlockEditor(world);
 
         System.out.println("generating Menger Sponge geometry");
         int m5 = 3 * 3 * 3 * 3 * 3;

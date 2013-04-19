@@ -18,7 +18,7 @@ public class CheckerTube
 
         File saveDir = WorldPicker.pickSaveDir();
 
-        BlockEditor editor = new BlockEditor(new MinecraftWorld(saveDir));
+        BlockEditor editor = new AnvilBlockEditor(new MinecraftWorld(saveDir));
 
         int ry=12;
         int rx=20;

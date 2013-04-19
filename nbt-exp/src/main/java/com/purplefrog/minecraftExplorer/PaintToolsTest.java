@@ -15,7 +15,7 @@ public class PaintToolsTest
     public static void main(String[] argv)
         throws IOException
     {
-        BlockEditor editor = new BlockEditor(new MinecraftWorld(WorldPicker.pickSaveDir()));
+        BasicBlockEditor editor = new AnvilBlockEditor(new MinecraftWorld(WorldPicker.pickSaveDir()));
 
         int x0=250;
         int y0=80;
@@ -35,7 +35,7 @@ public class PaintToolsTest
 
     }
 
-    public static void testBorderedRectangle(BlockEditor editor, int x0, int y0, int z0)
+    public static void testBorderedRectangle(BasicBlockEditor editor, int x0, int y0, int z0)
         throws IOException
     {
         BlockPlusData paleBlue = new BlockPlusData(35, 3);
@@ -57,7 +57,7 @@ public class PaintToolsTest
         }
     }
 
-    public static void testPyramid(BlockEditor editor, int x0, int y0, int z0)
+    public static void testPyramid(BasicBlockEditor editor, int x0, int y0, int z0)
         throws IOException
     {
         BlockPlusData paleBlue = new BlockPlusData(35, 3);
@@ -79,7 +79,7 @@ public class PaintToolsTest
         }
     }
 
-    public static void testPyramid2(BlockEditor editor, int x0, int y0, int z0)
+    public static void testPyramid2(BasicBlockEditor editor, int x0, int y0, int z0)
         throws IOException
     {
 

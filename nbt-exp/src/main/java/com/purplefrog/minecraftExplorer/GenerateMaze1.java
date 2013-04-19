@@ -32,7 +32,7 @@ public class GenerateMaze1
 
         File saveDir = WorldPicker.pickSaveDir();
 
-        BlockEditor editor = new BlockEditor(new MinecraftWorld(saveDir));
+        BlockEditor editor = new AnvilBlockEditor(new MinecraftWorld(saveDir));
 
 
         int x0=150;

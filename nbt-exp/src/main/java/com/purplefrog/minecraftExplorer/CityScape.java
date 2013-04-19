@@ -17,7 +17,7 @@ public class CityScape
     public static void main(String[] argv)
         throws IOException
     {
-        BlockEditor editor = new BlockEditor(new MinecraftWorld(WorldPicker.pickSaveDir()));
+        BasicBlockEditor editor = new AnvilBlockEditor(new MinecraftWorld(WorldPicker.pickSaveDir()));
 
         Random rand = new Random();
 
@@ -66,6 +66,8 @@ public class CityScape
         editor.relight();
 
         editor.save();
+
+        System.out.println(ss.xSize()+"x"+ss.zSize()+"+"+x0+"+"+z0);
     }
 
     public static void randomBuilding(BlockEditor editor, Rectangle emptyLot, int y0, Random rand)

@@ -58,7 +58,7 @@ public class Streetscape
         }
     }
 
-    public void render(BlockEditor editor, int x0, int y0, int z0)
+    public void render(BasicBlockEditor editor, int x0, int y0, int z0)
         throws IOException
     {
 //        for (int u=0; u<nStreets; u++) {
@@ -167,7 +167,7 @@ public class Streetscape
         return new Rectangle(x1,z1, x2-x1, z2-z1);
     }
 
-    public void drawAvenue(BlockEditor editor, int u, int v, int x1, int x2, int y, int z, RoadSpec seg)
+    public void drawAvenue(BasicBlockEditor editor, int u, int v, int x1, int x2, int y, int z, RoadSpec seg)
         throws IOException
     {
         if (true) {
@@ -183,7 +183,7 @@ public class Streetscape
         }
     }
 
-    public void drawStreet(BlockEditor editor, int u, int v, int x, int y, int z1, int z2, RoadSpec seg)
+    public void drawStreet(BasicBlockEditor editor, int u, int v, int x, int y, int z1, int z2, RoadSpec seg)
         throws IOException
     {
         int x1 = x - seg.width/2;
@@ -218,7 +218,7 @@ public class Streetscape
     {
         File saveDir = WorldPicker.pickSaveDir();
 
-        BlockEditor editor = new BlockEditor(new MinecraftWorld(saveDir));
+        BasicBlockEditor editor = new AnvilBlockEditor(new MinecraftWorld(saveDir));
 
         Streetscape q = new Streetscape(3, 4);
 

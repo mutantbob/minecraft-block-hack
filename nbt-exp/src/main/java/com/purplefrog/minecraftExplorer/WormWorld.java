@@ -42,7 +42,7 @@ public class WormWorld
     public static void main(String[] argv)
         throws IOException
     {
-        BlockEditor editor = new BlockEditor(new MinecraftWorld(WorldPicker.pickSaveDir()));
+        BasicBlockEditor editor = new AnvilBlockEditor(new MinecraftWorld(WorldPicker.pickSaveDir()));
 
         Bounds b = new Bounds(90,81,150,180,200,250);
 
