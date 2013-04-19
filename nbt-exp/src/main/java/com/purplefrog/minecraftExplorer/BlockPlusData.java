@@ -22,4 +22,23 @@ public class BlockPlusData
     {
         this(blockType,0);
     }
+
+    @Override
+    public boolean equals(Object obj)
+    {
+        if (obj instanceof BlockPlusData) {
+            BlockPlusData arg = (BlockPlusData) obj;
+
+            return arg.blockType == blockType
+                && arg.data == data;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return blockType *71 + data;
+    }
 }

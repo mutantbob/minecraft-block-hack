@@ -427,6 +427,12 @@ public class BlockEditor
         }
     }
 
+    public void fillCube(int blockType, WormWorld.Bounds b)
+        throws IOException
+    {
+        fillCube(blockType, b.x0, b.y0, b.z0, b.x1, b.y1, b.z1);
+    }
+
     public void fillCubeByCorners(BlockTemplate template, int x1, int y1, int z1, int x2, int y2, int z2)
         throws IOException
     {
@@ -493,13 +499,102 @@ public class BlockEditor
         }
     }
 
+    public void drawPyramid(int x1, int y1, int z1, int x2, int z2, BlockTemplate side, BlockTemplate corner)
+        throws IOException
+    {
+        drawPyramid(x1, y1, z1, x2, z2, side, side.rot90(), side.rot180(), side.rot270(), corner, 1);
+    }
+
+    public void drawPyramid(int x1, int y1, int z1, int x2, int z2, BlockTemplate side, BlockTemplate corner, int dy)
+        throws IOException
+    {
+        drawPyramid(x1, y1, z1, x2, z2, side, side.rot90(), side.rot180(), side.rot270(), corner, dy);
+    }
+
+    public void drawPyramid(int x1, int y1, int z1, int x2, int z2, BlockTemplate north, BlockTemplate east, BlockTemplate south, BlockTemplate west, BlockTemplate corner, int dy)
+        throws IOException
+    {
+
+        for (int x=x1; x<x2; x++) {
+            for (int z=z1; z<z2; z++) {
+
+                ColumnRef col=null;
+
+                int n=1;
+                int d=0;
+
+                if (west != null) {
+                    int x_ = z2-1-z;
+                    int z_ = x-x1;
+                    int n2 = z_;
+                    int d2 = west.depth;
+                    if (n2*d == n*d2) {
+                        col = corner.referenceColumn(x_, z_);
+                    } else if (n2 * d <= n * d2) {
+                        col = west.referenceColumn(x_, z_);
+                        n = n2;
+                        d = d2;
+                    }
+                }
+
+
+                if (east != null) {
+                    int x_ = z-z1;
+                    int z_ = x2-1-x;
+                    int n2 = z_;
+                    int d2 = east.depth;
+
+                    if (n2*d == n*d2) {
+                        col = corner.referenceColumn(x_, z_);
+                    } else if (n2*d <= n*d2) {
+                        col = east.referenceColumn(x_, z_);
+                        n = n2;
+                        d = d2;
+                    }
+                }
+
+                if (south != null) {
+                    int x_ = x2-x-1;
+                    int z_ = z2-z-1;
+                    int n2 = z_;
+                    int d2 = south.depth;
+                    if (n2*d == n*d2) {
+                        col = corner.referenceColumn(x_, z_);
+                    } else if (n2*d <= n*d2) {
+                        col = south.referenceColumn(x_, z_);
+                        n = n2;
+                        d = d2;
+                    }
+                }
+
+                if (north != null) {
+                    int x_ = x-x1;
+                    int z_ = z-z1;
+                    int n2 = z_;
+                    int d2 = north.depth;
+                    if (n2*d == n*d2) {
+                        col = corner.referenceColumn(x_, z_);
+                    } else if (n2*d <= n*d2) {
+                        col = north.referenceColumn(x_, z_);
+                        n = n2;
+                        d = d2;
+                    }
+                }
+
+                int y = y1 + (n/d) * dy;
+                col.renderColumn(this, x,y,z);
+            }
+        }
+
+    }
+
     public interface GetLightingCube
     {
         public NibbleCube getLightLevels(Anvil.Section s);
     }
 
     public static class GetSkyLightCube
-    implements GetLightingCube
+        implements GetLightingCube
     {
         @Override
         public NibbleCube getLightLevels(Anvil.Section s)
