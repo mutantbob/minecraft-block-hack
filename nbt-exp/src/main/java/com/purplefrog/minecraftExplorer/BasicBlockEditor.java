@@ -200,6 +200,20 @@ public abstract class BasicBlockEditor
 
     }
 
+    public void apply(GeometryTree tree, WormWorld.Bounds b)
+        throws IOException
+    {
+        for (int x=b.x0; x<b.x1; x++) {
+            for (int y=b.y0; y<b.y1; y++) {
+                for (int z=b.z0; z<b.z1; z++) {
+                    BlockPlusData bt = tree.pickFor(x, y, z);
+                    if (bt!=null)
+                        setBlock(x,y,z, bt);
+                }
+            }
+        }
+    }
+
     public interface GetLightingCube
     {
         public NibbleCube getLightLevels(Anvil.Section s);
