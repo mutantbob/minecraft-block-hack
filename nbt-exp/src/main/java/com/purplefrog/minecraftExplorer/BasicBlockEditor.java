@@ -13,8 +13,11 @@ public abstract class BasicBlockEditor
     implements BlockEditor
 {
     @Override
-    public abstract void setBlock(int x, int y, int z, int bt)
-        throws IOException;
+    public void setBlock(int x, int y, int z, int bt)
+        throws IOException
+    {
+        setBlock(x,y,z, new BlockPlusData(bt, 0));
+    }
 
     @Override
     public abstract void setBlock(int x, int y, int z, BlockPlusData block)
