@@ -17,10 +17,10 @@ public class FloatingIsland
     public DepthMap bottom;
     protected final boolean[] lampMap;
 
-    public FloatingIsland(int xSize, int zSize, int excavationLimit, int lampExclusionRadius)
+    public FloatingIsland(int xSize, int zSize, int excavationLimit, int lampExclusionRadius, Random rand)
     {
         this.excavationLimit = excavationLimit;
-        bottom = computeDepthMap(xSize, zSize, this.excavationLimit);
+        bottom = computeDepthMap(xSize, zSize, this.excavationLimit, rand);
 
         lampMap = computeLampSpots(bottom, lampExclusionRadius);
 
@@ -29,7 +29,9 @@ public class FloatingIsland
     public static void main(String[] argv)
         throws IOException
     {
-        FloatingIsland island = new FloatingIsland(100, 50, 9, 3);
+        Random rand = new Random();
+
+        FloatingIsland island = new FloatingIsland(100, 50, 9, 3, rand);
 
 
         File saveDir = WorldPicker.pickSaveDir();
@@ -43,7 +45,7 @@ public class FloatingIsland
         if (false) {
             island.renderClicheWithLamps(editor, x0, y0, z0, y0 + island.excavationLimit+3);
         } else {
-            island.render(editor, x0, y0, z0, y0 + island.excavationLimit + 3, new DoomChipCookie());
+            island.render(editor, x0, y0, z0, y0 + island.excavationLimit + 3, new DoomChipCookie(rand));
         }
 
         editor.relight();
@@ -81,11 +83,9 @@ public class FloatingIsland
         }
     }
 
-    public static DepthMap computeDepthMap(int xSize, int zSize, int excavationLimit)
+    public static DepthMap computeDepthMap(int xSize, int zSize, int excavationLimit, Random rand)
     {
         DepthMap bottom = new DepthMap(xSize, zSize);
-
-        Random rand = new Random();
 
         while (true) {
             RandomCoord rc = new RandomCoord(rand);
@@ -306,16 +306,18 @@ public class FloatingIsland
     public static class DoomChipCookie
         extends BlockChooser
     {
-        Random rand = new Random();
+        Random rand;
 
-        public DoomChipCookie(int airType, int ceilingType, int lampType)
+        public DoomChipCookie(int airType, int ceilingType, int lampType, Random rand)
         {
             super(airType, ceilingType, lampType);
+            this.rand = rand;
         }
 
-        public DoomChipCookie()
+        public DoomChipCookie(Random rand)
         {
             super(0, 1, 89);
+            this.rand = rand;
         }
 
         @Override

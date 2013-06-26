@@ -44,9 +44,8 @@ public class Streetscape
         Arrays.fill(avenueSegments, new RoadSpec(3, pavement, sidewalk, sidewalk) );
     }
 
-    public void randomClosures(int count)
+    public void randomClosures(int count, Random rand)
     {
-        Random rand = new Random();
         for (int i=0; i<count; i++) {
             int close = rand.nextInt(streetSegments.length + avenueSegments.length);
 
