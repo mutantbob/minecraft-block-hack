@@ -12,6 +12,10 @@ import java.util.*;
 public class BlockDatabase
 {
     public final static BlockPlusData chiseledStone = new BlockPlusData(98, 3);
+    public static final int BLOCK_TYPE_TNT = 46;
+    public static final int BLOCK_TYPE_GLOWSTONE = 89;
+    public static final int BLOCK_TYPE_IRON_BARS = 101;
+    public static final int BLOCK_TYPE_GLASS_PANE = 102;
     public static Map<Integer, int[]> unknownBlockTypes = new TreeMap<Integer, int[]>();
 
     public static int lightLevel(int blockType)
@@ -87,7 +91,7 @@ public class BlockDatabase
         TransparencyClass.Solid,
         TransparencyClass.Solid,
         TransparencyClass.Solid,
-        TransparencyClass.Solid,
+        TransparencyClass.OpaqueFunky,
         TransparencyClass.Solid,   // 45
         TransparencyClass.Solid,
         TransparencyClass.Solid,
