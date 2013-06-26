@@ -17,6 +17,11 @@ public class ByteCube
         this.data = data;
     }
 
+    public ByteCube()
+    {
+        data = new byte[16*16*16];
+    }
+
     public int get_(int pos)
     {
         return 0xff & data[pos];
