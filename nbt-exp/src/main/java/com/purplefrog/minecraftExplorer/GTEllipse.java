@@ -39,6 +39,11 @@ public class GTEllipse
         this(c.x, c.y, c.z, radius, btInside, btOutside);
     }
 
+    public GTEllipse(Point3D c, double radius, GeometryTree inside, GeometryTree outside)
+    {
+        this(c.x, c.y, c.z, radius, inside, outside);
+    }
+
     public GTEllipse(Point3D c, double radius, int btInside)
     {
         this(c.x, c.y, c.z, radius, btInside, -1);
