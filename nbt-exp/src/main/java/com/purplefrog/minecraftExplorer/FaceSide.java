@@ -9,12 +9,20 @@ package com.purplefrog.minecraftExplorer;
  */
 public enum FaceSide
 {
-    TOP,
-    NORTH,
-    SOUTH,
-    EAST,
-    WEST,
-    BOTTOM;
+    TOP(1,0,0, 0,0,-1),
+    NORTH(-1,0,0, 0,1,0),
+    SOUTH(1,0,0, 0,1,0),
+    EAST(0,0,-1, 0,1,0),
+    WEST(0,0,1, 0,1,0),
+    BOTTOM(1,0,0, 0,0,1);
+
+    public Point3Di uVector, vVector;
+
+    private FaceSide(int ux, int uy, int uz, int vx, int vy, int vz)
+    {
+        this.uVector = new Point3Di(ux, uy, uz);
+        this.vVector = new Point3Di(vx,vy,vz);
+    }
 
     public String capitalized()
     {
