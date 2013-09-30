@@ -4,6 +4,8 @@ import com.mojang.nbt.*;
 import net.minecraft.world.chunk.storage.*;
 
 import java.io.*;
+import java.util.*;
+import java.util.regex.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -48,4 +50,84 @@ public class MinecraftWorld
         return RegionFileCache.getRegionFile(metaX, metaZ, saveDir);
     }
 
+    public Iterable<RegionFile> allRegions()
+    {
+        return new Iterable<RegionFile>()
+        {
+            @Override
+            public Iterator<RegionFile> iterator()
+            {
+                return new RegionFileIterator();
+            }
+        };
+    }
+
+    private class RegionFileIterator
+        implements Iterator<RegionFile>
+    {
+        private RegionFile cache;
+        protected File[] fs;
+        private int dirPtr=0;
+
+        public RegionFileIterator()
+        {
+            File dir = new File(saveDir, "region");
+            fs = dir.listFiles();
+            if (fs==null)
+                fs = new File[0];
+        }
+
+        @Override
+        public boolean hasNext()
+        {
+            maybeFillCache();
+            return cache != null;
+        }
+
+        @Override
+        public RegionFile next()
+        {
+            maybeFillCache();
+            if (cache==null)
+                throw new NoSuchElementException();
+            RegionFile rval = cache;
+            cache = null;
+            return rval;
+        }
+
+        /**
+         * @see RegionFileCache#getRegionFile(int, int, java.io.File)
+         */
+        private void maybeFillCache()
+        {
+            if (cache!=null)
+                return;
+
+            File found = nextRegionFile();
+            if (found==null)
+                return;
+
+            cache = new RegionFile(found);
+        }
+
+        private File nextRegionFile()
+        {
+            while (dirPtr<fs.length) {
+                File candidate = fs[dirPtr++];
+                Pattern p = Pattern.compile("r\\.-?\\d+\\.-?\\d+\\.mca");
+                Matcher m = p.matcher(candidate.getName());
+                if (m.matches()) {
+                    return candidate;
+                }
+                System.out.println("rejected "+candidate.getName());
+            }
+            return null;
+        }
+
+        @Override
+        public void remove()
+        {
+            throw new UnsupportedOperationException();
+        }
+    }
 }
