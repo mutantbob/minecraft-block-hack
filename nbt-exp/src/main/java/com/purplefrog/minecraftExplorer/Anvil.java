@@ -64,6 +64,16 @@ public class Anvil
         return (ListTag) Anvil.deref(root, "Level", "Sections");
     }
 
+    public Tag getEntities()
+    {
+        return Anvil.deref(root, "Level", "Entities");
+    }
+
+    public Tag getTileEntities()
+    {
+        return Anvil.deref(root, "Level", "TileEntities");
+    }
+
     public Section getSectionFor(int y)
     {
         return getSectionForChunkY(y >> 4);
