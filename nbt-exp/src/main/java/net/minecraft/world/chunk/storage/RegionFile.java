@@ -2,15 +2,17 @@ package net.minecraft.world.chunk.storage;
 
 // http://jd.minecraftforge.net/src-html/net/minecraft/world/chunk/storage/
 
+import com.mojang.nbt.*;
+import com.purplefrog.minecraftExplorer.*;
+
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
-import java.util.ArrayList;
-import java.util.zip.DeflaterOutputStream;
+import java.lang.reflect.*;
+import java.util.*;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.InflaterInputStream;
 
@@ -348,6 +350,140 @@ public class RegionFile
         if (this.dataFile != null)
         {
             this.dataFile.close();
+        }
+    }
+
+    public Iterable<DataInputStream> allDataInputStreams()
+    {
+        return new Iterable<DataInputStream>()
+        {
+            @Override
+            public Iterator<DataInputStream> iterator()
+            {
+                return new DISIterator();
+            }
+        };
+    }
+
+    public Iterable<Tag> allChunks_()
+    {
+        return new Iterable<Tag>()
+        {
+            @Override
+            public Iterator<Tag> iterator()
+            {
+                return new ChunkTagIterator();
+            }
+        };
+    }
+
+    public Iterable<Anvil> allChunks()
+    {
+        return new Iterable<Anvil>()
+        {
+            @Override
+            public Iterator<Anvil> iterator()
+            {
+                return new ChunkIterator();
+            }
+        };
+    }
+
+
+    public class DISIterator
+        implements Iterator<DataInputStream>
+    {
+        int x=0, z=0;
+
+        @Override
+        public boolean hasNext()
+        {
+            while (true) {
+                if (x>=32) {
+                    x=0;
+                    z++;
+                }
+                if (z >= 32) {
+                    return false;
+                }
+
+                if (cursorOnChunk()) {
+                    return true;
+                }
+
+                x++;
+            }
+        }
+
+        public boolean cursorOnChunk()
+        {
+            return 0 != getOffset(x,z);
+        }
+
+        @Override
+        public DataInputStream next()
+        {
+            DataInputStream dis = getChunkDataInputStream(x, z);
+            x++;
+            return dis;
+        }
+
+        @Override
+        public void remove()
+        {
+            throw new UnsupportedOperationException();
+        }
+    }
+
+    private class ChunkIterator
+        implements Iterator<Anvil>
+    {
+        protected final ChunkTagIterator base = new ChunkTagIterator();
+
+        @Override
+        public boolean hasNext()
+        {
+            return base.hasNext();
+        }
+
+        @Override
+        public Anvil next()
+        {
+            return new Anvil((CompoundTag) base.next());
+        }
+
+        @Override
+        public void remove()
+        {
+            throw new UnsupportedOperationException();
+        }
+    }
+
+    private class ChunkTagIterator
+        implements Iterator<Tag>
+    {
+        protected final DISIterator base = new DISIterator();
+
+        @Override
+        public boolean hasNext()
+        {
+            return base.hasNext();
+        }
+
+        @Override
+        public Tag next()
+        {
+            try {
+                return NbtIo.read(base.next());
+            } catch (IOException e) {
+                throw new UndeclaredThrowableException(e);
+            }
+        }
+
+        @Override
+        public void remove()
+        {
+            throw new UnsupportedOperationException();
         }
     }
 }
