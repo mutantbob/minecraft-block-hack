@@ -40,6 +40,7 @@ public class BlockDatabase
         Water,
         Widget,
         OpaqueFunky,
+        Glass,
     }
 
     public static TransparencyClass[] TRANSPARENCY_CLASS = {
@@ -65,7 +66,7 @@ public class BlockDatabase
         TransparencyClass.Widget,
         TransparencyClass.Solid,
 
-        TransparencyClass.Widget,   // 20
+        TransparencyClass.Glass,   // 20
         TransparencyClass.Solid,
         TransparencyClass.Solid,
         TransparencyClass.Solid,
