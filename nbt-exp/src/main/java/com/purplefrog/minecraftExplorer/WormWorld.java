@@ -162,5 +162,17 @@ public class WormWorld
         {
             return z1-z0;
         }
+
+        public boolean contains(int x, int y, int z)
+        {
+            return x>=x0 && x<x1
+                && y>=y0 && y<y1
+                && z>=z0 && z<z1;
+        }
+
+        public Bounds outset(int dx, int dy, int dz)
+        {
+            return new Bounds(x0-dx, y0-dy, z0-dz, x1+dx, y1+dy, z1+dz);
+        }
     }
 }
