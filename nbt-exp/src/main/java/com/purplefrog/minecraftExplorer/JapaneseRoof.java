@@ -7,7 +7,7 @@ package com.purplefrog.minecraftExplorer;
  * Time: 3:40 PM
  * To change this template use File | Settings | File Templates.
  */
-public class Japanese
+public class JapaneseRoof
 {
 
     int rx;
@@ -20,7 +20,7 @@ public class Japanese
     protected final int slabDetail = 3;
 
 
-    public Japanese(int rx, int rz, int rx2, int rz2, boolean gableX, boolean gableZ)
+    public JapaneseRoof(int rx, int rz, int rx2, int rz2, boolean gableX, boolean gableZ)
     {
         this.rx = rx;
         this.rz = rz;
@@ -30,7 +30,7 @@ public class Japanese
         this.gableZ = gableZ;
     }
 
-    public WormWorld.Bounds getBounds(int cx, int y0, int cz, Japanese roof)
+    public WormWorld.Bounds getBounds(int cx, int y0, int cz, JapaneseRoof roof)
     {
         return new WormWorld.Bounds(cx-rx, y0, cz-rz,
             cx+rx+1, y0+roof.blockHeight(), cz+rz+1);

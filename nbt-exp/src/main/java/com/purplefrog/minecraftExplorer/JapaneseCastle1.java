@@ -37,7 +37,7 @@ public class JapaneseCastle1
     private static void doOne(BasicBlockEditor editor, int cx, int y0, int cz, int rx, int rz, int rx2, int rz2)
         throws IOException
     {
-        Japanese roof = new Japanese(rx, rz, rx2, rz2, true, false);
+        JapaneseRoof roof = new JapaneseRoof(rx, rz, rx2, rz2, true, false);
         editor.apply(roof.new GT(cx, y0, cz), roof.getBounds(cx, y0, cz, roof).outset(1, 0, 1));
     }
 
