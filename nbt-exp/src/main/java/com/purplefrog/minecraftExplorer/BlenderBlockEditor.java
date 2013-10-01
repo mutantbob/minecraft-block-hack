@@ -225,6 +225,8 @@ public class BlenderBlockEditor
         if (polys.isEmpty())
             return null;
 
+        polys = consolidateFaces(polys);
+
         StringBuilder rval = new StringBuilder();
 
         rval.append("sectionFaces = (\n");
@@ -232,6 +234,229 @@ public class BlenderBlockEditor
         rval.append(")\n" +
             "buildMinecraftMesh(sectionFaces, " + sectionPos.x + ", " + sectionPos.y + ", " + sectionPos.z + ")\n");
         return rval.toString();
+    }
+
+    /**
+     *
+     * @param polys this gets maimed
+     * @return
+     */
+    public static List<BlenderMeshElement> consolidateFaces(List<BlenderMeshElement> polys)
+    {
+        List<BlenderMeshElement.FatFace> horizontal = consolidateFacesHorizontal(polys);
+        List<BlenderMeshElement.FatFace> vertical = consolidateFacesVertical(polys);
+
+        List<BlenderMeshElement.FatFace> rects = consolidateFatFacesVertical(horizontal);
+
+        ArrayList<BlenderMeshElement> rval = new ArrayList<BlenderMeshElement>();
+        rval.addAll(rects);
+        rval.addAll(horizontal);
+        rval.addAll(vertical);
+        rval.addAll(polys);
+        return rval;
+    }
+
+    public static List<BlenderMeshElement.FatFace> consolidateFatFacesVertical(List<BlenderMeshElement.FatFace> polys)
+    {
+        ArrayList<BlenderMeshElement.FatFace> vertical;
+        {
+            vertical = new ArrayList<BlenderMeshElement.FatFace>();
+            int cursor=0;
+            while (cursor<polys.size()) {
+                BlenderMeshElement.FatFace f1_ = polys.get(cursor);
+
+
+                BlenderMeshElement.FatFace ff = new BlenderMeshElement.FatFace(f1_);
+
+                Point3Di vVector = ff.orientation.vVector;
+                while (true) {
+                    int x2 = ff.x + ff.dv * vVector.x;
+                    int y2 = ff.y + ff.dv * vVector.y;
+                    int z2 = ff.z + ff.dv * vVector.z;
+                    BlenderMeshElement.FatFace f2 = consumeFatFace(x2, y2, z2,
+                        ff.orientation, ff.bt, ff.blockData, polys, ff.du, 1);
+
+                    if (f2==null) {
+                        break;
+                    }
+                    ff.dv++;
+                }
+
+                while (true) {
+                    int x3 = ff.x - vVector.x;
+                    int y3 = ff.y - vVector.y;
+                    int z3 = ff.z - vVector.z;
+                    BlenderMeshElement.FatFace f2 = consumeFatFace(x3, y3, z3,
+                        ff.orientation, ff.bt, ff.blockData, polys, ff.du, 1);
+
+                    if (f2==null) {
+                        break;
+                    }
+                    ff.dv++;
+                    ff.x = ff.x - vVector.x;
+                    ff.y = ff.y - vVector.y;
+                    ff.z = ff.z - vVector.z;
+                }
+
+                if (ff.dv!=1) {
+                    vertical.add(ff);
+                    polys.remove(cursor);
+                } else {
+                    cursor++;
+                }
+            }
+        }
+        return vertical;
+
+    }
+
+    private static BlenderMeshElement.FatFace consumeFatFace(int x, int y, int z, FaceSide orientation, int bt, int blockData, List<BlenderMeshElement.FatFace> faces, int du, int dv)
+    {
+        for (Iterator<BlenderMeshElement.FatFace> iterator = faces.iterator(); iterator.hasNext(); ) {
+            BlenderMeshElement.FatFace face = iterator.next();
+            if (face.x == x && face.y == y && face.z == z
+                && face.bt == bt && face.blockData == blockData
+                && face.orientation == orientation
+                && face.du == du && face.dv == dv) {
+                iterator.remove();
+                return face;
+            }
+        }
+
+        return null;
+
+    }
+
+    public static List<BlenderMeshElement.FatFace> consolidateFacesVertical(List<BlenderMeshElement> polys)
+    {
+        ArrayList<BlenderMeshElement.FatFace> vertical;
+        {
+            vertical = new ArrayList<BlenderMeshElement.FatFace>();
+            int cursor=0;
+            while (cursor<polys.size()) {
+                BlenderMeshElement f1_ = polys.get(cursor);
+
+                if (!(f1_ instanceof BlenderMeshElement.Face)) {
+                    cursor++;
+                    continue;
+                }
+
+                BlenderMeshElement.FatFace ff = new BlenderMeshElement.FatFace((BlenderMeshElement.Face) f1_);
+
+                Point3Di vVector = ff.orientation.vVector;
+                while (true) {
+                    int x2 = ff.x + ff.dv * vVector.x;
+                    int y2 = ff.y + ff.dv * vVector.y;
+                    int z2 = ff.z + ff.dv * vVector.z;
+                    BlenderMeshElement.Face f2 = consumeFace(x2, y2, z2,
+                        ff.orientation, ff.bt, ff.blockData, polys);
+
+                    if (f2==null) {
+                        break;
+                    }
+                    ff.dv++;
+                }
+
+                while (true) {
+                    int x3 = ff.x - vVector.x;
+                    int y3 = ff.y - vVector.y;
+                    int z3 = ff.z - vVector.z;
+                    BlenderMeshElement.Face f2 = consumeFace(x3, y3, z3,
+                        ff.orientation, ff.bt, ff.blockData, polys);
+
+                    if (f2==null) {
+                        break;
+                    }
+                    ff.dv++;
+                    ff.x = ff.x - vVector.x;
+                    ff.y = ff.y - vVector.y;
+                    ff.z = ff.z - vVector.z;
+                }
+
+                if (ff.dv!=1) {
+                    vertical.add(ff);
+                    polys.remove(cursor);
+                } else {
+                    cursor++;
+                }
+            }
+        }
+        return vertical;
+    }
+
+    public static List<BlenderMeshElement.FatFace> consolidateFacesHorizontal(List<BlenderMeshElement> polys)
+    {
+        List<BlenderMeshElement.FatFace> horizontal;
+        {
+            horizontal = new ArrayList<BlenderMeshElement.FatFace>();
+            int cursor=0;
+            while (cursor<polys.size()) {
+                BlenderMeshElement f1_ = polys.get(cursor);
+
+                if (!(f1_ instanceof BlenderMeshElement.Face)) {
+                    cursor++;
+                    continue;
+                }
+
+                BlenderMeshElement.FatFace ff = new BlenderMeshElement.FatFace((BlenderMeshElement.Face) f1_);
+
+                Point3Di uVector = ff.orientation.uVector;
+                while (true) {
+                    int x2 = ff.x + ff.du * uVector.x;
+                    int y2 = ff.y + ff.du * uVector.y;
+                    int z2 = ff.z + ff.du * uVector.z;
+                    BlenderMeshElement.Face f2 = consumeFace(x2, y2, z2,
+                        ff.orientation, ff.bt, ff.blockData, polys);
+
+                    if (f2==null) {
+                        break;
+                    }
+                    ff.du++;
+                }
+
+                while (true) {
+                    int x3 = ff.x - uVector.x;
+                    int y3 = ff.y - uVector.y;
+                    int z3 = ff.z - uVector.z;
+                    BlenderMeshElement.Face f2 = consumeFace(x3, y3, z3,
+                        ff.orientation, ff.bt, ff.blockData, polys);
+
+                    if (f2==null) {
+                        break;
+                    }
+                    ff.du++;
+                    ff.x = ff.x- uVector.x;
+                    ff.y = ff.y- uVector.y;
+                    ff.z = ff.z- uVector.z;
+                }
+
+                if (ff.du!=1) {
+                    horizontal.add(ff);
+                    polys.remove(cursor);
+                } else {
+                    cursor++;
+                }
+            }
+        }
+        return horizontal;
+    }
+
+    public static BlenderMeshElement.Face consumeFace(int x, int y, int z, FaceSide orientation, int bt, int blockData, List<BlenderMeshElement> faces)
+    {
+        for (Iterator<BlenderMeshElement> iterator = faces.iterator(); iterator.hasNext(); ) {
+            BlenderMeshElement me = iterator.next();
+            if (me instanceof BlenderMeshElement.Face) {
+                BlenderMeshElement.Face face = (BlenderMeshElement.Face) me;
+                if (face.x == x && face.y == y && face.z == z
+                    && face.bt == bt && face.blockData == blockData
+                    && face.orientation == orientation) {
+                    iterator.remove();
+                    return face;
+                }
+            }
+        }
+
+        return null;
     }
 
     public BlenderMeshElement blenderCommandForFunky(int x, int y, int z, int bt, int blockData)
