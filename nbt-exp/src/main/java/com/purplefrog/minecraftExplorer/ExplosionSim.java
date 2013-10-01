@@ -95,26 +95,26 @@ public class ExplosionSim
             BlockDatabase.TransparencyClass tc1 = BlockDatabase.tClass(blockData.blockType);
 
             if (tc1== BlockDatabase.TransparencyClass.OpaqueFunky || tc1== BlockDatabase.TransparencyClass.Widget) {
-                String cmd = ((BlenderBlockEditor) sim.preExplosion).blenderCommandForFunky(x, y, z, blockData.blockType, blockData.data);
+                BlenderMeshElement cmd = ((BlenderBlockEditor) sim.preExplosion).blenderCommandForFunky(x, y, z, blockData.blockType, blockData.data);
                 bds.register(cmd, disappearTime);
             } else {
                 if (blockDisappearFaceTest(sim, x-1, y, z, disappearTime, tc1)) {
-                    bds.register("minecraftBlockWest("+x+","+y+","+z+", "+blockData.blockType+","+blockData.data+")", disappearTime);
+                    bds.register(new BlenderMeshElement.Face(x,y,z, blockData, FaceSide.WEST), disappearTime );
                 }
                 if (blockDisappearFaceTest(sim, x+1, y, z, disappearTime, tc1)) {
-                    bds.register("minecraftBlockEast("+x+","+y+","+z+", "+blockData.blockType+","+blockData.data+")", disappearTime);
+                    bds.register(new BlenderMeshElement.Face(x,y,z, blockData, FaceSide.EAST), disappearTime );
                 }
                 if (blockDisappearFaceTest(sim, x, y+1, z, disappearTime, tc1)) {
-                    bds.register("minecraftBlockTop("+x+","+y+","+z+", "+blockData.blockType+","+blockData.data+")", disappearTime);
+                    bds.register(new BlenderMeshElement.Face(x,y,z, blockData, FaceSide.TOP), disappearTime );
                 }
                 if (blockDisappearFaceTest(sim, x, y-1, z, disappearTime, tc1)) {
-                    bds.register("minecraftBlockBottom("+x+","+y+","+z+", "+blockData.blockType+","+blockData.data+")", disappearTime);
+                    bds.register(new BlenderMeshElement.Face(x,y,z, blockData, FaceSide.BOTTOM), disappearTime );
                 }
                 if (blockDisappearFaceTest(sim, x, y, z-1, disappearTime, tc1)) {
-                    bds.register("minecraftBlockNorth("+x+","+y+","+z+", "+blockData.blockType+","+blockData.data+")", disappearTime);
+                    bds.register(new BlenderMeshElement.Face(x,y,z, blockData, FaceSide.NORTH), disappearTime );
                 }
                 if (blockDisappearFaceTest(sim, x, y, z+1, disappearTime, tc1)) {
-                    bds.register("minecraftBlockSouth("+x+","+y+","+z+", "+blockData.blockType+","+blockData.data+")", disappearTime);
+                    bds.register(new BlenderMeshElement.Face(x,y,z, blockData, FaceSide.SOUTH), disappearTime );
                 }
             }
         }
@@ -481,19 +481,19 @@ public class ExplosionSim
 
     public static class BlockDestructionSet
     {
-        List<Map.Entry<String, Double>> parts = new ArrayList<Map.Entry<String, Double>>();
+        List<Map.Entry<BlenderMeshElement, Double>> parts = new ArrayList<Map.Entry<BlenderMeshElement, Double>>();
 
-        public void register(String meshPart, double disappearTime)
+        public void register(BlenderMeshElement meshPart, double disappearTime)
         {
-            parts.add(new AbstractMap.SimpleEntry<String, Double>(meshPart, disappearTime));
+            parts.add(new AbstractMap.SimpleEntry<BlenderMeshElement, Double>(meshPart, disappearTime));
         }
 
         public String emitDestructionMeshes(Point3Di sectionCoords)
         {
-            Collections.sort(parts, new Comparator<Map.Entry<String, Double>>()
+            Collections.sort(parts, new Comparator<Map.Entry<BlenderMeshElement, Double>>()
             {
                 @Override
-                public int compare(Map.Entry<String, Double> a, Map.Entry<String, Double> b)
+                public int compare(Map.Entry<BlenderMeshElement, Double> a, Map.Entry<BlenderMeshElement, Double> b)
                 {
                     return a.getValue().compareTo(b.getValue());
                 }
@@ -501,10 +501,10 @@ public class ExplosionSim
 
             StringBuilder rval = new StringBuilder();
 
-            List<String> faces = new ArrayList<String>();
+            List<BlenderMeshElement> faces = new ArrayList<BlenderMeshElement>();
 
             double curr=-1;
-            for (Map.Entry<String, Double> en : parts) {
+            for (Map.Entry<BlenderMeshElement, Double> en : parts) {
 
                 if (faces.size()==0)
                     curr = en.getValue();
@@ -514,7 +514,7 @@ public class ExplosionSim
                     if (faces.size()>0) {
                         rval.append(emitter(sectionCoords, faces, curr));
                     }
-                    faces = new ArrayList<String>();
+                    faces = new ArrayList<BlenderMeshElement>();
                     curr = en.getValue();
                 }
 
@@ -528,7 +528,7 @@ public class ExplosionSim
             return rval.toString();
         }
 
-        public String emitter(Point3Di sectionCoords, List<String> faces, double destructionTime)
+        public String emitter(Point3Di sectionCoords, List<BlenderMeshElement> faces, double destructionTime)
         {
             StringBuilder rval = new StringBuilder("sectionFaces = [");
             BlenderBlockEditor .appendJoin(rval, ",\n\t", faces);
