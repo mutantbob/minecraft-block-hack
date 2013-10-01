@@ -59,11 +59,14 @@ public class GTEllipse
     {
         double d2 = l2(x-this.x, y-this.y, z-this.z);
 
+
+        GeometryTree delegate;
         if (d2<= radius*radius) {
-            return inside.pickFor(x, y, z);
+            delegate = inside;
         } else {
-            return outside.pickFor(x, y, z);
+            delegate = outside;
         }
+        return delegate==null ? null : delegate .pickFor(x, y, z);
     }
 
     public static double l2(double dx, double dy, double dz)
