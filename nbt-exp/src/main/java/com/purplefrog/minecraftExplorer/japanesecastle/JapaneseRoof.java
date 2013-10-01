@@ -12,30 +12,35 @@ import com.purplefrog.minecraftExplorer.*;
 public class JapaneseRoof
 {
 
-    int rx;
-    int rz;
-    private final int rx2;
-    private final int rz2;
-    int r2x, r2z;
-    boolean gableX;
-    boolean gableZ;
+    public int rx;
+    public int rz;
+
+    public StairRoof secondary;
+    public int secondaryRX;
+    public int secondaryRZ;
+
     protected final int slabDetail = 3;
 
-
-    public JapaneseRoof(int rx, int rz, int rx2, int rz2, boolean gableX, boolean gableZ)
+    public JapaneseRoof(int rx, int rz)
     {
+
         this.rx = rx;
         this.rz = rz;
-        this.rx2 = rx2;
-        this.rz2 = rz2;
-        this.gableX = gableX;
-        this.gableZ = gableZ;
     }
 
-    public WormWorld.Bounds getBounds(int cx, int y0, int cz, JapaneseRoof roof)
+    public JapaneseRoof(int rx, int rz, int rx2, int rz2, boolean gableX, boolean gableZ, int secondaryRX, int secondaryRZ)
+    {
+        this(rx, rz);
+
+        secondary = new StairRoof(rx2, rz2, gableX, gableZ);
+        this.secondaryRX = secondaryRX;
+        this.secondaryRZ = secondaryRZ;
+    }
+
+    public WormWorld.Bounds getBounds(int cx, int y0, int cz)
     {
         return new WormWorld.Bounds(cx-rx, y0, cz-rz,
-            cx+rx+1, y0+roof.blockHeight(), cz+rz+1);
+            cx+rx+1, y0+blockHeight(), cz+rz+1);
     }
 
     public int blockHeight()
@@ -60,8 +65,10 @@ public class JapaneseRoof
         @Override
         public BlockPlusData pickFor(int x, int y, int z)
         {
-            int dx = Math.abs(x-cx);
-            int dz = Math.abs(z-cz);
+            int dx_ = x - cx;
+            int dx = Math.abs(dx_);
+            int dz_ = z - cz;
+            int dz = Math.abs(dz_);
 
             int inset = Math.min(rx-dx,rz-dz);
 
@@ -74,6 +81,44 @@ public class JapaneseRoof
 
             if (dx>rx || dz>rz)
                 return new BlockPlusData(0);
+
+
+            {
+                BlockPlusData rval = cornerDetails(x,y,z);
+                if (rval != null)
+                    return rval;
+            }
+
+            int y1 = (inset + 1) / 2;
+
+            if (secondary != null && dx<=secondaryRX && dz <= secondaryRZ) {
+                int y2 = secondary.yFor(dx_, dz_);
+
+                if (dy == y2) {
+                    if (y2==y1 && upper)
+                        return halfSlab(upper);
+                    if (y2 >= y1)
+                        return secondary.blockFor(dx_, dz_);
+                }
+            }
+
+            if (dy == y1) {
+                return halfSlab(upper);
+            }
+
+            return new BlockPlusData(0);
+
+        }
+
+        private BlockPlusData cornerDetails(int x, int y, int z)
+        {
+
+            int dx_ = x - cx;
+            int dx = Math.abs(dx_);
+            int dz_ = z - cz;
+            int dz = Math.abs(dz_);
+
+            int dy = y - cy;
 
             if (rx == dx && rz==dz) {
                 // corner points
@@ -111,46 +156,14 @@ public class JapaneseRoof
                 else
                     return new BlockPlusData(0);
 
-            } else if (dx<rx2 && dz < rz2) {
 
-                int peak = Math.min(rx + rx2, rz+rz2) /2;
-
-                int dyx = (rx-dx + (dx < rx2 ? rx2-dx:0))/2;
-                int dyz = (rz-dz + (dz < rz2 ? rz2-dz:0))/2;
-
-                if (dyz< dyx) {
-                    if (dy==dyz) {
-                        if (dy==peak)
-                            return halfSlab(false);
-                        else if (z<cz)
-                            return stair(2);
-                        else
-                            return stair(3);
-                    } else
-                        return new BlockPlusData(0);
-                } else {
-                    if (dy==dyx)
-                        if (dy==peak)
-                            return halfSlab(false);
-                        else if (x<cx ) {
-                            return stair(0);
-                        } else {
-                            return stair(1);
-                        }
-                    else
-                        return new BlockPlusData(0);
-                }
-
-            } else {
-                if (dy != ((inset+1)/2))
-                    return new BlockPlusData(0);
-
-                return halfSlab(upper);
             }
+
+            return null;
         }
     }
 
-    public BlockPlusData stair(int detail)
+    public static BlockPlusData stair(int detail)
     {
         return new BlockPlusData(136, detail);
     }
