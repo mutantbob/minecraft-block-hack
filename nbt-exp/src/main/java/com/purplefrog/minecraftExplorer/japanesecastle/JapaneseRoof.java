@@ -1,4 +1,6 @@
-package com.purplefrog.minecraftExplorer;
+package com.purplefrog.minecraftExplorer.japanesecastle;
+
+import com.purplefrog.minecraftExplorer.*;
 
 /**
  * Created with IntelliJ IDEA.
