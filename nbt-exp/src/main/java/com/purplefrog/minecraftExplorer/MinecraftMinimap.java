@@ -65,6 +65,7 @@ public class MinecraftMinimap
                 g.drawString(msg, 10,y);
             }
         });
+
     }
 
     @Override
@@ -251,7 +252,31 @@ public class MinecraftMinimap
                 double z = xform.screenYToWorld(e.getY());
 
                 worldMap.setCenter(x,z);
+                setCenter((int) x, (int) z);
             }
         });
+
+
+        if (false) {
+            addMouseListener(new MouseAdapter()
+            {
+                @Override
+                public void mouseClicked(MouseEvent ev)
+                {
+                    ScreenWorldTransform xform = getScreenWorldTransform();
+                    int x = (int) xform.screenXToWorld(ev.getX());
+                    int y = (int) xform.screenYToWorld(ev.getY());
+
+                }
+            });
+        }
+    }
+
+    private void setCenter(int x, int z)
+    {
+        wcx = x;
+        wcy = z;
+        repaint(1);
+        System.out.println(wcx+","+wcy);
     }
 }
