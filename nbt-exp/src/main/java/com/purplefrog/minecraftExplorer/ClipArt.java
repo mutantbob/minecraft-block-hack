@@ -29,15 +29,21 @@ public class ClipArt
 
     public static Object[] randomBuildingDecor(Random rand)
     {
-        SkyScraper1.WindowShape window1;
-        SkyScraper1.WindowShape window2;
-        int[] column;
         int w1 = rand.nextInt(3) +2;
         int w2 = rand.nextInt(3) +2;
         int floorHeight = rand.nextInt(2)+4;
-        int headRoom = floorHeight-1;
 
-        switch (rand.nextInt(4)) {
+        int decor = rand.nextInt(4);
+        return getDecor(w1, w2, floorHeight, decor);
+    }
+
+    public static Object[] getDecor(int w1, int w2, int floorHeight, int decor)
+    {
+        int headRoom = floorHeight-1;
+        SkyScraper1.WindowShape window1;
+        SkyScraper1.WindowShape window2;
+        int[] column;
+        switch (decor) {
             case 0:
                 window1 = ClipArt.glassPlusFloor(w1, headRoom, BlockDatabase.chiseledStone);
                 window2 = ClipArt.glassPlusFloor(w2, headRoom, BlockDatabase.chiseledStone);
