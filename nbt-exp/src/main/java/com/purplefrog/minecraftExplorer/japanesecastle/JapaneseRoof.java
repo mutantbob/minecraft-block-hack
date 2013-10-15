@@ -53,13 +53,25 @@ public class JapaneseRoof
     public class GT
         implements GeometryTree
     {
+        protected final GeometryTree chain;
         int cx, cy, cz;
 
-        public GT(int cx, int cy, int cz)
+        public GT(int cx, int cy, int cz, GeometryTree chain)
         {
             this.cx = cx;
             this.cy = cy;
             this.cz = cz;
+            this.chain = chain;
+        }
+
+        public GT(int cx, int cy, int cz)
+        {
+            this(cx,cy,cz, new BlockPlusData(0));
+        }
+
+        public GT(int cx, int cy, int cz, BlockPlusData chain)
+        {
+            this(cx,cy,cz, new Solid(chain));
         }
 
         @Override
@@ -77,16 +89,14 @@ public class JapaneseRoof
             int dy = y - cy;
 
             if (dy<0 || dy > Math.min(rx,rz))
-                return null;
+                return chain_(x,y,z);
 
             if (dx>rx || dz>rz)
-                return new BlockPlusData(0);
+                return chain_(x,y,z);
 
 
-            {
-                BlockPlusData rval = cornerDetails(x,y,z);
-                if (rval != null)
-                    return rval;
+            if (dx+dz+2 >= rx+rz) {
+                return cornerDetails(x,y,z);
             }
 
             int y1 = (inset + 1) / 2;
@@ -106,7 +116,7 @@ public class JapaneseRoof
                 return halfSlab(upper);
             }
 
-            return new BlockPlusData(0);
+            return chain_(x,y,z);
 
         }
 
@@ -123,9 +133,9 @@ public class JapaneseRoof
             if (rx == dx && rz==dz) {
                 // corner points
                 if (dy==2)
-                    return new BlockPlusData(125, slabDetail);
+                    return material1();
                 else
-                    return new BlockPlusData(0);
+                    return chain_(x, y, z);
 
             } else if (rx+rz == dx+dz+1) {
                 // corner stairs
@@ -146,7 +156,7 @@ public class JapaneseRoof
                     }
                     return stair(detail);
                 } else
-                    return new BlockPlusData(0);
+                    return chain_(x, y, z);
 
             } else if (rx+rz == dx+dz+2) {
                 // stair-adjacent slab
@@ -154,13 +164,23 @@ public class JapaneseRoof
                 if (dy==1)
                     return halfSlab(false);
                 else
-                    return new BlockPlusData(0);
+                    return chain_(x, y, z);
 
 
             }
 
             return null;
         }
+
+        private BlockPlusData chain_(int x,int y,int z)
+        {
+            return chain==null ?null : chain.pickFor(x,y,z);
+        }
+    }
+
+    private BlockPlusData material1()
+    {
+        return new BlockPlusData(125, slabDetail);
     }
 
     public static BlockPlusData stair(int detail)
