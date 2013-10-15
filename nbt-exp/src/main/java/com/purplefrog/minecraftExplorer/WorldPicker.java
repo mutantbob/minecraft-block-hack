@@ -13,6 +13,22 @@ public class WorldPicker
 {
     public static File pickSaveDir()
     {
-        return new File(System.getProperty("user.home"), ".minecraft/saves/menger-5");
+        File saves = savesDir();
+
+        if (false)
+            return new File(saves, "snapshot");
+        if (false)
+            return new File(saves, "2013-09-scratch");
+        return menger5();
+    }
+
+    public static File menger5()
+    {
+        return new File(savesDir(), "menger-5");
+    }
+
+    private static File savesDir()
+    {
+        return new File(System.getProperty("user.home"), ".minecraft/saves");
     }
 }
