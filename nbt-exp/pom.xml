@@ -27,7 +27,6 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>appassembler-maven-plugin</artifactId>
-                <!-- We bind to the package phase to automatically create the bin scripts for every simulator -->
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -39,15 +38,15 @@
                 <configuration>
                     <extraJvmArguments>
                     </extraJvmArguments>
-                    <!--programs>
+                    <programs>
                         <program>
-                            <mainClass>com.purplefrog.minecraftManager.RConClient</mainClass>
+                            <mainClass>com.purplefrog.minecraftExplorer.MinecraftMinimap</mainClass>
                             <name>RConClient</name>
                         </program>
-                    </programs-->
+                    </programs>
                 </configuration>
             </plugin>
-            <plugin>
+            <!--plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <executions>
                     <execution>
@@ -62,7 +61,7 @@
                         <descriptor>src/assembly/dist.xml</descriptor>
                     </descriptors>
                 </configuration>
-            </plugin>
+            </plugin-->
         </plugins>
 
         <extensions>
