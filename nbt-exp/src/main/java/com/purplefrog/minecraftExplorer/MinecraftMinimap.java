@@ -9,6 +9,7 @@ import java.awt.image.*;
 import java.io.*;
 import java.util.*;
 import java.util.List;
+import java.util.concurrent.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -20,6 +21,7 @@ import java.util.List;
 public class MinecraftMinimap
     extends JComponent
 {
+    protected final ExecutorService executor = Executors.newFixedThreadPool(1);
     private MinecraftWorld world;
 
     /**
@@ -113,46 +115,98 @@ public class MinecraftMinimap
             }
         } else {
 
-            int scale = 32*16;
-            int wx1 = (int) Math.floor(wx0/ scale);
-            int wy1 = (int) Math.floor(wy0/ scale);
+            int wx1 = (int) Math.floor(wx0/ regionImageTileSize);
+            int wy1 = (int) Math.floor(wy0/ regionImageTileSize);
 
-            int wx8 = (int) Math.ceil(wx9 / scale);
-            int wy8 = (int) Math.ceil(wy9 / scale);
+            int wx8 = (int) Math.ceil(wx9 / regionImageTileSize);
+            int wy8 = (int) Math.ceil(wy9 / regionImageTileSize);
 
 
             for (int x = wx1; x< wx8; x++) {
                 for (int y=wy1; y<wy8; y++) {
                     // iterating through regions
-
-                    int sx1 = (int) xform.worldXToScreen(x* scale);
-                    int sy1 = (int) xform.worldZToScreen((y) * scale);
-                    int sw = (int) xform.worldXToScreen((x+1)* scale) - sx1;
-                    int sh = (int) xform.worldZToScreen((y + 1) * scale) - sy1;
-                    g.drawImage(imageForRegion(x,y), sx1, sy1, sw, sh,null);
+                    drawRegionEventually(g, x, y);
                 }
             }
         }
 
     }
 
-    private Image imageForRegion(int rx, int ry)
+    int chunkWidthForRegion = 32;
+    int regionImageTileSize = chunkWidthForRegion*16;
+
+    private void drawRegionEventually(Graphics g, int x, int y)
+    {
+        Point key = new Point(x, y);
+        Image image1 = regionImageCache.get(key);
+        if (null== image1) {
+            backgroundDrawRegion(x,y);
+        } else {
+            drawRegionToScreen(g, x, y, image1);
+        }
+    }
+
+    private void drawRegionToScreen(Graphics g, int x, int y, Image image)
+    {
+        ScreenWorldTransform xform = getScreenWorldTransform();
+
+        int sx1 = (int) xform.worldXToScreen(x* regionImageTileSize);
+        int sy1 = (int) xform.worldZToScreen((y) * regionImageTileSize);
+        int sw = (int) xform.worldXToScreen((x+1)* regionImageTileSize) - sx1;
+        int sh = (int) xform.worldZToScreen((y + 1) * regionImageTileSize) - sy1;
+
+        g.drawImage(image, sx1, sy1, sw, sh,null);
+    }
+
+    private void backgroundDrawRegion(final int x, final int y)
+    {
+        executor.submit(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                final Image img = imageForRegion(x, y);
+                drawRegionToScreen_(img, x, y);
+            }
+        });
+    }
+
+    private void drawRegionToScreen_(final Image img, final int x, final int y)
+    {
+        Runnable runnable = new Runnable()
+        {
+            public void run()
+            {
+                drawRegionToScreen(getGraphics(), x,y, img);
+            }
+        };
+        SwingUtilities.invokeLater(runnable);
+    }
+
+    private synchronized Image imageForRegion(int rx, int ry)
     {
         Point key = new Point(rx,ry);
         Image image = regionImageCache.get(key);
         if (null==image) {
-            ColorModel cm = new DirectColorModel(24, 0xff0000, 0xff00, 0xff);
-            int[] pix = new int[32*32];
-
-            for (int z=0; z<32; z++) {
-                for (int x=0; x<32; x++) {
-                    pix[z*32 +x ] = colorFor(rx*32+x, ry*32+z).getRGB();
-                }
-            }
-            image = Toolkit.getDefaultToolkit().createImage(new MemoryImageSource(32, 32, cm, pix, 0, 32 ));
+            image = fabricateImage(rx, ry);
 
             regionImageCache.put(key, image);
         }
+        return image;
+    }
+
+    public Image fabricateImage(int rx, int ry)
+    {
+        Image image;ColorModel cm = new DirectColorModel(24, 0xff0000, 0xff00, 0xff);
+        int cwfr = chunkWidthForRegion;
+        int[] pix = new int[cwfr * cwfr];
+
+        for (int z=0; z< cwfr; z++) {
+            for (int x=0; x< cwfr; x++) {
+                pix[z* cwfr +x ] = colorFor(rx* cwfr +x, ry* cwfr +z).getRGB();
+            }
+        }
+        image = Toolkit.getDefaultToolkit().createImage(new MemoryImageSource(cwfr, cwfr, cm, pix, 0, cwfr));
         return image;
     }
 
