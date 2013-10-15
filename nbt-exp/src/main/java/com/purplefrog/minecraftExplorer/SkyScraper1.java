@@ -237,5 +237,10 @@ public class SkyScraper1
         {
             return blocks.length / (cellWidth-1);
         }
+
+        public BlockPlusData getBlock(int u, int v)
+        {
+            return blocks[u + v*(cellWidth-1)];
+        }
     }
 }
