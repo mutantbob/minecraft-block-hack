@@ -1,6 +1,7 @@
 package com.purplefrog.minecraftExplorer;
 
 import java.io.*;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -215,6 +216,47 @@ public abstract class BasicBlockEditor
                 }
             }
         }
+    }
+
+    public static String billOfMaterials(GeometryTree tree, WormWorld.Bounds b)
+    {
+        Map<String, int[]> bom = billOfMaterials_(tree, b);
+
+        StringBuilder rval = new StringBuilder();
+        for (Map.Entry<String, int[]> en : bom.entrySet()) {
+            rval.append(en.getKey()+"\tx"+en.getValue()[0]+"\n");
+        }
+        return rval.toString();
+    }
+
+    private static Map<String, int[]> billOfMaterials_(GeometryTree tree, WormWorld.Bounds b)
+    {
+        Map<String, int[]> bom = new TreeMap<String, int[]>();
+        for (int x=b.x0; x<b.x1; x++) {
+            for (int y=b.y0; y<b.y1; y++) {
+                for (int z=b.z0; z<b.z1; z++) {
+                    BlockPlusData bt = tree.pickFor(x, y, z);
+                    if (bt!=null) {
+                        String key = keyFor(bt);
+                        int[] bucket = bom.get(key);
+                        if (bucket==null) {
+                            bucket = new int[] {0};
+                            bom.put(key, bucket);
+                        }
+                        bucket[0] ++;
+                    }
+                }
+            }
+        }
+        return bom;
+    }
+
+    public static String keyFor(BlockPlusData bt)
+    {
+        if (bt.data==0)
+            return ""+bt.blockType;
+        else
+            return bt.blockType+"."+bt.data;
     }
 
     public interface GetLightingCube
