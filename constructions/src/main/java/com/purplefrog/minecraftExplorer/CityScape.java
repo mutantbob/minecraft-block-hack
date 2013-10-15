@@ -103,8 +103,8 @@ public class CityScape
 
         int nFloors = (rand.nextInt(250-y0-12)+12) / column.length;
 
-        SkyScraper1.WindowShape window1 = (SkyScraper1.WindowShape) windows[0];
-        SkyScraper1.WindowShape window2 = (SkyScraper1.WindowShape) windows[1];
+        WindowShape window1 = (WindowShape) windows[0];
+        WindowShape window2 = (WindowShape) windows[1];
 
         int uCells = (emptyLot.width - 2 - 1) / window1.cellWidth;
         int vCells = (emptyLot.height - 2 - 1) / window2.cellWidth;
@@ -126,7 +126,7 @@ public class CityScape
 
         void log(int x, int y, int z,
                  int uCells, int vCells, int nFloors,
-                 int[] column, SkyScraper1.WindowShape window1, SkyScraper1.WindowShape window2);
+                 int[] column, WindowShape window1, WindowShape window2);
 
     }
 
@@ -141,7 +141,7 @@ public class CityScape
         }
 
         @Override
-        public void log(int x, int y, int z, int uCells, int vCells, int nFloors, int[] column, SkyScraper1.WindowShape window1, SkyScraper1.WindowShape window2)
+        public void log(int x, int y, int z, int uCells, int vCells, int nFloors, int[] column, WindowShape window1, WindowShape window2)
         {
             String msg = "buildingPretender("+x+","+y+","+z+", "
                 +uCells+","+vCells+","+nFloors+", "+column.length+","+window1.cellWidth+","+window2.cellWidth+")\n";

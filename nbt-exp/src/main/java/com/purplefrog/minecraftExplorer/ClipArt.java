@@ -11,12 +11,12 @@ import java.util.*;
  */
 public class ClipArt
 {
-    public static SkyScraper1.WindowShape glassPlusFloor(int glassU, int glassV, BlockPlusData floor)
+    public static WindowShape glassPlusFloor(int glassU, int glassV, BlockPlusData floor)
     {
         return somethingPlusFloor(glassU, glassV, floor, new BlockPlusData(102));
     }
 
-    private static SkyScraper1.WindowShape somethingPlusFloor(int glassU, int glassV, BlockPlusData floor, BlockPlusData something)
+    private static WindowShape somethingPlusFloor(int glassU, int glassV, BlockPlusData floor, BlockPlusData something)
     {
         BlockPlusData[] blocks = new BlockPlusData[glassU * (glassV + 1)];
         for (int u=0; u<glassU; u++) {
@@ -24,7 +24,7 @@ public class ClipArt
                 blocks[u+v*glassU] = v==0 ? floor : something;
             }
         }
-        return new SkyScraper1.WindowShape(glassU+1, blocks);
+        return new WindowShape(glassU+1, blocks);
     }
 
     public static Object[] randomBuildingDecor(Random rand)
@@ -40,8 +40,8 @@ public class ClipArt
     public static Object[] getDecor(int w1, int w2, int floorHeight, int decor)
     {
         int headRoom = floorHeight-1;
-        SkyScraper1.WindowShape window1;
-        SkyScraper1.WindowShape window2;
+        WindowShape window1;
+        WindowShape window2;
         int[] column;
         switch (decor) {
             case 0:

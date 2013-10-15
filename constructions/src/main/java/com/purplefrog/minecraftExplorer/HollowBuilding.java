@@ -112,7 +112,7 @@ public class HollowBuilding
 
     public static class Materials
     {
-        SkyScraper1.WindowShape  windows  = (SkyScraper1.WindowShape) ClipArt.getDecor(1,1,4,0)[0];
+        WindowShape windows  = (WindowShape) ClipArt.getDecor(1,1,4,0)[0];
 
         BlockPlusData columns() {
             return new BlockPlusData(1);
