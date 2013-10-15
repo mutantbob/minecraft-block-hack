@@ -184,9 +184,9 @@ public class StairRoof
         return new BlockPlusData(136, detail);
     }
 
-    public WormWorld.Bounds getBounds(int cx, int y0, int cz)
+    public Bounds3Di getBounds(int cx, int y0, int cz)
     {
-        return new WormWorld.Bounds(cx-rx, y0, cz-rz, cx+rx+1, y0+ blockHeight() +1, cz+rz+1);
+        return new Bounds3Di(cx-rx, y0, cz-rz, cx+rx+1, y0+ blockHeight() +1, cz+rz+1);
     }
 
     private int blockHeight()

@@ -31,7 +31,7 @@ public class MoriaColumns
     {
         BasicBlockEditor editor = new AnvilBlockEditor(new MinecraftWorld(WorldPicker.pickSaveDir()));
 
-        WormWorld.Bounds bounds = new WormWorld.Bounds(1, 85, 1, 75, 110, 90);
+        Bounds3Di bounds = new Bounds3Di(1, 85, 1, 75, 110, 90);
 
         editor.fillCube(0, bounds);
 
@@ -41,7 +41,7 @@ public class MoriaColumns
         editor.save();
     }
 
-    public void render(BasicBlockEditor editor, WormWorld.Bounds bounds)
+    public void render(BasicBlockEditor editor, Bounds3Di bounds)
         throws IOException
     {
 

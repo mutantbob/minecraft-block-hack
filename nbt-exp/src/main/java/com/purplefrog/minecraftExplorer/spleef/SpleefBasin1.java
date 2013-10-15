@@ -84,9 +84,9 @@ public class SpleefBasin1
         editor.save();
     }
 
-    public WormWorld.Bounds getBounds()
+    public Bounds3Di getBounds()
     {
-        return new WormWorld.Bounds(cx- outerRadius, y0, cz- outerRadius,
+        return new Bounds3Di(cx- outerRadius, y0, cz- outerRadius,
             cx+ outerRadius +1, y0+3, cz+ outerRadius +1);
     }
 }

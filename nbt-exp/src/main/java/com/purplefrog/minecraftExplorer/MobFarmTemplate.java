@@ -14,11 +14,11 @@ public class MobFarmTemplate
 {
 
     private final int cx2,cz2;
-    public WormWorld.Bounds b;
+    public Bounds3Di b;
     private BlockPlusData wall = new BlockPlusData(1);
     private BlockPlusData air = new BlockPlusData(0);
 
-    public MobFarmTemplate(WormWorld.Bounds b)
+    public MobFarmTemplate(Bounds3Di b)
     {
         this.b = b;
 
@@ -88,7 +88,7 @@ public class MobFarmTemplate
         int z0 = 100;
 
         int w = 30;
-        WormWorld.Bounds b = new WormWorld.Bounds(x0, y0, z0, x0+w, y1, z0+w);
+        Bounds3Di b = new Bounds3Di(x0, y0, z0, x0+w, y1, z0+w);
 
         editor.apply(new MobFarmTemplate(b), b);
 

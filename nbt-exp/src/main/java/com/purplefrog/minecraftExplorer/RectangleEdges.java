@@ -11,9 +11,9 @@ import java.io.*;
  */
 public class RectangleEdges
 {
-    private final WormWorld.Bounds bounds;
+    private final Bounds3Di bounds;
 
-    public RectangleEdges(WormWorld.Bounds b)
+    public RectangleEdges(Bounds3Di b)
     {
         bounds = b;
     }

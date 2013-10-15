@@ -122,11 +122,11 @@ public class MobFarm2Template
 
     }
 
-    public WormWorld.Bounds getBounds()
+    public Bounds3Di getBounds()
     {
         int dx = 13;
         int dz=11;
-        return new WormWorld.Bounds(cx-dx, y0, cz-dz,
+        return new Bounds3Di(cx-dx, y0, cz-dz,
             cx+dx+1, y0+nFloors*4+1 +1, cz+dz);
     }
 

@@ -138,7 +138,7 @@ public class Valleyscape2
         int y0 = 100;
         int z0 = 5;
 
-        WormWorld.Bounds bounds = new WormWorld.Bounds(x0, y0, z0, x0+vs.width, y0+vs.maxElevation+1, z0+vs.length);
+        Bounds3Di bounds = new Bounds3Di(x0, y0, z0, x0+vs.width, y0+vs.maxElevation+1, z0+vs.length);
         GeometryTree ground = new SuperSphere.DoomChipCookie();
         GeometryTree sky = new GeometryTree.Solid(0);
         editor.apply(vs.new GT(x0, y0, z0, ground, sky), bounds);

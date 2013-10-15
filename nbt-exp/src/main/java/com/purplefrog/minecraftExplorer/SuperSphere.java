@@ -29,7 +29,7 @@ public class SuperSphere
         tree = doomLatticeGlow(c);
 //        tree = cylinderLayers(c);
 
-        editor.apply(tree, new WormWorld.Bounds(cx-126, cy-126, cz-126, cx+126, cy+126, cz+126));
+        editor.apply(tree, new Bounds3Di(cx-126, cy-126, cz-126, cx+126, cy+126, cz+126));
 
         editor.relight();
         editor.save();

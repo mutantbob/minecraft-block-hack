@@ -37,9 +37,9 @@ public class JapaneseRoof
         this.secondaryRZ = secondaryRZ;
     }
 
-    public WormWorld.Bounds getBounds(int cx, int y0, int cz)
+    public Bounds3Di getBounds(int cx, int y0, int cz)
     {
-        return new WormWorld.Bounds(cx-rx, y0, cz-rz,
+        return new Bounds3Di(cx-rx, y0, cz-rz,
             cx+rx+1, y0+blockHeight(), cz+rz+1);
     }
 

@@ -48,7 +48,7 @@ public class Valleyscape1
         int y0 = 100;
         int z0 = 5;
 
-        WormWorld.Bounds bounds = new WormWorld.Bounds(x0, y0, z0, x0+vs.width, y0+vs.terrainMax+1, z0+vs.length);
+        Bounds3Di bounds = new Bounds3Di(x0, y0, z0, x0+vs.width, y0+vs.terrainMax+1, z0+vs.length);
 
         GeometryTree.Solid sky = new GeometryTree.Solid(0);
         GeometryTree.Solid ground = new GeometryTree.Solid(2);

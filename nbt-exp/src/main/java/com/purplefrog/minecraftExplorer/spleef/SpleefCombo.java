@@ -42,10 +42,10 @@ public class SpleefCombo
     public static void cliche(BasicBlockEditor editor, int cx, int y0, int cz)
         throws IOException
     {
-        WormWorld.Bounds bounds;
+        Bounds3Di bounds;
         {
             int r1 = 15;
-            bounds = new WormWorld.Bounds(cx- r1, y0, cz- r1,
+            bounds = new Bounds3Di(cx- r1, y0, cz- r1,
                 cx+ r1 +1, y0+40, cz+ r1 +1);
         }
         SpleefBasin1 basin = new SpleefBasin1(cx, y0, cz, 15, 12);

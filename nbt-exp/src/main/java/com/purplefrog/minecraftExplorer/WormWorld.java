@@ -17,11 +17,11 @@ public class WormWorld
     protected double dx, dy, dz;
     protected double radius, dr;
 
-    public final Bounds bounds;
+    public final Bounds3Di bounds;
     public int blockType = 3;
     protected final Random rand;
 
-    public WormWorld(Bounds b, Random rand_)
+    public WormWorld(Bounds3Di b, Random rand_)
     {
         bounds = b;
 
@@ -44,7 +44,7 @@ public class WormWorld
     {
         BasicBlockEditor editor = new AnvilBlockEditor(new MinecraftWorld(WorldPicker.pickSaveDir()));
 
-        Bounds b = new Bounds(90,81,150,180,200,250);
+        Bounds3Di b = new Bounds3Di(90,81,150,180,200,250);
 
         editor.fillCube(0, b.x0, b.y0, b.z0, b.xSize(), b.ySize(), b.zSize());
 
@@ -133,56 +133,4 @@ public class WormWorld
         return (int) Math.ceil(x);
     }
 
-    public static class Bounds
-    {
-        public int x0, y0, z0;
-        public int x1, y1, z1;
-
-        public Bounds(int x0, int y0, int z0, int x1, int y1, int z1)
-        {
-            this.x0 = x0;
-            this.y0 = y0;
-            this.z0 = z0;
-            this.x1 = x1;
-            this.y1 = y1;
-            this.z1 = z1;
-        }
-
-        public Bounds(Point3Di p0, Point3Di p1)
-        {
-            x0 = p0.x;
-            y0 = p0.y;
-            z0 = p0.z;
-            x1 = p1.x;
-            y1 = p1.y;
-            z1 = p1.z;
-        }
-
-        public int xSize()
-        {
-            return x1-x0;
-        }
-
-        public int ySize()
-        {
-            return y1-y0;
-        }
-
-        public int zSize()
-        {
-            return z1-z0;
-        }
-
-        public boolean contains(int x, int y, int z)
-        {
-            return x>=x0 && x<x1
-                && y>=y0 && y<y1
-                && z>=z0 && z<z1;
-        }
-
-        public Bounds outset(int dx, int dy, int dz)
-        {
-            return new Bounds(x0-dx, y0-dy, z0-dz, x1+dx, y1+dy, z1+dz);
-        }
-    }
 }

@@ -57,7 +57,7 @@ public class JapaneseCastle1
             air);
 
 
-        WormWorld.Bounds bounds = new WormWorld.Bounds(x0, y0, z0, x9, y9, z9);
+        Bounds3Di bounds = new Bounds3Di(x0, y0, z0, x9, y9, z9);
         editor.apply(castle, bounds);
 
         String report = BasicBlockEditor.billOfMaterials(castle, bounds);
@@ -251,7 +251,7 @@ public class JapaneseCastle1
             throws IOException
         {
             JapaneseRoof roof = new JapaneseRoof(rx, rz, rx2, rz2, true, false, 7, 5);
-            WormWorld.Bounds bounds = roof.getBounds(cx, y0, cz).outset(1, 0, 1);
+            Bounds3Di bounds = roof.getBounds(cx, y0, cz).outset(1, 0, 1);
             bounds.y1 = 200;
             editor.apply(roof.new GT(cx, y0, cz), bounds);
         }
@@ -260,7 +260,7 @@ public class JapaneseCastle1
             throws IOException
         {
             StairRoof roof = new StairRoof(rx, rz, gableX, gableZ);
-            WormWorld.Bounds bounds = roof.getBounds(cx, y0, cz).outset(1, 0, 1);
+            Bounds3Di bounds = roof.getBounds(cx, y0, cz).outset(1, 0, 1);
             bounds.y1 = 200;
             editor.apply(roof.new GT(cx, y0, cz), bounds);
         }

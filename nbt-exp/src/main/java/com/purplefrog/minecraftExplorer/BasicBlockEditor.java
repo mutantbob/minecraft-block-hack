@@ -43,7 +43,7 @@ public abstract class BasicBlockEditor
         }
     }
 
-    public void fillCube(int blockType, WormWorld.Bounds b)
+    public void fillCube(int blockType, Bounds3Di b)
         throws IOException
     {
         fillCube(blockType, b.x0, b.y0, b.z0, b.x1, b.y1, b.z1);
@@ -204,7 +204,7 @@ public abstract class BasicBlockEditor
 
     }
 
-    public void apply(GeometryTree tree, WormWorld.Bounds b)
+    public void apply(GeometryTree tree, Bounds3Di b)
         throws IOException
     {
         for (int x=b.x0; x<b.x1; x++) {
@@ -218,7 +218,7 @@ public abstract class BasicBlockEditor
         }
     }
 
-    public static String billOfMaterials(GeometryTree tree, WormWorld.Bounds b)
+    public static String billOfMaterials(GeometryTree tree, Bounds3Di b)
     {
         Map<String, int[]> bom = billOfMaterials_(tree, b);
 
@@ -229,7 +229,7 @@ public abstract class BasicBlockEditor
         return rval.toString();
     }
 
-    private static Map<String, int[]> billOfMaterials_(GeometryTree tree, WormWorld.Bounds b)
+    private static Map<String, int[]> billOfMaterials_(GeometryTree tree, Bounds3Di b)
     {
         Map<String, int[]> bom = new TreeMap<String, int[]>();
         for (int x=b.x0; x<b.x1; x++) {
