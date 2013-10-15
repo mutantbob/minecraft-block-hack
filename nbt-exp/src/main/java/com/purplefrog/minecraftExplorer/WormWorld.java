@@ -148,6 +148,16 @@ public class WormWorld
             this.z1 = z1;
         }
 
+        public Bounds(Point3Di p0, Point3Di p1)
+        {
+            x0 = p0.x;
+            y0 = p0.y;
+            z0 = p0.z;
+            x1 = p1.x;
+            y1 = p1.y;
+            z1 = p1.z;
+        }
+
         public int xSize()
         {
             return x1-x0;
