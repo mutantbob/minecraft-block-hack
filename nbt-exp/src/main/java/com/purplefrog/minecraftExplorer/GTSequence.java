@@ -1,7 +1,5 @@
 package com.purplefrog.minecraftExplorer;
 
-import com.purplefrog.minecraftExplorer.spleef.*;
-
 import java.util.*;
 
 /**
