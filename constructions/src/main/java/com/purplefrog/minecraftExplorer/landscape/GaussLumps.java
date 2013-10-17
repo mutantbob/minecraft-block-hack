@@ -194,7 +194,7 @@ public class GaussLumps
         return toIcon(ip);
     }
 
-    private static ImageIcon toIcon(ImageProducer ip)
+    public static ImageIcon toIcon(ImageProducer ip)
     {
         Image img = Toolkit.getDefaultToolkit().createImage(ip);
         return new ImageIcon(img);
@@ -268,7 +268,7 @@ public class GaussLumps
     {
         double blargh(double x, double y);
     }
-    
+
     public static class GaussHM
         implements HeightMap
     {
