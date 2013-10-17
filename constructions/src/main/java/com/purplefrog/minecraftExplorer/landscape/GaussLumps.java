@@ -22,120 +22,72 @@ public class GaussLumps
     public static final double GAUSS_DENOM = Math.sqrt(2 * Math.PI);
 
     public static final BlockPlusData AIR = new BlockPlusData(0);
-    public static final BlockPlusData TNT = new BlockPlusData(18);
+    public static final BlockPlusData SEA = new BlockPlusData(0);
+    public static final BlockPlusData LEAVES = new BlockPlusData(18);
     public static final BlockPlusData STONE = new BlockPlusData(1);
     public static final BlockPlusData GRASS = new BlockPlusData(2);
 
-    private final double[] heightmap;
-    protected final int vScale;
-    protected final double minSigma;
+    public final Bounds3Di bounds;
+    public final int vScale;
+    public double vScale2;
 
     public double threshold;
-    public int cellSize;
-    Bounds3Di b;
+    public double threshold2;
 
-    Map<Point, HeightMap> elements = new HashMap<Point, HeightMap>();
-    protected final int clusterDiameter;
-    protected final Random rand = new Random();
-    protected double sigmaSpan;
+    protected final QuantizedDCG topSurface;
+    protected final QuantizedDCG bottomSurface;
 
-    public GaussLumps(Bounds3Di bounds, int cellSize, int vScale, double minSigma, int maxSigma, int clusterDiameter, double threshold1)
+    public GaussLumps(Bounds3Di bounds, int cellSize, int vScale, double minSigma, double maxSigma, int clusterDiameter, double threshold1, double threshold2)
     {
-        this.cellSize = cellSize;
+        topSurface = new QuantizedDCG(clusterDiameter, minSigma, maxSigma, bounds, cellSize);
+        bottomSurface = new QuantizedDCG(clusterDiameter, minSigma, maxSigma, bounds, cellSize/2);
+        bottomSurface.addRandomNoise(0.5);
         this.vScale = vScale;
-        this.minSigma = minSigma;
-        this.clusterDiameter = clusterDiameter;
-        sigmaSpan = maxSigma - minSigma;
+        this.vScale2 = vScale/2;
         threshold = threshold1;
+        this.threshold2 = threshold2;
 
-        b = bounds;
-
-        this.heightmap = fabricateHeightMap();
+        this.bounds = bounds;
     }
 
     public GaussLumps(Bounds3Di b)
     {
-        this(b, 16, 5, 0.3, 1, 4, 1.5);
-    }
-
-    private double[] fabricateHeightMap()
-    {
-        int dx = b.xSize();
-        int dy = b.ySize();
-        int dz = b.zSize();
-        double[] heightmap = new double[dx*dz];
-
-        for (int x=b.x0; x<b.x1; x++) {
-            for (int z=b.z0; z<b.z1; z++) {
-                heightmap[x-b.x0 + dx*(z-b.z0)] = height(x,z);
-            }
-        }
-        System.out.println("height map");
-        return heightmap;
-    }
-
-    private double height(int x, int z)
-    {
-        int r = 3;
-        int uc = (int) Math.floor(x / (double)cellSize);
-        int vc = (int) Math.floor(z / (double)cellSize);
-
-        double x1 = x / (double) cellSize;
-        double z1 = z / (double) cellSize;
-
-        double rval =0;
-        for (int u= uc - r; u<= uc+r; u++) {
-            for (int v=vc-r; v<= vc+r; v++) {
-                HeightMap hm = getElement(u,v);
-                rval += hm.blargh(x1, z1);
-            }
-        }
-        return rval;
-    }
-
-    private HeightMap getElement(int u, int v)
-    {
-        Point key = new Point(u, v);
-        HeightMap rval = elements.get(key);
-        if (rval==null) {
-            double cx = u + clusterDiameter * (rand.nextDouble() - 0.5);
-            double cz = v + clusterDiameter * (rand.nextDouble() - 0.5);
-            double sigma = rand.nextDouble() * sigmaSpan + minSigma;
-            rval = new SingleGaussMap(cx, cz, sigma);
-            elements.put(key, rval);
-        }
-        return rval;
+        this(b, 16, 5, 0.3, 1, 4, 1.5, 1.8);
     }
 
     @Override
     public BlockPlusData pickFor(int x, int y, int z)
     {
-        int u = x-b.x0;
-        int v = z-b.z0;
-        if (u<0 || x>=b.x1)
-            return null;
-        if (z<0 || z>=b.z1)
+        if (!topSurface.b.contains(x, y, z))
             return null;
 
-        int y1 = y-b.y0;
-        if (y1<0)
-            return null;
+        int y1 = y- topSurface.b.y0;
 
-        int dx = b.xSize();
-        double h = heightmap[u + v * dx];
+        double h = topSurface.heightAt(x, z);
         double y2 = h * vScale;
         if (y1>=y2)
             return AIR;
         if (h<threshold)
-            return TNT;
-        if (y1<(threshold+0.3)*vScale)
+            return SEA;
+
+        double h2 = bottomSurface.heightAt(x,z);
+        double y3 = threshold*vScale - Math.max(0, h2-1)*vScale2;
+
+        if (y1<y3) {
+            if (x%4==0 && z%4==0)
+                return LEAVES;
+            else
+                return AIR;
+        }
+
+        if (y1< threshold2 *vScale)
             return STONE;
         return GRASS;
     }
 
     private Bounds3Di bounds()
     {
-        return b;
+        return bounds;
     }
 
 
@@ -147,12 +99,43 @@ public class GaussLumps
             File w = WorldPicker.menger5();
             BasicBlockEditor editor = new AnvilBlockEditor(new MinecraftWorld(w));
 
-            final Point3Di p1 = new Point3Di(225, 80, 400);
+            int x1 = 225;
+            int y0 = 80;
+            int z1 = 400;
             int cellSize = 16;
             int vScale = 5;
-            final Point3Di point3Di = new Point3Di(p1.x + cellSize * 15, p1.y + vScale * 5, p1.z + cellSize * 40);
-            GaussLumps lumps = new GaussLumps(new Bounds3Di(p1, point3Di));
-            editor.apply(lumps, lumps.bounds());
+            int dy = vScale*5;
+
+            int x2 = x1 + cellSize * 15;
+            int z2 = z1 + cellSize * 40;
+
+            int y1 = y0 + dy;
+            int y2 = y1+dy;
+            int y3 = y2+dy;
+
+            {
+                final Point3Di p1 = new Point3Di(x1, y0, z1);
+                final Point3Di p2 = new Point3Di(x2, y1, z2);
+
+                GaussLumps lumps = new GaussLumps(new Bounds3Di(p1, p2));
+                editor.apply(lumps, lumps.bounds());
+            }
+
+            {
+                Point3Di p1 = new Point3Di(x1, y1, z1);
+                Point3Di p2 = new Point3Di(x2, y2, z2);
+                GaussLumps lumps = new GaussLumps(new Bounds3Di(p1, p2), 16, 5, 0.3, 0.9, 4, 1.8, 2.0);
+                editor.apply(lumps, lumps.bounds());
+            }
+
+            {
+                Point3Di p1 = new Point3Di(x1, y2, z1);
+                Point3Di p2 = new Point3Di(x2, y3, z2);
+                GaussLumps lumps = new GaussLumps(new Bounds3Di(p1, p2), 8, 5, 0.3, 0.9, 4, 2.0, 2.2);
+                editor.apply(lumps, lumps.bounds());
+            }
+
+
             editor.relight();
             editor.save();
         }
@@ -285,6 +268,7 @@ public class GaussLumps
     {
         double blargh(double x, double y);
     }
+    
     public static class GaussHM
         implements HeightMap
     {
@@ -372,24 +356,4 @@ public class GaussLumps
         }
     }
 
-    private class SingleGaussMap
-        implements HeightMap
-    {
-        double cx;
-        double cy;
-        double sigma;
-
-        public SingleGaussMap(double cx, double cy, double sigma)
-        {
-            this.cx = cx;
-            this.cy = cy;
-            this.sigma = sigma;
-        }
-
-        @Override
-        public double blargh(double x, double y)
-        {
-            return gauss(L22(x-cx, y-cy), sigma);
-        }
-    }
 }
