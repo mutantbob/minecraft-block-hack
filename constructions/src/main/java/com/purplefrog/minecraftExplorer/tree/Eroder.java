@@ -19,9 +19,18 @@ public class Eroder
 {
     public static void main(String[] argv)
     {
-        JPanel p = new JPanel(new BorderLayout());
         int sz = 60;
-        Random rand = new Random(4264);
+        for (int i=0; i<10; i++) {
+            int seed = 4262 + i;
+            Random rand = new Random(seed);
+            popUpFrame(sz, rand, "eroder "+seed);
+        }
+    }
+
+    private static void popUpFrame(int sz, Random rand, String title)
+    {
+        JPanel p = new JPanel(new BorderLayout());
+
         Matrix m = generateSample1(sz, rand);
 
         if (true) {
@@ -48,7 +57,7 @@ public class Eroder
             p.add(imageWidget);
         }
 
-        JFrame fr = new JFrame("eroder");
+        JFrame fr = new JFrame(title);
 
         fr.getContentPane().add(p);
 
@@ -152,9 +161,10 @@ public class Eroder
                     m.get(x + 1, y + 1, 0) > 0)
                     ;
 
-                if (shouldErode(code) && 0 != (code&polarity)
-                    && rand.nextInt(5) > 0) {
-                    rval.set(x,y,0);
+                if (shouldErode(code) && 0 != (code & polarity)) {
+                    if (rand.nextInt(5) > 0) {
+                        rval.set(x,y,0);
+                    }
                     dirty[0] = true;
                 }
 
@@ -189,6 +199,9 @@ public class Eroder
             (code & 8) != 0,
 
         };
+
+        if ((code&0x2f) == 0x2f)
+            return false; // special case?
 
         int changes=0;
         int count=0;
