@@ -38,4 +38,10 @@ public interface GeometryTree
             return blockType;
         }
     }
+
+    public interface WithBounds
+        extends GeometryTree
+    {
+        Bounds3Di getBounds();
+    }
 }

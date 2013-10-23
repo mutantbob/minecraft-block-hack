@@ -35,4 +35,30 @@ public class GTSequence
 
         return null;
     }
+
+    public static class WithBounds
+        extends GTSequence
+        implements GeometryTree.WithBounds
+    {
+
+        public Bounds3Di bounds;
+
+        public WithBounds(Bounds3Di bounds, GeometryTree... trees)
+        {
+            super(trees);
+            this.bounds = bounds;
+        }
+
+        public WithBounds(Bounds3Di bounds, List<GeometryTree> trees)
+        {
+            super(trees);
+            this.bounds = bounds;
+        }
+
+        @Override
+        public Bounds3Di getBounds()
+        {
+            return bounds;
+        }
+    }
 }
