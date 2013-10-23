@@ -1,5 +1,7 @@
 package com.purplefrog.minecraftExplorer.landscape;
 
+import com.purplefrog.minecraftExplorer.*;
+
 import java.awt.*;
 import java.util.*;
 
@@ -56,7 +58,7 @@ public class DistortedCellularGauss
         @Override
         public double blargh(double x, double y)
         {
-            return GaussLumps.gauss(GaussLumps.L22(x - cx, y - cy), sigma);
+            return GaussLumps.gauss(Math2.L22(x - cx, y - cy), sigma);
         }
     }
 }

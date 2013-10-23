@@ -37,7 +37,7 @@ public class CompoundLimb
         this.a9 = a9;
         this.inflation = inflation;
 
-        double axisL = L2(axis);
+        double axisL = Math2.L2(axis.x, axis.y, axis.z);
 
         giraffe = 0.6;
 
@@ -67,11 +67,6 @@ public class CompoundLimb
     public double mix(double zero, double one, double t)
     {
         return ((1- t)*zero+ t *one);
-    }
-
-    public static double L2(Point3D v)
-    {
-        return Math.sqrt(GTEllipse.l2(v.x, v.y, v.z));
     }
 
     public static Point3D scaledSum(Point3D A, double aF, Point3D B, double bF)

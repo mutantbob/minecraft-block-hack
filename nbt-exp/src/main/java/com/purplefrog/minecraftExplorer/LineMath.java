@@ -18,7 +18,7 @@ public class LineMath
 
     public LineMath(Point3D origin, Point3D axis)
     {
-        axisL22 = GTEllipse.l2(axis.x, axis.y, axis.z);
+        axisL22 = Math2.L22(axis.x, axis.y, axis.z);
         axisL2 = Math.sqrt(axisL22);
         this.origin = origin;
         this.axis = axis;
@@ -26,7 +26,7 @@ public class LineMath
 
     public static double l2(double x, double y, double z)
     {
-        return GTEllipse.l2(x,y,z);
+        return Math2.L22(x, y, z);
     }
 
     public Squares getSquares(double x, double y, double z)

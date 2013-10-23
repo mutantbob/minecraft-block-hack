@@ -26,12 +26,7 @@ public class GaussNode
     @Override
     public double eval(double x, double y, double z)
     {
-        return GaussLumps.gauss(L22(x-x0, y-y0, z-z0), sigma);
+        return GaussLumps.gauss(Math2.L22(x - x0, y - y0, z - z0), sigma);
     }
 
-    private double L22(double x, double y, double z)
-    {
-
-        return x*x + y*y + z*z;
-    }
 }

@@ -57,7 +57,7 @@ public class GTEllipse
     @Override
     public BlockPlusData pickFor(int x, int y, int z)
     {
-        double d2 = l2(x-this.x, y-this.y, z-this.z);
+        double d2 = Math2.L22(x - this.x, y - this.y, z - this.z);
 
 
         GeometryTree delegate;
@@ -69,8 +69,4 @@ public class GTEllipse
         return delegate==null ? null : delegate .pickFor(x, y, z);
     }
 
-    public static double l2(double dx, double dy, double dz)
-    {
-        return dx*dx + dy*dy + dz*dz;
-    }
 }

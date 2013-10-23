@@ -78,7 +78,7 @@ public class WormWorld
         for (int a = Math.max(bounds.x0, floor(x - radius)); a<=ceil(x+radius) && a < bounds.x1; a++) {
             for (int b= Math.max(bounds.y0, floor(y - radius)); b<=ceil(y+radius) && b < bounds.y1; b++) {
                 for (int c= Math.max(bounds.z0, floor(z-radius)); c<=ceil(z+radius) && c < bounds.z1; c++) {
-                    if (radius*radius >= l2(a-x, b-y, c-z)) {
+                    if (radius*radius >= Math2.L22(a - x, b - y, c - z)) {
                         editor.setBlock(a,b,c, blockType);
                     }
                 }
@@ -116,11 +116,6 @@ public class WormWorld
             x = max;
         }
         return x;
-    }
-
-    public static double l2(double x, double y, double z)
-    {
-        return x*x+y*y+z*z;
     }
 
     public static int floor(double x)

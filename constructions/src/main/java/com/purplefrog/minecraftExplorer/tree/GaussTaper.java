@@ -57,14 +57,9 @@ public class GaussTaper
     public double eval(double x, double y, double z)
     {
         double r = radiusFor(y);
-        double q = L22(x - x0, z - z0);
+        double q = Math2.L22(x - x0, z - z0);
         double pre = GaussLumps.gauss(q / (r * r), sigma);
         return inflation * pre;
-    }
-
-    private double L22(double x, double y)
-    {
-        return x*x + y*y;
     }
 
     public static double PI = Math.PI;

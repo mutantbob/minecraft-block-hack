@@ -254,20 +254,10 @@ public class GaussLumps
     }
 
 
-    public static double L2(double dx, double dy)
-    {
-        return Math.sqrt(L22(dx, dy));
-    }
-
-    public static double L22(double dx, double dy)
-    {
-        return dx * dx + dy * dy;
-    }
-
     public static double blargh(double x, double y)
     {
-        return ( gauss(L22(x, y), 0.3)
-            + gauss(L22(x - 0.7, y + 0.8), 0.2))
+        return ( gauss(Math2.L22(x, y), 0.3)
+            + gauss(Math2.L22(x - 0.7, y + 0.8), 0.2))
             /2.0;
     }
 
@@ -320,7 +310,7 @@ public class GaussLumps
                 double cy = centers[i+1];
                 double sigma = centers[i+2];
 
-                double d= L22(x-cx,y-cy);
+                double d= Math2.L22(x - cx, y - cy);
                 sum += gauss(d, sigma);
             }
             return sum;
@@ -361,7 +351,7 @@ public class GaussLumps
                 double cy = centers[i+1];
                 double sigma = centers[i+2];
 
-                double d= L22(x-cx,y-cy);
+                double d= Math2.L22(x - cx, y - cy);
                 sum += gauss(d, sigma);
             }
             return sum;

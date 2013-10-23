@@ -48,7 +48,7 @@ public class Cylinder
         for (int i = 0; i < nodes_.length; i++) {
             double x1 =  this.radius * (rand.nextDouble()-0.5)*2;
             double z1 =  this.radius * (rand.nextDouble()-0.5)*2;
-            if (GaussLumps.L2(x1, z1) > this.radius) {
+            if (Math2.L2(x1, z1) > this.radius) {
                 i--;
                 continue;
             }
@@ -73,7 +73,7 @@ public class Cylinder
 
     private BlockPlusData pickFor(double x, double y, double z)
     {
-        double val = GaussLumps.L2(x - x0, z - z0) + nodes.eval(x, y, z);
+        double val = Math2.L2(x - x0, z - z0) + nodes.eval(x, y, z);
 
         if ( val < radius ) {
             return WOOD;

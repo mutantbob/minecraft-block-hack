@@ -115,7 +115,7 @@ public class Valleyscape2
 
     public static double l2(double x, double y, double z)
     {
-        return GTEllipse.l2(x,y,z);
+        return Math2.L22(x, y, z);
     }
 
 
