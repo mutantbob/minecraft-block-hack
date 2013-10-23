@@ -7,6 +7,7 @@ import java.awt.*;
 import java.awt.image.*;
 import java.io.*;
 import java.util.*;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -99,6 +100,16 @@ public class GaussLumps
             File w = WorldPicker.menger5();
             BasicBlockEditor editor = new AnvilBlockEditor(new MinecraftWorld(w));
 
+            WithBounds gt2 = cliche1(editor);
+            editor.apply(gt2, gt2.getBounds());
+
+            editor.relight();
+            editor.save();
+        }
+
+        public static WithBounds cliche1(BasicBlockEditor editor)
+            throws IOException
+        {
             int x1 = 225;
             int y0 = 80;
             int z1 = 400;
@@ -113,31 +124,32 @@ public class GaussLumps
             int y2 = y1+dy;
             int y3 = y2+dy;
 
+            List<GeometryTree> layers = new ArrayList<GeometryTree>();
+
             {
                 final Point3Di p1 = new Point3Di(x1, y0, z1);
                 final Point3Di p2 = new Point3Di(x2, y1, z2);
 
                 GaussLumps lumps = new GaussLumps(new Bounds3Di(p1, p2));
-                editor.apply(lumps, lumps.bounds());
+                layers.add(lumps);
             }
 
             {
                 Point3Di p1 = new Point3Di(x1, y1, z1);
                 Point3Di p2 = new Point3Di(x2, y2, z2);
                 GaussLumps lumps = new GaussLumps(new Bounds3Di(p1, p2), 16, 5, 0.3, 0.9, 4, 1.8, 2.0);
-                editor.apply(lumps, lumps.bounds());
+                editor.apply(lumps, lumps.bounds());                layers.add(lumps);
             }
 
             {
                 Point3Di p1 = new Point3Di(x1, y2, z1);
                 Point3Di p2 = new Point3Di(x2, y3, z2);
                 GaussLumps lumps = new GaussLumps(new Bounds3Di(p1, p2), 8, 5, 0.3, 0.9, 4, 2.0, 2.2);
-                editor.apply(lumps, lumps.bounds());
+                layers.add(lumps);
             }
 
 
-            editor.relight();
-            editor.save();
+            return new GTSequence.WithBounds(new Bounds3Di(x1, y0, z1, x2, y3, z2), layers);
         }
     }
 
