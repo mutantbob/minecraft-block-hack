@@ -101,7 +101,11 @@ public class AnvilBlockEditor
             Anvil anvil = new Anvil(en.getValue());
             for (Anvil.Section section : anvil.getSections()) {
 
-                section.getBlockLight().zero();
+                try {
+                    section.getBlockLight().zero();
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
+                }
 
                 section.getSkyLight().zero();
             }
