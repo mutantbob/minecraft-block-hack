@@ -58,4 +58,19 @@ public class Bounds3Di
     {
         return new Bounds3Di(x0-dx, y0-dy, z0-dz, x1+dx, y1+dy, z1+dz);
     }
+
+    public int volume()
+    {
+        return xSize() * ySize() * zSize();
+    }
+
+    public Bounds3Di max(Bounds3Di arg)
+    {
+        return new Bounds3Di(Math.min(x0, arg.x0),
+            Math.min(y0, arg.y0),
+            Math.min(z0, arg.z0),
+            Math.max(x1, arg.x1),
+            Math.max(y1, arg.y1),
+            Math.max(z1, arg.z1));
+    }
 }
