@@ -23,6 +23,15 @@ public class BlockPlusData
         this(blockType,0);
     }
 
+    public static BlockPlusData[] convert(int... blockTypes)
+    {
+        BlockPlusData[] rval = new BlockPlusData[blockTypes.length];
+        for (int i = 0; i < blockTypes.length; i++) {
+            rval[i] = new BlockPlusData(blockTypes[i]);
+        }
+        return rval;
+    }
+
     @Override
     public boolean equals(Object obj)
     {
