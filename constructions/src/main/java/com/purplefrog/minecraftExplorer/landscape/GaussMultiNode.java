@@ -27,7 +27,7 @@ public class GaussMultiNode
         this.nodes = concat(n1, n2, F3.class);
     }
 
-    public GaussMultiNode(List<F3> n1, F3... n2)
+    public GaussMultiNode(List<? extends F3> n1, F3... n2)
     {
         this.nodes = concat(n1, n2, F3.class);
     }
@@ -48,7 +48,7 @@ public class GaussMultiNode
         return (T[]) rval;
     }
 
-    public static <T> T[] concat(List<T> n1, T[] n2, Class<T> cls)
+    public static <T> T[] concat(List<? extends T> n1, T[] n2, Class<T> cls)
     {
         if (n1.size() ==0)
             return n2;
