@@ -68,10 +68,28 @@ public class GaussTaper
     {
         BasicBlockEditor editor = new AnvilBlockEditor(new MinecraftWorld(WorldPicker.menger5()));
 
-        GeometryTree.WithBounds gt2 = GaussLumps.GaussIslands.cliche1(editor);
+        Random rand = new Random();
 
-        editor.apply(gt2, gt2.getBounds());
+        if (false) {
+            GeometryTree.WithBounds gt2 = GaussLumps.GaussIslands.cliche1(editor);
+            editor.apply(gt2, gt2.getBounds());
 
+            GeometryTree.WithBounds tree2 = cliche1(rand);
+            GeometryTree gt3 = new GTSequence(tree2,gt2);
+            Bounds3Di b2 = gt2.getBounds();
+            editor.apply(gt3, tree2.getBounds().max(b2));
+
+        } else {
+            GeometryTree.WithBounds tree2 = cliche1(rand);
+            editor.apply(tree2, tree2.getBounds());
+        }
+        editor.save();
+        editor.relight();
+
+    }
+
+    public static GeometryTree.WithBounds cliche1(Random rand)
+    {
         int maxr = 70;
         int x0 = 225+5+maxr;
         int y1 = 80;
@@ -79,22 +97,69 @@ public class GaussTaper
         int z0 = 400+5+maxr;
         GaussTaper t1 = new GaussTaper(x0, y1, y2, z0, 10, 12, 2.2);
 
-        Random rand = new Random();
+        List<LimbWithBranches> limbs = fabLimbs(rand, maxr, x0, y1, y2, z0);
 
-        List<F3> limbs = new ArrayList<F3>();
+//        SimpleLimb limb = new SimpleLimb(new Point3D(x0, 120, z0), new Point3D(x0, 140, z0+50),
+//            8, 4, 0, 50, 10);
+        F3 combo = new GaussMultiNode(limbs, t1);
+        GeometryTree tree = new GT(combo, new GeometryTree.Solid(new BlockPlusData(17, 1)),
+            1, new GeometryTree.Solid(Clouds.SPARSE),
+            0.2, new GeometryTree.Solid(Cylinder.AIR)
+//            1, new GeometryTree.Solid(Cylinder.AIR),
+//            0.2, null
+        );
+
+        Bounds3Di bounds1 = t1.computeBounds(maxr);
+
+        return new GTSequence.WithBounds(bounds1, tree);
+    }
+
+    public static GeometryTree.WithBounds cliche2(Random rand)
+    {
+        int maxr = 70;
+        int x0 = 225+5+maxr;
+        int y1 = 80;
+        int y2 = 240;
+        int z0 = 400+5+maxr;
+        GaussTaper t1 = new GaussTaper(x0, y1, y2, z0, 10, 12, 2.2);
+
+        List<LimbWithBranches> limbs = fabLimbs(rand, maxr, x0, y1, y2, z0);
+
+//        SimpleLimb limb = new SimpleLimb(new Point3D(x0, 120, z0), new Point3D(x0, 140, z0+50),
+//            8, 4, 0, 50, 10);
+        F3 combo = new GaussMultiNode(limbs, t1);
+        GeometryTree tree = new GT(combo, new GeometryTree.Solid(new BlockPlusData(17, 1)),
+            0.2, null
+        );
+
+        List<F3> leaves_ = new ArrayList<F3>();
+        for (LimbWithBranches limb : limbs) {
+            leaves_.addAll(limb.lumpCloud(rand));
+        }
+        F3 leafCloud = new GaussMultiNode(leaves_);
+        GeometryTree leaves = new GT(leafCloud, new SuperSphere.DoomChipCookie(), 0.1, null);
+
+        Bounds3Di bounds1 = t1.computeBounds(maxr);
+
+        return new GTSequence.WithBounds(bounds1, tree, leaves);
+    }
+
+    private static List<LimbWithBranches> fabLimbs(Random rand, int maxr, int x0, int y1, int y2, int z0)
+    {
+        List<LimbWithBranches> limbs = new ArrayList<LimbWithBranches>();
 
         double theta = 0;
         for (int i=0; i<10; i++) {
-            double y5 = y1+i*15;
-            double y6 = BLI(0, i, 9, 10, 4);
+            double y5 = BLI(0, i, 10, y1, y2);
+            double y6 = BLI(0, i, 10-1, 10, 4);
             double a9 = BLI(y1, y5, y2, maxr, 10);
             double x6 = Math.cos(theta)* a9;
             double z6 = Math.sin(theta)* a9;
             Point3D origin = new Point3D(x0, y5, z0);
             double r1 = BLI(y1, y5, y2, 4 , 2);
             double r2 = BLI(y1, y5, y2, 2 , 0.5);
-            F3 limb =
-                new CompoundLimb
+            LimbWithBranches limb =
+                new LimbWithBranches
 //                    new SimpleLimb
                     (origin, new Point3D(x6,y6,z6), r1, r2, 0, a9, 10
                         , rand
@@ -106,7 +171,7 @@ public class GaussTaper
             double z7 = Math.sin(theta)*a9;
             limb =
 //                new SimpleLimb
-                new CompoundLimb
+                new LimbWithBranches
                 (origin, new Point3D(x7,y6,z7), r1, r2, 0, a9, 10
                     , rand
                 );
@@ -114,29 +179,7 @@ public class GaussTaper
 
             theta = theta + rand.nextDouble()*0.2 -0.1 + PI/2;
         }
-
-//        SimpleLimb limb = new SimpleLimb(new Point3D(x0, 120, z0), new Point3D(x0, 140, z0+50),
-//            8, 4, 0, 50, 10);
-        F3 combo = new GaussMultiNode(limbs, t1);
-        GeometryTree tree = new F3.GT(combo, new GeometryTree.Solid(new BlockPlusData(17, 2)),
-            1, new GeometryTree.Solid(Clouds.SPARSE),
-            0.2, new GeometryTree.Solid(Cylinder.AIR)
-//            1, new GeometryTree.Solid(Cylinder.AIR),
-//            0.2, null
-        );
-
-        Bounds3Di bounds1 = t1.computeBounds(maxr);
-        if (false) {
-            GeometryTree gt3 = new GTSequence(tree,gt2);
-            Bounds3Di b2 = gt2.getBounds();
-            editor.apply(gt3, bounds1.max(b2));
-        } else {
-            editor.apply(tree, bounds1);
-        }
-
-        editor.save();
-        editor.relight();
-
+        return limbs;
     }
 
     private static double BLI(int y1, double y, int y2, double q1, double q2)
