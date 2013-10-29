@@ -1,5 +1,6 @@
 package com.purplefrog.minecraftExplorer.landscape;
 
+import com.purplefrog.jwavefrontobj.*;
 import com.purplefrog.minecraftExplorer.*;
 
 /**
@@ -21,6 +22,11 @@ public class GaussNode
         this.y0 = y0;
         this.z0 = z0;
         this.sigma = sigma;
+    }
+
+    public GaussNode(Point3D center, double sigma)
+    {
+        this(center.x, center.y, center.z, sigma);
     }
 
     @Override
