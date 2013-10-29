@@ -38,6 +38,8 @@ public class GaussLumps
     protected final QuantizedDCG topSurface;
     protected final QuantizedDCG bottomSurface;
 
+    public GeometryTree overlayer = new Solid(AIR);
+
     public GaussLumps(Bounds3Di bounds, int cellSize, int vScale, double minSigma, double maxSigma, int clusterDiameter, double threshold1, double threshold2)
     {
         topSurface = new QuantizedDCG(clusterDiameter, minSigma, maxSigma, bounds, cellSize);
@@ -56,6 +58,11 @@ public class GaussLumps
         this(b, 16, 5, 0.3, 1, 4, 1.5, 1.8);
     }
 
+    public double yFor(int x,int z)
+    {
+        return topSurface.b.y0 + vScale * topSurface.heightAt(x,z);
+    }
+
     @Override
     public BlockPlusData pickFor(int x, int y, int z)
     {
@@ -67,7 +74,7 @@ public class GaussLumps
         double h = topSurface.heightAt(x, z);
         double y2 = h * vScale;
         if (y1>=y2)
-            return AIR;
+            return overlayer==null ? null : overlayer.pickFor(x,y,z);
         if (h<threshold)
             return SEA;
 
