@@ -56,6 +56,13 @@ public class LineMath
         return new LineMath(origin, axis);
     }
 
+    public Point3D interpolate(double v)
+    {
+        return new Point3D(origin.x + v*axis.x,
+            origin.y + v*axis.y,
+            origin.z + v*axis.z);
+    }
+
     /**
      * This stores the squares of the lengths of the sides of a right triangle formed by the origin, axis,
      * and some point of interest.
