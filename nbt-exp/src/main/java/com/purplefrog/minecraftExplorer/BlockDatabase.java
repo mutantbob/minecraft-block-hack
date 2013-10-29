@@ -24,6 +24,7 @@ public class BlockDatabase
             case 10: // lava
             case 11: // lava
             case 89: // glowstone ore
+            case 91: // jack-o-lantern
             case 124: // glowstone lamp
                 return 15;
             case 50: // torch
