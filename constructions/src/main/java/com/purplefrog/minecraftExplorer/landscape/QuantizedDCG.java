@@ -10,7 +10,7 @@ import com.purplefrog.minecraftExplorer.*;
  * To change this template use File | Settings | File Templates.
  */
 public class QuantizedDCG
-    extends DistortedCellularGauss
+    extends DistortedCellularGauss.D2
 {
     public int cellSize;
     Bounds3Di b;
