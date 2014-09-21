@@ -8,6 +8,7 @@ package com.purplefrog.minecraftExplorer;
  * To change this template use File | Settings | File Templates.
  */
 public class BlockPlusData
+    implements Comparable<BlockPlusData>
 {
     public final int blockType;
     public final int data;
@@ -49,5 +50,21 @@ public class BlockPlusData
     public int hashCode()
     {
         return blockType *71 + data;
+    }
+
+    @Override
+    public int compareTo(BlockPlusData arg)
+    {
+        if (blockType < arg.blockType)
+            return -1;
+        if (blockType > arg.blockType)
+            return 1;
+
+        if (data<arg.data)
+            return -1;
+        if (data > arg.data)
+            return 1;
+
+        return 0;
     }
 }
