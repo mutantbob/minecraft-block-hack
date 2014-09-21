@@ -345,57 +345,6 @@ public abstract class BlenderMeshElement
 
         }
 
-        private void stairs2(ExportWebGL.GLStore glStore)
-        {
-            List<XYZUV> points = new ArrayList<XYZUV>();
-
-            points.add(new XYZUV(0, 0, 0,     1,0));
-            points.add(new XYZUV(0, 0.5, 0,   1,0.5));
-            points.add(new XYZUV(0.5, 0.5, 0, 0.5,0.5));
-            points.add(new XYZUV(0.5, 1, 0,   0.5,1));
-            points.add(new XYZUV(1, 1, 0,     0,1));
-            points.add(new XYZUV(1, 0, 0,     0,0));
-            //0..5^^   vv6..11
-            points.add(new XYZUV(0, 0, 1,     0,0));
-            points.add(new XYZUV(0, 0.5, 1,   0,0.5));
-            points.add(new XYZUV(0.5, 0.5, 1, 0.5,0.5));
-            points.add(new XYZUV(0.5, 1, 1,   0.5,1));
-            points.add(new XYZUV(1, 1, 1,     1,1));
-            points.add(new XYZUV(1, 0, 1,     1,0));
-
-            // 12..15
-            points.add(new XYZUV(0,0,0, 0,0));
-            points.add(new XYZUV(0,0,1, 1,0));
-            points.add(new XYZUV(0,0.5,1, 1,0.5));
-            points.add(new XYZUV(0,0.5,0, 0,0.5));
-
-            points.add(new XYZUV(0.5,0.5,0, 0,0.5));
-            points.add(new XYZUV(0.5,0.5,1, 1,0.5));
-            points.add(new XYZUV(0.5,1,1, 1,1));
-            points.add(new XYZUV(0.5,1,0, 0,1));
-
-            points = rotated(points);
-
-            points = translated(points);
-
-
-            ExportWebGL.TextureForGL side = ExportWebGL.TextureForGL.from(new BlockPlusData(bt,99), BlockSide.SIDE);
-
-            int[] v = new int[points.size()];
-            for (int i = 0; i < v.length; i++) {
-                v[i] = glStore.getVertex(points.get(i));
-            }
-            // left
-            glStore.addFace(side, v[0], v[1], v[2], v[3]);
-            glStore.addFace(side, v[3], v[4], v[5], v[0]);
-            // right
-            glStore.addFace(side, v[6], v[11], v[8], v[7]);
-            glStore.addFace(side, v[11], v[10], v[9], v[8]);
-            // front
-            glStore.addFace(side, v[12], v[13], v[14], v[15]);
-            glStore.addFace(side, v[16], v[17], v[18], v[19]);
-        }
-
         double[][] rotX180 = {
             {1,0,0,0},
             {0,-1,0,1},
