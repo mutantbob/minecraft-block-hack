@@ -1,5 +1,7 @@
 package com.purplefrog.minecraftExplorer;
 
+import java.util.*;
+
 /**
  * Created with IntelliJ IDEA.
  * User: thoth
@@ -56,13 +58,28 @@ public abstract class BlenderMeshElement
             && arg.bt == bt
             && arg.blockData == blockData;
     }
+
+    public abstract void accumOpenGL(ExportWebGL.GLStore glStore);
+
 //
 
     public static class Pane
         extends BlenderMeshElement
     {
+        /**
+         * @see com.purplefrog.minecraftExplorer.BasicBlockEditor#paneOrientation(int, int, int)
+         */
         private final int orientation;
 
+        /**
+         *
+         * @param x
+         * @param y
+         * @param z
+         * @param bt
+         * @param blockData
+         * @param orientation  see {@link com.purplefrog.minecraftExplorer.BasicBlockEditor#paneOrientation(int, int, int)}
+         */
         public Pane(int x, int y, int z, int bt, int blockData, int orientation)
         {
             super(x, y, z, bt, blockData);
@@ -75,6 +92,39 @@ public abstract class BlenderMeshElement
         {
 
             return "minecraftPane("+locString()+", "+bt+","+blockData+", " +orientation+")";
+        }
+
+        @Override
+        public void accumOpenGL(ExportWebGL.GLStore glStore)
+        {
+            ExportWebGL.TextureForGL tex = ExportWebGL.TextureForGL.from(new BlockPlusData(bt, blockData), FaceSide.NORTH);
+
+            if (0 != (orientation&1) ) {
+                addHalfPane(glStore, tex, 0.5, 0.5, 0, 0.5);
+            }
+            if (0 != (orientation&2) ) {
+                addHalfPane(glStore, tex, 0.5, 0.5, 1, 0.5);
+            }
+            if (0 != (orientation&4) ) {
+                addHalfPane(glStore, tex, 1, 0.5, 0.5, 0.5);
+            }
+            if (0 != (orientation&8) ) {
+                addHalfPane(glStore, tex, 0, 0.5, 0.5, 0.5);
+            }
+        }
+
+        private void addHalfPane(ExportWebGL.GLStore glStore, ExportWebGL.TextureForGL tex, double dx1, double dx2, double dz1, double dz2)
+        {
+            glStore.addFace(tex,
+                glStore.getVertex(x+dx1, y, z+dz1, 0,0),
+                glStore.getVertex(x+dx2, y, z+dz2, 0.5,0),
+                glStore.getVertex(x+dx2, y+1, z+dz2, 0.5,1),
+                glStore.getVertex(x+dx1, y+1, z+dz1, 0,1));
+            glStore.addFace(tex,
+                glStore.getVertex(x+dx2, y, z+dz2, 0.5,0),
+                glStore.getVertex(x+dx1, y, z+dz1, 1,0),
+                glStore.getVertex(x+dx1, y+1, z+dz1, 1,1),
+                glStore.getVertex(x+dx2, y+1, z+dz1, 0.5,1));
         }
     }
 
@@ -102,6 +152,49 @@ public abstract class BlenderMeshElement
             return "minecraftBlock" +orientation.capitalized()+
                 "(" + args + ")";
         }
+
+        @Override
+        public void accumOpenGL(ExportWebGL.GLStore glStore)
+        {
+            ExportWebGL.TextureForGL tex = ExportWebGL.TextureForGL.from(new BlockPlusData(bt, blockData), orientation);
+            switch (orientation) {
+                case TOP:
+                    glStore.addFace(tex,
+                        glStore.getVertex(x,y+1,z, 0,0),
+                        glStore.getVertex(x,y+1,z+1, 1,0),
+                        glStore.getVertex(x+1,y+1,z+1, 1,1),
+                        glStore.getVertex(x+1,y+1,z, 0,1) );
+                    break;
+                case NORTH:
+                    glStore.addFace(tex,
+                        glStore.getVertex(x+1,y,z, 0,0),
+                        glStore.getVertex(x,y,z, 1,0),
+                        glStore.getVertex(x,y+1,z, 1,1),
+                        glStore.getVertex(x+1,y+1,z, 0,1));
+                    break;
+                case SOUTH:
+                    glStore.addFace(tex,
+                        glStore.getVertex(x,y+1,z+1, 0,1),
+                        glStore.getVertex(x,y,z+1, 0,0),
+                        glStore.getVertex(x+1,y,z+1, 1,0),
+                        glStore.getVertex(x+1,y+1,z+1, 1,1));
+                    break;
+                case EAST:
+                    glStore.addFace(tex,
+                        glStore.getVertex(x+1,y,z+1, 0,0),
+                        glStore.getVertex(x+1,y,z, 1,0),
+                        glStore.getVertex(x+1,y+1,z, 1,1),
+                        glStore.getVertex(x+1,y+1,z+1, 0,1));
+                    break;
+                case WEST:
+                    glStore.addFace(tex,
+                        glStore.getVertex(x,y,z, 0,0),
+                        glStore.getVertex(x,y,z+1, 1,0),
+                        glStore.getVertex(x,y+1,z+1, 1,1),
+                        glStore.getVertex(x,y+1,z, 0,1));
+                    break;
+            }
+        }
     }
 
     public static class Widget
@@ -117,6 +210,285 @@ public abstract class BlenderMeshElement
         {
             return ("minecraftWidget("+locString()+", "+bt+","+blockData+")");
         }
+
+        @Override
+        public void accumOpenGL(ExportWebGL.GLStore glStore)
+        {
+            ExportWebGL.TextureForGL tex = ExportWebGL.TextureForGL.from(new BlockPlusData(bt, blockData), FaceSide.NORTH);
+
+            if (bt==156) {
+                stairs(glStore);
+            }
+        }
+
+        private void stairs(ExportWebGL.GLStore glStore)
+        {
+            XYZUV[] pre = {new XYZUV(1.000000,1.000000,1.000000, -1.000000,1.000000),
+                new XYZUV(1.000000,0.000000,1.000000, -1.000000,0.000000),
+                new XYZUV(1.000000,0.000000,0.000000, 0.000000,0.000000),
+                new XYZUV(1.000000,1.000000,0.000000, 0.000000,1.000000),
+                new XYZUV(0.000000,0.500000,1.000000, 1.000000,0.500000),
+                new XYZUV(0.000000,0.500000,0.000000, 0.000000,0.500000),
+                new XYZUV(0.000000,0.000000,0.000000, 0.000000,0.000000),
+                new XYZUV(0.000000,0.000000,1.000000, 1.000000,0.000000),
+                new XYZUV(1.000000,0.000000,1.000000, 1.000000,0.000000),
+                new XYZUV(0.500000,0.500000,1.000000, 0.500000,0.500000),
+                new XYZUV(0.000000,0.500000,1.000000, 0.000000,0.500000),
+                new XYZUV(0.000000,0.000000,1.000000, 0.000000,0.000000),
+                new XYZUV(1.000000,0.000000,1.000000, -1.000000,-1.000000),
+                new XYZUV(0.000000,0.000000,1.000000, 0.000000,-1.000000),
+                new XYZUV(0.000000,0.000000,0.000000, 0.000000,0.000000),
+                new XYZUV(1.000000,0.000000,0.000000, -1.000000,0.000000),
+                new XYZUV(1.000000,0.000000,0.000000, -1.000000,0.000000),
+                new XYZUV(0.000000,0.000000,0.000000, 0.000000,0.000000),
+                new XYZUV(0.000000,0.500000,0.000000, 0.000000,0.500000),
+                new XYZUV(0.500000,0.500000,0.000000, -0.500000,0.500000),
+                new XYZUV(0.500000,1.000000,1.000000, 0.500000,-1.000000),
+                new XYZUV(1.000000,1.000000,1.000000, 1.000000,-1.000000),
+                new XYZUV(1.000000,1.000000,0.000000, 1.000000,0.000000),
+                new XYZUV(0.500000,1.000000,0.000000, 0.500000,0.000000),
+                new XYZUV(0.500000,0.500000,1.000000, 1.000000,0.500000),
+                new XYZUV(0.500000,1.000000,1.000000, 1.000000,1.000000),
+                new XYZUV(0.500000,1.000000,0.000000, 0.000000,1.000000),
+                new XYZUV(0.500000,0.500000,0.000000, 0.000000,0.500000),
+                new XYZUV(0.500000,0.500000,1.000000, 0.500000,-1.000000),
+                new XYZUV(0.500000,0.500000,0.000000, 0.500000,0.000000),
+                new XYZUV(0.000000,0.500000,0.000000, 0.000000,0.000000),
+                new XYZUV(0.000000,0.500000,1.000000, 0.000000,-1.000000),
+                new XYZUV(1.000000,1.000000,0.000000, -1.000000,1.000000),
+                new XYZUV(1.000000,0.000000,0.000000, -1.000000,0.000000),
+                new XYZUV(0.500000,0.500000,0.000000, -0.500000,0.500000),
+                new XYZUV(0.500000,1.000000,0.000000, -0.500000,1.000000),
+                new XYZUV(1.000000,1.000000,1.000000, 1.000000,1.000000),
+                new XYZUV(0.500000,1.000000,1.000000, 0.500000,1.000000),
+                new XYZUV(0.500000,0.500000,1.000000, 0.500000,0.500000),
+                new XYZUV(1.000000,0.000000,1.000000, 1.000000,0.000000),
+            };
+
+            List<XYZUV> points = rotated(Arrays.asList(pre));
+
+            points = translated(points);
+
+            for (int i=0; i<pre.length; i++) {
+                pre[i] = points.get(i);
+            }
+
+            ExportWebGL.TextureForGL tex0 = ExportWebGL.TextureForGL.from(new BlockPlusData(bt,99), BlockSide.SIDE);
+
+            ExportWebGL.TextureForGL tex1 = ExportWebGL.TextureForGL.from(new BlockPlusData(bt,99), BlockSide.TOP);
+            glStore.addFace(tex0,
+                glStore.getVertex(points.get(0)),
+                glStore.getVertex(points.get(1)),
+                glStore.getVertex(points.get(2)),
+                glStore.getVertex(points.get(3)));
+            glStore.addFace(tex0,
+                glStore.getVertex(points.get(4)),
+                glStore.getVertex(points.get(5)),
+                glStore.getVertex(points.get(6)),
+                glStore.getVertex(points.get(7)));
+            glStore.addFace(tex0,
+                glStore.getVertex(points.get(8)),
+                glStore.getVertex(points.get(9)),
+                glStore.getVertex(points.get(10)),
+                glStore.getVertex(points.get(11)));
+            glStore.addFace(tex1,
+                glStore.getVertex(points.get(12)),
+                glStore.getVertex(points.get(13)),
+                glStore.getVertex(points.get(14)),
+                glStore.getVertex(points.get(15)));
+            glStore.addFace(tex0,
+                glStore.getVertex(points.get(16)),
+                glStore.getVertex(points.get(17)),
+                glStore.getVertex(points.get(18)),
+                glStore.getVertex(points.get(19)));
+            glStore.addFace(tex1,
+                glStore.getVertex(points.get(20)),
+                glStore.getVertex(points.get(21)),
+                glStore.getVertex(points.get(22)),
+                glStore.getVertex(points.get(23)));
+            glStore.addFace(tex0,
+                glStore.getVertex(points.get(24)),
+                glStore.getVertex(points.get(25)),
+                glStore.getVertex(points.get(26)),
+                glStore.getVertex(points.get(27)));
+            glStore.addFace(tex1,
+                glStore.getVertex(points.get(28)),
+                glStore.getVertex(points.get(29)),
+                glStore.getVertex(points.get(30)),
+                glStore.getVertex(points.get(31)));
+            glStore.addFace(tex0,
+                glStore.getVertex(points.get(32)),
+                glStore.getVertex(points.get(33)),
+                glStore.getVertex(points.get(34)),
+                glStore.getVertex(points.get(35)));
+            glStore.addFace(tex0,
+                glStore.getVertex(points.get(36)),
+                glStore.getVertex(points.get(37)),
+                glStore.getVertex(points.get(38)),
+                glStore.getVertex(points.get(39)));
+
+
+        }
+
+        private void stairs2(ExportWebGL.GLStore glStore)
+        {
+            List<XYZUV> points = new ArrayList<XYZUV>();
+
+            points.add(new XYZUV(0, 0, 0,     1,0));
+            points.add(new XYZUV(0, 0.5, 0,   1,0.5));
+            points.add(new XYZUV(0.5, 0.5, 0, 0.5,0.5));
+            points.add(new XYZUV(0.5, 1, 0,   0.5,1));
+            points.add(new XYZUV(1, 1, 0,     0,1));
+            points.add(new XYZUV(1, 0, 0,     0,0));
+            //0..5^^   vv6..11
+            points.add(new XYZUV(0, 0, 1,     0,0));
+            points.add(new XYZUV(0, 0.5, 1,   0,0.5));
+            points.add(new XYZUV(0.5, 0.5, 1, 0.5,0.5));
+            points.add(new XYZUV(0.5, 1, 1,   0.5,1));
+            points.add(new XYZUV(1, 1, 1,     1,1));
+            points.add(new XYZUV(1, 0, 1,     1,0));
+
+            // 12..15
+            points.add(new XYZUV(0,0,0, 0,0));
+            points.add(new XYZUV(0,0,1, 1,0));
+            points.add(new XYZUV(0,0.5,1, 1,0.5));
+            points.add(new XYZUV(0,0.5,0, 0,0.5));
+
+            points.add(new XYZUV(0.5,0.5,0, 0,0.5));
+            points.add(new XYZUV(0.5,0.5,1, 1,0.5));
+            points.add(new XYZUV(0.5,1,1, 1,1));
+            points.add(new XYZUV(0.5,1,0, 0,1));
+
+            points = rotated(points);
+
+            points = translated(points);
+
+
+            ExportWebGL.TextureForGL side = ExportWebGL.TextureForGL.from(new BlockPlusData(bt,99), BlockSide.SIDE);
+
+            int[] v = new int[points.size()];
+            for (int i = 0; i < v.length; i++) {
+                v[i] = glStore.getVertex(points.get(i));
+            }
+            // left
+            glStore.addFace(side, v[0], v[1], v[2], v[3]);
+            glStore.addFace(side, v[3], v[4], v[5], v[0]);
+            // right
+            glStore.addFace(side, v[6], v[11], v[8], v[7]);
+            glStore.addFace(side, v[11], v[10], v[9], v[8]);
+            // front
+            glStore.addFace(side, v[12], v[13], v[14], v[15]);
+            glStore.addFace(side, v[16], v[17], v[18], v[19]);
+        }
+
+        double[][] rotX180 = {
+            {1,0,0,0},
+            {0,-1,0,1},
+            {0,0,-1,1},
+            {0,0,0,1}
+        };
+
+        double[][] identity = {
+            {1,0,0,0},
+            {0,1,0,0},
+            {0,0,1,0},
+            {0,0,0,1},
+        };
+
+        double[][] rotY180 = {
+            {-1,0,0,1},
+            {0,1,0,0},
+            {0,0,-1,1},
+            {0,0,0,1},
+        };
+
+        double[][] rotY90 = {
+            {0,0,1,0},
+            {0,1,0,0},
+            {-1,0,0,1},
+            {0,0,0,1},
+        };
+
+        double[][] rotY270 = {
+            {0,0,-1,1},
+            {0,1,0,0},
+            {1,0,0,0},
+            {0,0,0,1},
+        };
+
+        public List<XYZUV> rotated(Iterable<XYZUV> points)
+        {
+            double[][] matrix;
+            switch (blockData&3) {
+                case 0:
+                    matrix = identity; break;
+                case 1:
+                    matrix = rotY180; break;
+                case 2:
+                    matrix = rotY270; break;
+                default:
+                    matrix = rotY90; break;
+            }
+            if (0 != (blockData&4 )) {
+                matrix = mult(rotX180, matrix);
+            }
+
+            return rotated(points, matrix);
+        }
+
+        public List<XYZUV> translated(List<XYZUV> points)
+        {
+            List<XYZUV> rval = new ArrayList<XYZUV>();
+            for (XYZUV point : points) {
+                rval.add(new XYZUV(point.x+x, point.y+y, point.z+z, point.u, point.v));
+            }
+            return rval;
+        }
+    }
+
+    public static List<XYZUV> rotated(Iterable<XYZUV>points, double[][]matrix)
+    {
+        List<XYZUV> rval = new ArrayList<XYZUV>();
+        for (XYZUV point : points) {
+            double x2 = mult34(point.x, point.y, point.z, matrix[0]);
+            double y2 = mult34(point.x, point.y, point.z, matrix[1]);
+            double z2 = mult34(point.x, point.y, point.z, matrix[2]);
+            rval.add(new XYZUV(x2, y2, z2, point.u, point.v));
+        }
+        return rval;
+    }
+
+    public static double mult34(double x, double y, double z, double[] matrixRow)
+    {
+        return x*matrixRow[0]
+            +y*matrixRow[1]
+            +z*matrixRow[2]
+            +matrixRow[3];
+    }
+
+    public static double[][] mult(double[][] A, double[][]B)
+    {
+        int l2 = B[0].length;
+        double[][] rval = new double[A.length][];
+
+        for (int i=0; i<A.length; i++) {
+            rval[i] = new double[l2];
+            for (int j=0; j< l2; j++) {
+                double accum=0;
+                for (int k=0; k<B.length; k++) {
+                    accum += A[i][k] * B[k][j];
+                }
+                rval[i][j] = accum;
+            }
+        }
+        return rval;
+    }
+
+
+    public static class VSet
+    {
+        List<XYZUV> vertices = new ArrayList<XYZUV>();
+
     }
 
     public static class FatFace
@@ -163,6 +535,12 @@ public abstract class BlenderMeshElement
             } else {
                 return false;
             }
+        }
+
+        @Override
+        public void accumOpenGL(ExportWebGL.GLStore glStore)
+        {
+            // XXX
         }
     }
 }
