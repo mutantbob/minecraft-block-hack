@@ -53,6 +53,28 @@ public class AnvilBlockEditor
         s.getData().set(x,y,z, block.data);
     }
 
+    @Override
+    public int getBlockType(int x, int y, int z)
+    {
+        try {
+            Anvil.Section section = getSection(x, y, z);
+            return section.getBlocks().get(x,y,z);
+        } catch (IOException e) {
+            return -1;
+        }
+    }
+
+    @Override
+    public BlockPlusData getBlockData(int x, int y, int z)
+    {
+        try {
+            Anvil.Section section = getSection(x, y, z);
+            return new BlockPlusData(section.getBlocks().get(x,y,z), section.getData().get(x, y, z));
+        } catch (IOException e) {
+            return null;
+        }
+    }
+
     protected Anvil.Section getSection(int x, int y, int z)
         throws IOException
     {
