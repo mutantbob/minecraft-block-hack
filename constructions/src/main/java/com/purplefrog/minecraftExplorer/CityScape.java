@@ -131,7 +131,7 @@ public class CityScape
     }
 
     public static class SimpleLowRes
-        implements LowResLog, BlenderBlockEditor.LowRes
+        implements LowResLog, RAMBlockEditor.LowRes
     {
         Writer w;
 
@@ -159,7 +159,7 @@ public class CityScape
         {
             StringBuilder msg = new StringBuilder( "fillCube(");
             BlockPlusData block = template.getBlock(0, (y2-y1-1)%template.elevation, 0);
-            BlenderBlockEditor.appendJoin(msg, ", ", block.blockType, x1, y1, z1, x2, y2, z2);
+            RAMBlockEditor.appendJoin(msg, ", ", block.blockType, x1, y1, z1, x2, y2, z2);
             msg.append(")\n");
 
             try {

@@ -14,7 +14,7 @@ public class ExplosionSim
 {
 
     QueryableBlockEditor preExplosion;
-    BlenderBlockEditor postExplosion;
+    RAMBlockEditor postExplosion;
 
     VoxelBlock<Double> blockDisappearTime = new VoxelBlock<Double>(Double.class, null);
 
@@ -82,7 +82,7 @@ public class ExplosionSim
 
             BlockPlusData blockData = sim.preExplosion.getBlockData(x, y, z);
 
-            Point3Di loc16 = BlenderBlockEditor.cook(x, y, z);
+            Point3Di loc16 = RAMBlockEditor.cook(x, y, z);
 
             BlockDestructionSet bds = destructions.get(loc16);
             if (null==bds) {
@@ -221,7 +221,7 @@ public class ExplosionSim
     public static int countBlocks(QueryableBlockEditor world, int match)
     {
         int rval=0;
-        for (Map.Entry<Point3Di, BlenderBlockEditor.Combo> en : world.getCachedSections()) {
+        for (Map.Entry<Point3Di, RAMBlockEditor.Combo> en : world.getCachedSections()) {
             for (Map.Entry<Point3Di, BlockPlusData> block : en.getValue().allBlocks(en.getKey())) {
                 if (block.getValue().blockType== match)
                 rval++;
@@ -234,7 +234,7 @@ public class ExplosionSim
     {
         Point3Di chosen = null;
 
-        for (Map.Entry<Point3Di, BlenderBlockEditor.Combo> en : editor.getCachedSections()) {
+        for (Map.Entry<Point3Di, RAMBlockEditor.Combo> en : editor.getCachedSections()) {
 
             Iterator<Map.Entry<Point3Di, BlockPlusData>> i2 = en.getValue().allBlocksIter(en.getKey());
 
@@ -358,7 +358,7 @@ public class ExplosionSim
     public Set<Point3Di> detonate(Point3Di loc, double tm)
         throws IOException
     {
-        BlenderBlockEditor world = postExplosion;
+        RAMBlockEditor world = postExplosion;
         Set<Point3Di> chained = new HashSet<Point3Di>();
 
         detonations.put(loc, tm);
@@ -467,7 +467,7 @@ public class ExplosionSim
             }
 
             rval.append("explosionSequence(");
-            BlenderBlockEditor.appendJoin(rval, ",\n\t", parts);
+            RAMBlockEditor.appendJoin(rval, ",\n\t", parts);
             rval.append(")\n");
 
             return rval.toString();
@@ -531,7 +531,7 @@ public class ExplosionSim
         public String emitter(Point3Di sectionCoords, List<BlenderMeshElement> faces, double destructionTime)
         {
             StringBuilder rval = new StringBuilder("sectionFaces = [");
-            BlenderBlockEditor .appendJoin(rval, ",\n\t", faces);
+            RAMBlockEditor.appendJoin(rval, ",\n\t", faces);
             rval.append("\n\t]\n" +
                 "buildBlockDestructionMesh(sectionFaces, (" + sectionCoords.x
                 + "," + sectionCoords.y

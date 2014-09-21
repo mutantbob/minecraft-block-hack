@@ -1,7 +1,5 @@
 package com.purplefrog.minecraftExplorer;
 
-import com.purplefrog.jwavefrontobj.*;
-
 import java.util.*;
 
 /**
@@ -14,13 +12,9 @@ import java.util.*;
 public abstract class QueryableBlockEditor
     extends BasicBlockEditor
 {
-    public abstract BlenderBlockEditor.Combo getOrCreateSection(Point3Di cooked);
+    public abstract RAMBlockEditor.Combo getOrCreateSection(Point3Di cooked);
 
-    public abstract Set<Map.Entry<Point3Di, BlenderBlockEditor.Combo>> getCachedSections();
-
-    public abstract int getBlockType(int x, int y, int z);
-
-    public abstract BlockPlusData getBlockData(int x, int y, int z);
+    public abstract Set<Map.Entry<Point3Di, RAMBlockEditor.Combo>> getCachedSections();
 
     public abstract Iterable<Map.Entry<Point3Di, BlockPlusData>> allVoxels();
 

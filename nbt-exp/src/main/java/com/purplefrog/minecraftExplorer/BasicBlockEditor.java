@@ -259,6 +259,77 @@ public abstract class BasicBlockEditor
             return bt.blockType+"."+bt.data;
     }
 
+    /**
+     * we have something like a glass pane or iron bars at x,y,z, what orientation should we draw it in
+     * @return bit mask for quadrants 1=north, 2=south, 4=east, 8=west
+     */
+    public int paneOrientation(int x, int y, int z)
+    {
+        boolean north = RAMBlockEditor.canAnchorPane(getBlockType(x, y, z - 1));
+        boolean south = RAMBlockEditor.canAnchorPane(getBlockType(x, y, z + 1));
+        boolean east = RAMBlockEditor.canAnchorPane(getBlockType(x + 1, y, z));
+        boolean west = RAMBlockEditor.canAnchorPane(getBlockType(x - 1, y, z));
+
+        return (north ? 1:0)
+            | (south ? 2:0)
+            | (east ? 4:0)
+            | (west ? 8:0);
+    }
+
+    public abstract int getBlockType(int x, int y, int z);
+
+    public abstract BlockPlusData getBlockData(int x, int y, int z);
+
+    public void getBlenderMeshElements(List<BlenderMeshElement> dest, int x, int y, int z)
+    {
+        BlockPlusData bd = getBlockData(x, y, z);
+        if (null != bd)
+            getMeshElements(dest, x,y,z, bd.blockType, bd.data);
+    }
+
+    public void getMeshElements(List<BlenderMeshElement> accum, int x, int y, int z, int bt, int blockData)
+    {
+        if (bt==0)
+            return; // air doesn't have polys
+
+        BlockDatabase.TransparencyClass transparencyClass = BlockDatabase.tClass(bt);
+        if (transparencyClass == BlockDatabase.TransparencyClass.Widget ||
+            transparencyClass == BlockDatabase.TransparencyClass.OpaqueFunky) {
+            BlenderMeshElement emitter = blenderCommandForFunky(x, y, z, bt, blockData);
+            accum.add(emitter);
+        } else {
+            if (BlockDatabase.tClass(getBlockType(x,y+1,z))!= transparencyClass) {
+                accum.add(new BlenderMeshElement.Face(x,y,z, bt, blockData, FaceSide.TOP));
+            }
+            if (BlockDatabase.tClass(getBlockType(x,y-1,z))!= transparencyClass) {
+                accum.add(new BlenderMeshElement.Face(x,y,z, bt, blockData, FaceSide.BOTTOM));
+            }
+            if (BlockDatabase.tClass(getBlockType(x+1,y,z))!= transparencyClass) {
+                accum.add(new BlenderMeshElement.Face(x,y,z, bt, blockData, FaceSide.EAST));
+            }
+            if (BlockDatabase.tClass(getBlockType(x-1,y,z))!= transparencyClass) {
+                accum.add(new BlenderMeshElement.Face(x,y,z, bt, blockData, FaceSide.WEST));
+            }
+            if (BlockDatabase.tClass(getBlockType(x,y,z-1))!= transparencyClass) {
+                accum.add(new BlenderMeshElement.Face(x,y,z, bt, blockData, FaceSide.NORTH));
+            }
+            if (BlockDatabase.tClass(getBlockType(x,y,z+1))!= transparencyClass) {
+                accum.add(new BlenderMeshElement.Face(x,y,z, bt, blockData, FaceSide.SOUTH));
+            }
+        }
+    }
+
+    public BlenderMeshElement blenderCommandForFunky(int x, int y, int z, int bt, int blockData)
+    {
+        if (bt== BlockDatabase.BLOCK_TYPE_GLASS_PANE
+            || bt == BlockDatabase.BLOCK_TYPE_IRON_BARS) {
+            int orientation = paneOrientation(x,y,z);
+            return new BlenderMeshElement.Pane(x,y,z,bt,blockData, orientation);
+        } else {
+            return new BlenderMeshElement.Widget(x,y,z,bt,blockData);
+        }
+    }
+
     public interface GetLightingCube
     {
         public NibbleCube getLightLevels(Anvil.Section s);
