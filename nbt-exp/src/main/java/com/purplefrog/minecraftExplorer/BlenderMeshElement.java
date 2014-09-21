@@ -216,8 +216,23 @@ public abstract class BlenderMeshElement
         {
             ExportWebGL.TextureForGL tex = ExportWebGL.TextureForGL.from(new BlockPlusData(bt, blockData), FaceSide.NORTH);
 
-            if (bt==156) {
+            if (bt==53
+                || bt==67
+                || bt==108
+                || bt==109
+                || bt==114
+                || bt==128
+                || bt==134
+                || bt==135
+                || bt==136
+                || bt==156
+                || bt==163
+                || bt==164
+                || bt==180
+                ) {
                 stairs(glStore);
+            } else {
+                System.err.println("unknown widget "+bt);
             }
         }
 
