@@ -65,20 +65,46 @@ public class ExportWebGL
         Writer w = new FileWriter(ofname);
 
         w.write("webgl_segments=[\n");
+        GLStore opaque = new GLStore();
+        GLStore translucent = new GLStore();
         GLStore glStore = new GLStore();
         for (BlenderMeshElement poly : polys) {
-            if (glStore.vertices.size() > 0xff00) {
-                dumpSegment(w, glStore);
-                w.write(",\n");
-                glStore = new GLStore();
-            }
+            glStore.clear();
+            maybeFlush(w, opaque);
             poly.accumOpenGL(glStore);
+
+            // copy the freshly created face set into the correct accumulator
+            for (GLFace face : glStore.faces) {
+                GLStore tgt;
+                if (face.bd.isTranslucent()) {
+                    tgt = translucent;
+                } else {
+                    tgt = opaque;
+                }
+                int[] verts = new int[face.vertices.length];
+                for (int i = 0; i < verts.length; i++) {
+                    verts[i] = tgt.getVertex(glStore.vertices.get(face.vertices[i]));
+                }
+                tgt.addFace(face.bd, verts);
+            }
         }
 
-        dumpSegment(w, glStore);
+        dumpSegment(w, opaque);
+        w.write(",\n");
+        dumpSegment(w, translucent);
         w.write("] // end webgl_segments\n");
 
         w.close();
+    }
+
+    private void maybeFlush(Writer w, GLStore opaque)
+        throws IOException
+    {
+        if (opaque.vertices.size() > 0xff00) {
+            dumpSegment(w, opaque);
+            w.write(",\n");
+            opaque.clear();
+        }
     }
 
     private void dumpSegment(Writer w, GLStore glStore)
@@ -182,10 +208,12 @@ public class ExportWebGL
         implements Comparable<TextureForGL>
     {
         public final String textureName;
+        public final int blockType;
 
-        public TextureForGL(String textureName)
+        public TextureForGL(BlockPlusData bd, BlockSide orientation)
         {
-            this.textureName = textureName;
+            this.textureName = "tex."+bd.blockType+"."+bd.data+"."+orientation.ordinal();
+            this.blockType = bd.blockType;
         }
 
         @Override
@@ -212,7 +240,7 @@ public class ExportWebGL
 
         public static TextureForGL from(BlockPlusData bd, BlockSide orientation)
         {
-            return new TextureForGL("tex."+bd.blockType+"."+bd.data+"."+orientation.ordinal());
+            return new TextureForGL(bd, orientation);
         }
 
         @Override
@@ -230,6 +258,50 @@ public class ExportWebGL
             } else {
                 return false;
             }
+        }
+
+        public boolean isTranslucent()
+        {
+            return blockType == 6
+                || blockType == 18
+                || blockType == 20
+                || blockType == 26
+                || blockType == 27
+                || blockType == 28
+                || blockType == 30
+                || blockType == 31
+                || blockType == 32
+                || blockType == 37
+                || blockType == 38
+                || blockType == 39
+                || blockType == 40
+                || blockType == 51
+                || blockType == 52
+                || blockType == 55
+                || blockType == 59
+                || blockType == 64
+                || blockType == 65
+                || blockType == 66
+                || blockType == 71
+                || blockType == 83
+                || blockType == 96
+                || blockType == 101
+                || blockType == 102
+                || blockType == 104
+                || blockType == 105
+                || blockType == 106
+                || blockType == 111
+                || blockType == 115
+                || blockType == 117
+                || blockType == 132
+                || blockType == 141
+                || blockType == 142
+                || blockType == 157
+                || blockType == 160
+                || blockType == 161
+                || blockType == 167
+                || blockType == 175
+                || blockType ==66;
         }
     }
 
@@ -279,6 +351,12 @@ public class ExportWebGL
         public void addFace(TextureForGL bd, int... vertices)
         {
             faces.add(new GLFace(bd, vertices));
+        }
+
+        public void clear()
+        {
+            vertices.clear();
+            faces.clear();
         }
     }
 
