@@ -323,7 +323,7 @@ public abstract class BlenderMeshElement
                 new XYZUV(1.000000,0.000000,1.000000, 1.000000,0.000000),
             };
 
-            List<XYZUV> points = rotated(Arrays.asList(pre));
+            List<XYZUV> points = rotated_stair(Arrays.asList(pre));
 
             points = translated(points);
 
@@ -1185,7 +1185,7 @@ public abstract class BlenderMeshElement
             {0,0,0,1},
         };
 
-        public List<XYZUV> rotated(Iterable<XYZUV> points)
+        public List<XYZUV> rotated_stair(Iterable<XYZUV> points)
         {
             double[][] matrix;
             switch (blockData&3) {
@@ -1199,7 +1199,7 @@ public abstract class BlenderMeshElement
                     matrix = rotY90; break;
             }
             if (0 != (blockData&4 )) {
-                matrix = mult(rotX180, matrix);
+                matrix = mult(matrix, rotX180);
             }
 
             return rotated(points, matrix);
