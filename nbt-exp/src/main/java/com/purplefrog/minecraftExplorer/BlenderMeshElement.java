@@ -217,7 +217,7 @@ public abstract class BlenderMeshElement
             ExportWebGL.TextureForGL tex = ExportWebGL.TextureForGL.from(new BlockPlusData(bt, blockData), FaceSide.NORTH);
 
             if (bt==37 || bt == 38) {
-                flower(glStore);
+                flower(glStore, 1);
             } else if (bt == 50) {
                 torch(glStore);
             } else if (bt == 53
@@ -521,29 +521,27 @@ public abstract class BlenderMeshElement
             }
         }
 
-        public void flower(ExportWebGL.GLStore glStore)
+        public void flower(ExportWebGL.GLStore glStore, double y1)
         {
             XYZUV[] pre = {
 
                 new XYZUV(0,0,0.5, 0,0),
                 new XYZUV(1,0,0.5, 1,0),
-                new XYZUV(1,1,0.5, 1,1),
-                new XYZUV(0,1,0.5, 0,1),
-
+                new XYZUV(1, y1,0.5, 1, y1),
+                new XYZUV(0, y1,0.5, 0, y1),
                 new XYZUV(0,0,0.5, 1,0),
-                new XYZUV(0,1,0.5, 1,1),
-                new XYZUV(1,1,0.5, 0,1),
+                new XYZUV(0, y1,0.5, 1, y1),
+                new XYZUV(1, y1,0.5, 0, y1),
                 new XYZUV(1,0,0.5, 0,0),
 
 
                 new XYZUV(0.5,0,0, 0,0),
                 new XYZUV(0.5,0,1, 1,0),
-                new XYZUV(0.5,1,1, 1,1),
-                new XYZUV(0.5,1,0, 0,1),
-
+                new XYZUV(0.5, y1,1, 1, y1),
+                new XYZUV(0.5, y1,0, 0, y1),
                 new XYZUV(0.5,0,0, 1,0),
-                new XYZUV(0.5,1,0, 1,1),
-                new XYZUV(0.5,1,1, 0,1),
+                new XYZUV(0.5, y1,0, 1, y1),
+                new XYZUV(0.5, y1,1, 0, y1),
                 new XYZUV(0.5,0,1, 0,0),
             };
 
