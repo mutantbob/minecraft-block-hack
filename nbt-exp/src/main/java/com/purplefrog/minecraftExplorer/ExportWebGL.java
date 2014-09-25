@@ -34,14 +34,31 @@ public class ExportWebGL
         MinecraftWorld world = new MinecraftWorld(WorldPicker.pickSaveDir());
         BasicBlockEditor editor = new AnvilBlockEditor(world);
 
+        if (argv.length != 7) {
+            usage(System.err);
+            return;
+        }
+
+        int x1 = Integer.parseInt(argv[0]);
+        int y1 = Integer.parseInt(argv[1]);
+        int z1 = Integer.parseInt(argv[2]);
+        int x2 = Integer.parseInt(argv[3]);
+        int y2 = Integer.parseInt(argv[4]);
+        int z2 = Integer.parseInt(argv[5]);
+
+        String ofname = argv[6];
+
         ExportWebGL exporter = new ExportWebGL(
-//            0,0,0, 64, 256, 64,
-//            -485, 60, 130, -426, 80, 190, // farm
-            -485, 60, 159, -448, 80, 190, // farm house
-//            64,0,-64, 128, 256, -1,
-//            -470, 50, 0, 64, 80, 64,
-            "/tmp/minecraft.gl.js");
+            x1,y1,z1,x2,y2,z2,
+            ofname);
         exporter.exportWebGL(editor);
+
+        System.out.println("writing to "+ofname);
+    }
+
+    public static void usage(PrintStream out)
+    {
+        out.println("Usage:\njava "+ExportWebGL.class.getName()+" x1 y1 z1 x2 y2 z2 ofname.js");
     }
 
     public void exportWebGL(BasicBlockEditor editor)
