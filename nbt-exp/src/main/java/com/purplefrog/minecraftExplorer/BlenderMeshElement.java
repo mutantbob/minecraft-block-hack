@@ -216,8 +216,18 @@ public abstract class BlenderMeshElement
         {
             ExportWebGL.TextureForGL tex = ExportWebGL.TextureForGL.from(new BlockPlusData(bt, blockData), FaceSide.NORTH);
 
-            if (bt==37 || bt == 38) {
+            if (bt==32
+                || bt==37
+                || bt == 38) {
                 flower(glStore, 1);
+            } else if (bt == 104
+                || bt==105 ) {
+                flower(glStore, blockData / 7);
+            } else if (bt == 18
+                || bt==20 ) {
+                fullBlock(glStore);
+            } else if (bt==44) {
+                slab(glStore);
             } else if (bt == 50) {
                 torch(glStore);
             } else if (bt == 53
@@ -237,13 +247,24 @@ public abstract class BlenderMeshElement
                 stairs(glStore);
             } else if (bt == 54) {
                 chest(glStore);
-            } else if (bt==59) {
+            } else if (bt == 64
+                || bt==71) {
+                door(glStore);
+            } else if (bt==59
+                || bt==141
+                || bt==142) {
                 crop(glStore);
             } else if (bt==65) {
                 ladder(glStore);
             } else if (bt==85 || bt==113
                 || bt>=188 && bt<=192) {
                 fence(glStore);
+            } else if (bt==96) {
+                trapdoor(glStore);
+            } else if (bt==139) {
+                cobblestone_fence(glStore);
+            } else if (bt==154) {
+                hopper(glStore);
             } else {
                 System.err.println("unknown widget "+bt);
             }
@@ -475,6 +496,7 @@ public abstract class BlenderMeshElement
             }
 
         }
+
         public void torch(ExportWebGL.GLStore glStore)
         {
             XYZUV[] pre = {
@@ -599,6 +621,417 @@ public abstract class BlenderMeshElement
             }
         }
 
+        public void hopper(ExportWebGL.GLStore glStore)
+        {
+            XYZUV[] pre = {
+                new XYZUV(0.375000,0.000000,0.625000, 0.625000,0.000000),
+                new XYZUV(0.375000,0.250000,0.625000, 0.625000,0.250000),
+                new XYZUV(0.375000,0.250000,0.375000, 0.375000,0.250000),
+                new XYZUV(0.375000,0.000000,0.375000, 0.375000,0.000000),
+
+                new XYZUV(0.625000,0.250000,0.625000, 0.375000,0.250000),
+                new XYZUV(0.625000,0.000000,0.625000, 0.375000,0.000000),
+                new XYZUV(0.625000,0.000000,0.375000, 0.625000,0.000000),
+                new XYZUV(0.625000,0.250000,0.375000, 0.625000,0.250000),
+
+                new XYZUV(0.625000,0.000000,0.625000, 0.375000,0.625000),
+                new XYZUV(0.375000,0.000000,0.625000, 0.375000,0.375000),
+                new XYZUV(0.375000,0.000000,0.375000, 0.625000,0.375000),
+                new XYZUV(0.625000,0.000000,0.375000, 0.625000,0.625000),
+
+                new XYZUV(0.375000,0.000000,0.375000, 0.625000,0.000000),
+                new XYZUV(0.375000,0.250000,0.375000, 0.625000,0.250000),
+                new XYZUV(0.625000,0.250000,0.375000, 0.375000,0.250000),
+                new XYZUV(0.625000,0.000000,0.375000, 0.375000,0.000000),
+
+                new XYZUV(0.625000,0.000000,0.625000, 0.625000,0.000000),
+                new XYZUV(0.625000,0.250000,0.625000, 0.625000,0.250000),
+                new XYZUV(0.375000,0.250000,0.625000, 0.375000,0.250000),
+                new XYZUV(0.375000,0.000000,0.625000, 0.375000,0.000000),
+
+                new XYZUV(0.750000,0.250000,0.250000, 0.250000,0.250000),
+                new XYZUV(0.250000,0.250000,0.250000, 0.750000,0.250000),
+                new XYZUV(0.250000,0.625000,0.250000, 0.750000,0.625000),
+                new XYZUV(0.750000,0.625000,0.250000, 0.250000,0.625000),
+
+                new XYZUV(0.250000,0.250000,0.250000, 0.750000,0.250000),
+                new XYZUV(0.750000,0.250000,0.250000, 0.750000,0.750000),
+                new XYZUV(0.750000,0.250000,0.750000, 0.250000,0.750000),
+                new XYZUV(0.250000,0.250000,0.750000, 0.250000,0.250000),
+
+                new XYZUV(0.750000,0.250000,0.750000, 0.250000,0.250000),
+                new XYZUV(0.750000,0.250000,0.250000, 0.750000,0.250000),
+                new XYZUV(0.750000,0.625000,0.250000, 0.750000,0.625000),
+                new XYZUV(0.750000,0.625000,0.750000, 0.250000,0.625000),
+
+                new XYZUV(0.250000,0.250000,0.750000, 0.250000,0.250000),
+                new XYZUV(0.750000,0.250000,0.750000, 0.750000,0.250000),
+                new XYZUV(0.750000,0.625000,0.750000, 0.750000,0.625000),
+                new XYZUV(0.250000,0.625000,0.750000, 0.250000,0.625000),
+
+                new XYZUV(0.250000,0.250000,0.250000, 0.250000,0.250000),
+                new XYZUV(0.250000,0.250000,0.750000, 0.750000,0.250000),
+                new XYZUV(0.250000,0.625000,0.750000, 0.750000,0.625000),
+                new XYZUV(0.250000,0.625000,0.250000, 0.250000,0.625000),
+
+                new XYZUV(1.000000,0.625000,0.000000, 0.000000,0.625000),
+                new XYZUV(0.000000,0.625000,0.000000, 1.000000,0.625000),
+                new XYZUV(0.000000,1.000000,0.000000, 1.000000,1.000000),
+                new XYZUV(1.000000,1.000000,0.000000, 0.000000,1.000000),
+
+                new XYZUV(0.000000,0.625000,0.000000, 1.000000,0.000000),
+                new XYZUV(1.000000,0.625000,0.000000, 1.000000,1.000000),
+                new XYZUV(1.000000,0.625000,1.000000, 0.000000,1.000000),
+                new XYZUV(0.000000,0.625000,1.000000, 0.000000,0.000000),
+
+                new XYZUV(1.000000,1.000000,0.000000, 0.000000,1.000000),
+                new XYZUV(0.000000,1.000000,0.000000, 0.000000,0.000000),
+                new XYZUV(0.062500,1.000000,0.062500, 0.062500,0.062500),
+                new XYZUV(0.937500,1.000000,0.062500, 0.062500,0.937500),
+
+                new XYZUV(1.000000,0.625000,1.000000, 0.000000,0.625000),
+                new XYZUV(1.000000,0.625000,0.000000, 1.000000,0.625000),
+                new XYZUV(1.000000,1.000000,0.000000, 1.000000,1.000000),
+                new XYZUV(1.000000,1.000000,1.000000, 0.000000,1.000000),
+
+                new XYZUV(0.000000,0.625000,1.000000, 0.000000,0.625000),
+                new XYZUV(1.000000,0.625000,1.000000, 1.000000,0.625000),
+                new XYZUV(1.000000,1.000000,1.000000, 1.000000,1.000000),
+                new XYZUV(0.000000,1.000000,1.000000, 0.000000,1.000000),
+
+                new XYZUV(0.000000,0.625000,0.000000, 0.000000,0.625000),
+                new XYZUV(0.000000,0.625000,1.000000, 1.000000,0.625000),
+                new XYZUV(0.000000,1.000000,1.000000, 1.000000,1.000000),
+                new XYZUV(0.000000,1.000000,0.000000, 0.000000,1.000000),
+
+                new XYZUV(0.937500,1.000000,0.062500, 0.937500,1.000000),
+                new XYZUV(0.062500,1.000000,0.062500, 0.062500,1.000000),
+                new XYZUV(0.062500,0.687500,0.062500, 0.062500,0.687500),
+                new XYZUV(0.937500,0.687500,0.062500, 0.937500,0.687500),
+
+                new XYZUV(1.000000,1.000000,1.000000, 1.000000,1.000000),
+                new XYZUV(1.000000,1.000000,0.000000, 0.000000,1.000000),
+                new XYZUV(0.937500,1.000000,0.062500, 0.062500,0.937500),
+                new XYZUV(0.937500,1.000000,0.937500, 0.937500,0.937500),
+
+                new XYZUV(0.000000,1.000000,1.000000, 1.000000,0.000000),
+                new XYZUV(1.000000,1.000000,1.000000, 1.000000,1.000000),
+                new XYZUV(0.937500,1.000000,0.937500, 0.937500,0.937500),
+                new XYZUV(0.062500,1.000000,0.937500, 0.937500,0.062500),
+
+                new XYZUV(0.000000,1.000000,0.000000, 0.000000,0.000000),
+                new XYZUV(0.000000,1.000000,1.000000, 1.000000,0.000000),
+                new XYZUV(0.062500,1.000000,0.937500, 0.937500,0.062500),
+                new XYZUV(0.062500,1.000000,0.062500, 0.062500,0.062500),
+
+                new XYZUV(0.062500,0.687500,0.937500, 0.937500,0.062500),
+                new XYZUV(0.937500,0.687500,0.937500, 0.937500,0.937500),
+                new XYZUV(0.937500,0.687500,0.062500, 0.062500,0.937500),
+                new XYZUV(0.062500,0.687500,0.062500, 0.062500,0.062500),
+
+                new XYZUV(0.937500,1.000000,0.937500, 0.937500,1.000000),
+                new XYZUV(0.937500,1.000000,0.062500, 0.062500,1.000000),
+                new XYZUV(0.937500,0.687500,0.062500, 0.062500,0.687500),
+                new XYZUV(0.937500,0.687500,0.937500, 0.937500,0.687500),
+
+                new XYZUV(0.062500,1.000000,0.937500, 0.937500,1.000000),
+                new XYZUV(0.937500,1.000000,0.937500, 0.062500,1.000000),
+                new XYZUV(0.937500,0.687500,0.937500, 0.062500,0.687500),
+                new XYZUV(0.062500,0.687500,0.937500, 0.937500,0.687500),
+
+                new XYZUV(0.062500,1.000000,0.062500, 0.937500,1.000000),
+                new XYZUV(0.062500,1.000000,0.937500, 0.062500,1.000000),
+                new XYZUV(0.062500,0.687500,0.937500, 0.062500,0.687500),
+                new XYZUV(0.062500,0.687500,0.062500, 0.937500,0.687500),
+            };
+
+
+            List<XYZUV> points = Arrays.asList(pre);
+            points = translated(points);
+
+            ExportWebGL.TextureForGL tex0 = ExportWebGL.TextureForGL.from(new BlockPlusData(bt,blockData), BlockSide.SIDE);
+
+            for (int i=0; i<points.size(); i+=4) {
+                glStore.addFace(tex0,
+                    glStore.getVertex(points.get(i+0)),
+                    glStore.getVertex(points.get(i+1)),
+                    glStore.getVertex(points.get(i+2)),
+                    glStore.getVertex(points.get(i+3)));
+            }
+        }
+
+        public void slab(ExportWebGL.GLStore glStore)
+        {
+            XYZUV[] pre = {
+                new XYZUV(0.000000,0.000000,1.000000, 1.000000,0.000000),
+                new XYZUV(0.000000,0.500000,1.000000, 1.000000,0.500000),
+                new XYZUV(0.000000,0.500000,0.000000, 0.000000,0.500000),
+                new XYZUV(0.000000,0.000000,0.000000, 0.000000,0.000000),
+
+                new XYZUV(0.000000,0.500000,1.000000, 1.000000,0.000000),
+                new XYZUV(1.000000,0.500000,1.000000, 1.000000,1.000000),
+                new XYZUV(1.000000,0.500000,0.000000, 0.000000,1.000000),
+                new XYZUV(0.000000,0.500000,0.000000, 0.000000,0.000000),
+
+                new XYZUV(1.000000,0.500000,1.000000, 0.000000,0.500000),
+                new XYZUV(1.000000,0.000000,1.000000, 0.000000,0.000000),
+                new XYZUV(1.000000,0.000000,0.000000, 1.000000,0.000000),
+                new XYZUV(1.000000,0.500000,0.000000, 1.000000,0.500000),
+
+                new XYZUV(1.000000,0.000000,1.000000, 0.000000,1.000000),
+                new XYZUV(0.000000,0.000000,1.000000, 0.000000,0.000000),
+                new XYZUV(0.000000,0.000000,0.000000, 1.000000,0.000000),
+                new XYZUV(1.000000,0.000000,0.000000, 1.000000,1.000000),
+
+                new XYZUV(0.000000,0.000000,0.000000, 1.000000,0.000000),
+                new XYZUV(0.000000,0.500000,0.000000, 1.000000,0.500000),
+                new XYZUV(1.000000,0.500000,0.000000, 0.000000,0.500000),
+                new XYZUV(1.000000,0.000000,0.000000, 0.000000,0.000000),
+
+                new XYZUV(1.000000,0.000000,1.000000, 1.000000,0.000000),
+                new XYZUV(1.000000,0.500000,1.000000, 1.000000,0.500000),
+                new XYZUV(0.000000,0.500000,1.000000, 0.000000,0.500000),
+                new XYZUV(0.000000,0.000000,1.000000, 0.000000,0.000000),
+            };
+
+            List<XYZUV> points = Arrays.asList(pre);
+
+            int bd = blockData;
+            if (0==(bd&8)) {
+                points = translated(points);
+            } else {
+                points = translated(x,y+0.5,z, points);
+                bd = bd&7;
+            }
+
+            ExportWebGL.TextureForGL tex0 = ExportWebGL.TextureForGL.from(new BlockPlusData(bt,bd), BlockSide.SIDE);
+            ExportWebGL.TextureForGL tex1 = ExportWebGL.TextureForGL.from(new BlockPlusData(bt,bd), BlockSide.TOP);
+
+            for (int i=0; i<points.size(); i+=4) {
+                glStore.addFace((i==1 || i==3) ? tex1 : tex0,
+                    glStore.getVertex(points.get(i+0)),
+                    glStore.getVertex(points.get(i+1)),
+                    glStore.getVertex(points.get(i+2)),
+                    glStore.getVertex(points.get(i+3)));
+            }
+        }
+
+        public void door(ExportWebGL.GLStore glStore)
+        {
+            if (0 != (blockData&8)) {
+                // top half of a door, let the bottom half draw it.
+                return;
+            }
+
+            XYZUV[] pre = {
+                new XYZUV(0.000000,1.000000,0.125000, 0.125000,1.000000),
+                new XYZUV(0.000000,2.000000,0.125000, 0.125000,2.000000),
+                new XYZUV(0.000000,2.000000,0.000000, 0.000000,2.000000),
+                new XYZUV(0.000000,1.000000,0.000000, 0.000000,1.000000),
+
+                new XYZUV(0.000000,2.000000,0.125000, 0.125000,0.000000),
+                new XYZUV(1.000000,2.000000,0.125000, 0.125000,1.000000),
+                new XYZUV(1.000000,2.000000,0.000000, 0.000000,1.000000),
+                new XYZUV(0.000000,2.000000,0.000000, 0.000000,0.000000),
+
+                new XYZUV(1.000000,1.000000,0.125000, 0.875000,1.000000),
+                new XYZUV(1.000000,0.000000,0.125000, 0.875000,0.000000),
+                new XYZUV(1.000000,0.000000,0.000000, 1.000000,0.000000),
+                new XYZUV(1.000000,1.000000,0.000000, 1.000000,1.000000),
+
+                new XYZUV(1.000000,0.000000,0.125000, 0.875000,1.000000),
+                new XYZUV(0.000000,0.000000,0.125000, 0.875000,0.000000),
+                new XYZUV(0.000000,0.000000,0.000000, 1.000000,0.000000),
+                new XYZUV(1.000000,0.000000,0.000000, 1.000000,1.000000),
+
+                new XYZUV(0.000000,1.000000,0.000000, 1.000000,1.000000),
+                new XYZUV(0.000000,2.000000,0.000000, 1.000000,2.000000),
+                new XYZUV(1.000000,2.000000,0.000000, 0.000000,2.000000),
+                new XYZUV(1.000000,1.000000,0.000000, 0.000000,1.000000),
+
+                new XYZUV(1.000000,1.000000,0.125000, 1.000000,1.000000),
+                new XYZUV(1.000000,2.000000,0.125000, 1.000000,2.000000),
+                new XYZUV(0.000000,2.000000,0.125000, 0.000000,2.000000),
+                new XYZUV(0.000000,1.000000,0.125000, 0.000000,1.000000),
+
+                new XYZUV(0.000000,0.000000,0.125000, 0.125000,0.000000),
+                new XYZUV(0.000000,1.000000,0.125000, 0.125000,1.000000),
+                new XYZUV(0.000000,1.000000,0.000000, 0.000000,1.000000),
+                new XYZUV(0.000000,0.000000,0.000000, 0.000000,0.000000),
+
+                new XYZUV(1.000000,2.000000,0.125000, 0.875000,2.000000),
+                new XYZUV(1.000000,1.000000,0.125000, 0.875000,1.000000),
+                new XYZUV(1.000000,1.000000,0.000000, 1.000000,1.000000),
+                new XYZUV(1.000000,2.000000,0.000000, 1.000000,2.000000),
+
+                new XYZUV(0.000000,0.000000,0.000000, 1.000000,0.000000),
+                new XYZUV(0.000000,1.000000,0.000000, 1.000000,1.000000),
+                new XYZUV(1.000000,1.000000,0.000000, 0.000000,1.000000),
+                new XYZUV(1.000000,0.000000,0.000000, 0.000000,0.000000),
+
+                new XYZUV(1.000000,0.000000,0.125000, 1.000000,0.000000),
+                new XYZUV(1.000000,1.000000,0.125000, 1.000000,1.000000),
+                new XYZUV(0.000000,1.000000,0.125000, 0.000000,1.000000),
+                new XYZUV(0.000000,0.000000,0.125000, 0.000000,0.000000),
+            };
+
+
+            ExportWebGL.TextureForGL tex0 = ExportWebGL.TextureForGL.from(new BlockPlusData(bt,0), BlockSide.SIDE);
+            ExportWebGL.TextureForGL tex1 = ExportWebGL.TextureForGL.from(new BlockPlusData(bt,0), BlockSide.TOP);
+
+            List<XYZUV> points = Arrays.asList(pre);
+            points = translated(points);
+            glStore.addFace(tex0,
+                glStore.getVertex(points.get(0)),
+                glStore.getVertex(points.get(1)),
+                glStore.getVertex(points.get(2)),
+                glStore.getVertex(points.get(3)));
+            glStore.addFace(tex0,
+                glStore.getVertex(points.get(4)),
+                glStore.getVertex(points.get(5)),
+                glStore.getVertex(points.get(6)),
+                glStore.getVertex(points.get(7)));
+            glStore.addFace(tex0,
+                glStore.getVertex(points.get(8)),
+                glStore.getVertex(points.get(9)),
+                glStore.getVertex(points.get(10)),
+                glStore.getVertex(points.get(11)));
+            glStore.addFace(tex0,
+                glStore.getVertex(points.get(12)),
+                glStore.getVertex(points.get(13)),
+                glStore.getVertex(points.get(14)),
+                glStore.getVertex(points.get(15)));
+            glStore.addFace(tex1,
+                glStore.getVertex(points.get(16)),
+                glStore.getVertex(points.get(17)),
+                glStore.getVertex(points.get(18)),
+                glStore.getVertex(points.get(19)));
+            glStore.addFace(tex1,
+                glStore.getVertex(points.get(20)),
+                glStore.getVertex(points.get(21)),
+                glStore.getVertex(points.get(22)),
+                glStore.getVertex(points.get(23)));
+            glStore.addFace(tex0,
+                glStore.getVertex(points.get(24)),
+                glStore.getVertex(points.get(25)),
+                glStore.getVertex(points.get(26)),
+                glStore.getVertex(points.get(27)));
+            glStore.addFace(tex0,
+                glStore.getVertex(points.get(28)),
+                glStore.getVertex(points.get(29)),
+                glStore.getVertex(points.get(30)),
+                glStore.getVertex(points.get(31)));
+            glStore.addFace(tex0,
+                glStore.getVertex(points.get(32)),
+                glStore.getVertex(points.get(33)),
+                glStore.getVertex(points.get(34)),
+                glStore.getVertex(points.get(35)));
+            glStore.addFace(tex0,
+                glStore.getVertex(points.get(36)),
+                glStore.getVertex(points.get(37)),
+                glStore.getVertex(points.get(38)),
+                glStore.getVertex(points.get(39)));
+        }
+
+
+        public void cobblestone_fence(ExportWebGL.GLStore glStore)
+        {
+            XYZUV[] pre = {
+                new XYZUV(0.250000,0.000000,0.750000, 0.750000,0.000000),
+                new XYZUV(0.250000,1.000000,0.750000, 0.750000,1.000000),
+                new XYZUV(0.250000,1.000000,0.250000, 0.250000,1.000000),
+                new XYZUV(0.250000,0.000000,0.250000, 0.250000,0.000000),
+
+                new XYZUV(0.250000,1.000000,0.750000, 0.750000,0.250000),
+                new XYZUV(0.750000,1.000000,0.750000, 0.750000,0.750000),
+                new XYZUV(0.750000,1.000000,0.250000, 0.250000,0.750000),
+                new XYZUV(0.250000,1.000000,0.250000, 0.250000,0.250000),
+
+                new XYZUV(0.750000,1.000000,0.750000, 0.250000,1.000000),
+                new XYZUV(0.750000,0.000000,0.750000, 0.250000,0.000000),
+                new XYZUV(0.750000,0.000000,0.250000, 0.750000,0.000000),
+                new XYZUV(0.750000,1.000000,0.250000, 0.750000,1.000000),
+
+                new XYZUV(0.750000,0.000000,0.750000, 0.250000,0.750000),
+                new XYZUV(0.250000,0.000000,0.750000, 0.250000,0.250000),
+                new XYZUV(0.250000,0.000000,0.250000, 0.750000,0.250000),
+                new XYZUV(0.750000,0.000000,0.250000, 0.750000,0.750000),
+
+                new XYZUV(0.250000,0.000000,0.250000, 0.750000,0.000000),
+                new XYZUV(0.250000,1.000000,0.250000, 0.750000,1.000000),
+                new XYZUV(0.750000,1.000000,0.250000, 0.250000,1.000000),
+                new XYZUV(0.750000,0.000000,0.250000, 0.250000,0.000000),
+
+                new XYZUV(0.750000,0.000000,0.750000, 0.750000,0.000000),
+                new XYZUV(0.750000,1.000000,0.750000, 0.750000,1.000000),
+                new XYZUV(0.250000,1.000000,0.750000, 0.250000,1.000000),
+                new XYZUV(0.250000,0.000000,0.750000, 0.250000,0.000000),
+            };
+
+            // XXX incomplete, crossposts?
+
+            List<XYZUV> points = Arrays.asList(pre);
+            points = translated(points);
+
+            ExportWebGL.TextureForGL tex0 = ExportWebGL.TextureForGL.from(new BlockPlusData(bt,blockData), BlockSide.SIDE);
+
+            for (int i=0; i<points.size(); i+=4) {
+                glStore.addFace(tex0,
+                    glStore.getVertex(points.get(i+0)),
+                    glStore.getVertex(points.get(i+1)),
+                    glStore.getVertex(points.get(i+2)),
+                    glStore.getVertex(points.get(i+3)));
+            }
+        }
+
+        public void trapdoor(ExportWebGL.GLStore glStore)
+        {
+            XYZUV[] pre = {
+                new XYZUV(0.000000,0.000000,1.000000, 1.000000,0.000000),
+                new XYZUV(0.000000,0.187500,1.000000, 1.000000,0.187500),
+                new XYZUV(0.000000,0.187500,0.000000, 0.000000,0.187500),
+                new XYZUV(0.000000,0.000000,0.000000, 0.000000,0.000000),
+
+                new XYZUV(0.000000,0.187500,1.000000, 1.000000,0.000000),
+                new XYZUV(1.000000,0.187500,1.000000, 1.000000,1.000000),
+                new XYZUV(1.000000,0.187500,0.000000, 0.000000,1.000000),
+                new XYZUV(0.000000,0.187500,0.000000, 0.000000,0.000000),
+
+                new XYZUV(1.000000,0.187500,1.000000, 0.000000,0.187500),
+                new XYZUV(1.000000,0.000000,1.000000, 0.000000,0.000000),
+                new XYZUV(1.000000,0.000000,0.000000, 1.000000,0.000000),
+                new XYZUV(1.000000,0.187500,0.000000, 1.000000,0.187500),
+
+                new XYZUV(1.000000,0.000000,1.000000, 0.000000,1.000000),
+                new XYZUV(0.000000,0.000000,1.000000, 0.000000,0.000000),
+                new XYZUV(0.000000,0.000000,0.000000, 1.000000,0.000000),
+                new XYZUV(1.000000,0.000000,0.000000, 1.000000,1.000000),
+
+                new XYZUV(0.000000,0.000000,0.000000, 1.000000,0.000000),
+                new XYZUV(0.000000,0.187500,0.000000, 1.000000,0.187500),
+                new XYZUV(1.000000,0.187500,0.000000, 0.000000,0.187500),
+                new XYZUV(1.000000,0.000000,0.000000, 0.000000,0.000000),
+
+                new XYZUV(1.000000,0.000000,1.000000, 1.000000,0.000000),
+                new XYZUV(1.000000,0.187500,1.000000, 1.000000,0.187500),
+                new XYZUV(0.000000,0.187500,1.000000, 0.000000,0.187500),
+                new XYZUV(0.000000,0.000000,1.000000, 0.000000,0.000000),
+            };
+
+            List<XYZUV> points = Arrays.asList(pre);
+            points = translated(points);
+
+            ExportWebGL.TextureForGL tex0 = ExportWebGL.TextureForGL.from(new BlockPlusData(bt,blockData), BlockSide.SIDE);
+
+            for (int i=0; i<points.size(); i+=4) {
+                glStore.addFace(tex0,
+                    glStore.getVertex(points.get(i+0)),
+                    glStore.getVertex(points.get(i+1)),
+                    glStore.getVertex(points.get(i+2)),
+                    glStore.getVertex(points.get(i+3)));
+            }
+        }
+
         public void chest(ExportWebGL.GLStore glStore)
         {
             XYZUV[] pre = {
@@ -667,6 +1100,56 @@ public abstract class BlenderMeshElement
             }
         }
 
+        public void fullBlock(ExportWebGL.GLStore glStore)
+        {
+            XYZUV[] pre = {
+                new XYZUV(0.000000,0.000000,1.000000, 1.000000,0.000000),
+                new XYZUV(0.000000,1.000000,1.000000, 1.000000,1.000000),
+                new XYZUV(0.000000,1.000000,0.000000, 0.000000,1.000000),
+                new XYZUV(0.000000,0.000000,0.000000, 0.000000,0.000000),
+
+                new XYZUV(0.000000,1.000000,1.000000, 1.000000,0.000000),
+                new XYZUV(1.000000,1.000000,1.000000, 1.000000,1.000000),
+                new XYZUV(1.000000,1.000000,0.000000, 0.000000,1.000000),
+                new XYZUV(0.000000,1.000000,0.000000, 0.000000,0.000000),
+
+                new XYZUV(1.000000,1.000000,1.000000, 0.000000,1.000000),
+                new XYZUV(1.000000,0.000000,1.000000, 0.000000,0.000000),
+                new XYZUV(1.000000,0.000000,0.000000, 1.000000,0.000000),
+                new XYZUV(1.000000,1.000000,0.000000, 1.000000,1.000000),
+
+                new XYZUV(1.000000,0.000000,1.000000, 0.000000,1.000000),
+                new XYZUV(0.000000,0.000000,1.000000, 0.000000,0.000000),
+                new XYZUV(0.000000,0.000000,0.000000, 1.000000,0.000000),
+                new XYZUV(1.000000,0.000000,0.000000, 1.000000,1.000000),
+
+                new XYZUV(0.000000,0.000000,0.000000, 1.000000,0.000000),
+                new XYZUV(0.000000,1.000000,0.000000, 1.000000,1.000000),
+                new XYZUV(1.000000,1.000000,0.000000, 0.000000,1.000000),
+                new XYZUV(1.000000,0.000000,0.000000, 0.000000,0.000000),
+
+                new XYZUV(1.000000,0.000000,1.000000, 1.000000,0.000000),
+                new XYZUV(1.000000,1.000000,1.000000, 1.000000,1.000000),
+                new XYZUV(0.000000,1.000000,1.000000, 0.000000,1.000000),
+                new XYZUV(0.000000,0.000000,1.000000, 0.000000,0.000000),
+            };
+
+            List<XYZUV> points = Arrays.asList(pre);
+            points = translated(points);
+
+            ExportWebGL.TextureForGL tex0 = ExportWebGL.TextureForGL.from(new BlockPlusData(bt,blockData), BlockSide.SIDE);
+
+            for (int i=0; i<points.size(); i+=4) {
+                glStore.addFace(tex0,
+                    glStore.getVertex(points.get(i+0)),
+                    glStore.getVertex(points.get(i+1)),
+                    glStore.getVertex(points.get(i+2)),
+                    glStore.getVertex(points.get(i+3)));
+            }
+        }
+
+        //
+
         double[][] rotX180 = {
             {1,0,0,0},
             {0,-1,0,1},
@@ -724,9 +1207,14 @@ public abstract class BlenderMeshElement
 
         public List<XYZUV> translated(List<XYZUV> points)
         {
+            return translated(x, y, z, points);
+        }
+
+        public static List<XYZUV> translated(double x, double y, double z, List<XYZUV> points)
+        {
             List<XYZUV> rval = new ArrayList<XYZUV>();
             for (XYZUV point : points) {
-                rval.add(new XYZUV(point.x+x, point.y+y, point.z+z, point.u, point.v));
+                rval.add(new XYZUV(point.x+ x, point.y+ y, point.z+ z, point.u, point.v));
             }
             return rval;
         }
