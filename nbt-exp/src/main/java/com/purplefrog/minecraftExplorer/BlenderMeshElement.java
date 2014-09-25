@@ -235,6 +235,8 @@ public abstract class BlenderMeshElement
                 || bt==180
                 ) {
                 stairs(glStore);
+            } else if (bt == 54) {
+                chest(glStore);
             } else if (bt==59) {
                 crop(glStore);
             } else if (bt==65) {
@@ -584,6 +586,74 @@ public abstract class BlenderMeshElement
                     points = rotated(points, rotY90);
                     break;
             }
+            points = translated(points);
+
+            ExportWebGL.TextureForGL tex0 = ExportWebGL.TextureForGL.from(new BlockPlusData(bt,blockData), BlockSide.SIDE);
+
+            for (int i=0; i<points.size(); i+=4) {
+                glStore.addFace(tex0,
+                    glStore.getVertex(points.get(i+0)),
+                    glStore.getVertex(points.get(i+1)),
+                    glStore.getVertex(points.get(i+2)),
+                    glStore.getVertex(points.get(i+3)));
+            }
+        }
+
+        public void chest(ExportWebGL.GLStore glStore)
+        {
+            XYZUV[] pre = {
+                new XYZUV(0.062500,0.625000,0.937500, 0.218750,0.703125),
+                new XYZUV(0.062500,0.875000,0.937500, 0.218750,0.781250),
+                new XYZUV(0.062500,0.875000,0.062500, 0.000000,0.781250),
+                new XYZUV(0.062500,0.625000,0.062500, 0.000000,0.703125),
+
+                new XYZUV(0.062500,0.875000,0.937500, 0.437500,0.781250),
+                new XYZUV(0.937500,0.875000,0.937500, 0.437500,1.000000),
+                new XYZUV(0.937500,0.875000,0.062500, 0.218750,1.000000),
+                new XYZUV(0.062500,0.875000,0.062500, 0.218750,0.781250),
+
+                new XYZUV(0.937500,0.625000,0.937500, 0.437500,0.484375),
+                new XYZUV(0.937500,0.000000,0.937500, 0.437500,0.328125),
+                new XYZUV(0.937500,0.000000,0.062500, 0.656250,0.328125),
+                new XYZUV(0.937500,0.625000,0.062500, 0.656250,0.484375),
+
+                new XYZUV(0.937500,0.000000,0.937500, 0.437500,0.484375),
+                new XYZUV(0.062500,0.000000,0.937500, 0.656250,0.484375),
+                new XYZUV(0.062500,0.000000,0.062500, 0.656250,0.703125),
+                new XYZUV(0.937500,0.000000,0.062500, 0.437500,0.703125),
+
+                new XYZUV(0.062500,0.625000,0.062500, 0.875000,0.703125),
+                new XYZUV(0.062500,0.875000,0.062500, 0.875000,0.781250),
+                new XYZUV(0.937500,0.875000,0.062500, 0.656250,0.781250),
+                new XYZUV(0.937500,0.625000,0.062500, 0.656250,0.703125),
+
+                new XYZUV(0.937500,0.625000,0.937500, 0.437500,0.703125),
+                new XYZUV(0.937500,0.875000,0.937500, 0.437500,0.781250),
+                new XYZUV(0.062500,0.875000,0.937500, 0.218750,0.781250),
+                new XYZUV(0.062500,0.625000,0.937500, 0.218750,0.703125),
+
+                new XYZUV(0.062500,0.000000,0.937500, 0.000000,0.328125),
+                new XYZUV(0.062500,0.625000,0.937500, 0.218750,0.328125),
+                new XYZUV(0.062500,0.625000,0.062500, 0.218750,0.484375),
+                new XYZUV(0.062500,0.000000,0.062500, 0.000000,0.484375),
+
+                new XYZUV(0.937500,0.875000,0.937500, 0.656250,0.703125),
+                new XYZUV(0.937500,0.625000,0.937500, 0.656250,0.781250),
+                new XYZUV(0.937500,0.625000,0.062500, 0.437500,0.781250),
+                new XYZUV(0.937500,0.875000,0.062500, 0.437500,0.703125),
+
+                new XYZUV(0.062500,0.000000,0.062500, 0.656250,0.484375),
+                new XYZUV(0.062500,0.625000,0.062500, 0.656250,0.328125),
+                new XYZUV(0.937500,0.625000,0.062500, 0.875000,0.328125),
+                new XYZUV(0.937500,0.000000,0.062500, 0.875000,0.484375),
+
+                new XYZUV(0.937500,0.000000,0.937500, 0.437500,0.328125),
+                new XYZUV(0.937500,0.625000,0.937500, 0.437500,0.484375),
+                new XYZUV(0.062500,0.625000,0.937500, 0.218750,0.484375),
+                new XYZUV(0.062500,0.000000,0.937500, 0.218750,0.328125),
+            };
+
+            List<XYZUV> points = Arrays.asList(pre);
             points = translated(points);
 
             ExportWebGL.TextureForGL tex0 = ExportWebGL.TextureForGL.from(new BlockPlusData(bt,blockData), BlockSide.SIDE);

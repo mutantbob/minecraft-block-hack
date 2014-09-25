@@ -104,7 +104,7 @@ public class BlockDatabase
         TransparencyClass.Widget,
         TransparencyClass.Widget,
         TransparencyClass.OpaqueFunky,
-        TransparencyClass.Solid,
+        TransparencyClass.Widget,
         TransparencyClass.Solid,   // 55
         TransparencyClass.Solid,
         TransparencyClass.Solid,
