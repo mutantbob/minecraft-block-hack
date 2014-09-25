@@ -120,11 +120,11 @@ public abstract class BlenderMeshElement
                 glStore.getVertex(x+dx2, y, z+dz2, 0.5,0),
                 glStore.getVertex(x+dx2, y+1, z+dz2, 0.5,1),
                 glStore.getVertex(x+dx1, y+1, z+dz1, 0,1));
-            glStore.addFace(tex,
+            /*glStore.addFace(tex,
                 glStore.getVertex(x+dx2, y, z+dz2, 0.5,0),
                 glStore.getVertex(x+dx1, y, z+dz1, 1,0),
                 glStore.getVertex(x+dx1, y+1, z+dz1, 1,1),
-                glStore.getVertex(x+dx2, y+1, z+dz1, 0.5,1));
+                glStore.getVertex(x+dx2, y+1, z+dz1, 0.5,1));*/
         }
     }
 
@@ -370,43 +370,43 @@ public abstract class BlenderMeshElement
                 new XYZUV(1,0,0.25, 1,0),
                 new XYZUV(1,1,0.25, 1,1),
                 new XYZUV(0,1,0.25, 0,1),
-
+/*
                 new XYZUV(0,0,0.25, 1,0),
                 new XYZUV(0,1,0.25, 1,1),
                 new XYZUV(1,1,0.25, 0,1),
                 new XYZUV(1,0,0.25, 0,0),
-
+*/
                 new XYZUV(0,0,0.75, 0,0),
                 new XYZUV(1,0,0.75, 1,0),
                 new XYZUV(1,1,0.75, 1,1),
                 new XYZUV(0,1,0.75, 0,1),
-
+/*
                 new XYZUV(0,0,0.75, 1,0),
                 new XYZUV(0,1,0.75, 1,1),
                 new XYZUV(1,1,0.75, 0,1),
                 new XYZUV(1,0,0.75, 0,0),
-
+*/
 
                 new XYZUV(0.25,0,0, 0,0),
                 new XYZUV(0.25,0,1, 1,0),
                 new XYZUV(0.25,1,1, 1,1),
                 new XYZUV(0.25,1,0, 0,1),
-
+/*
                 new XYZUV(0.25,0,0, 1,0),
                 new XYZUV(0.25,1,0, 1,1),
                 new XYZUV(0.25,1,1, 0,1),
                 new XYZUV(0.25,0,1, 0,0),
-
+*/
                 new XYZUV(0.75,0,0, 0,0),
                 new XYZUV(0.75,0,1, 1,0),
                 new XYZUV(0.75,1,1, 1,1),
                 new XYZUV(0.75,1,0, 0,1),
-
+/*
                 new XYZUV(0.75,0,0, 1,0),
                 new XYZUV(0.75,1,0, 1,1),
                 new XYZUV(0.75,1,1, 0,1),
                 new XYZUV(0.75,0,1, 0,0),
-
+*/
             };
 
             List<XYZUV> points = Arrays.asList(pre);
@@ -529,20 +529,22 @@ public abstract class BlenderMeshElement
                 new XYZUV(1,0,0.5, 1,0),
                 new XYZUV(1, y1,0.5, 1, y1),
                 new XYZUV(0, y1,0.5, 0, y1),
+/*
                 new XYZUV(0,0,0.5, 1,0),
                 new XYZUV(0, y1,0.5, 1, y1),
                 new XYZUV(1, y1,0.5, 0, y1),
                 new XYZUV(1,0,0.5, 0,0),
-
+*/
 
                 new XYZUV(0.5,0,0, 0,0),
                 new XYZUV(0.5,0,1, 1,0),
                 new XYZUV(0.5, y1,1, 1, y1),
                 new XYZUV(0.5, y1,0, 0, y1),
+/*
                 new XYZUV(0.5,0,0, 1,0),
                 new XYZUV(0.5, y1,0, 1, y1),
                 new XYZUV(0.5, y1,1, 0, y1),
-                new XYZUV(0.5,0,1, 0,0),
+                new XYZUV(0.5,0,1, 0,0),*/
             };
 
             List<XYZUV> points = Arrays.asList(pre);
