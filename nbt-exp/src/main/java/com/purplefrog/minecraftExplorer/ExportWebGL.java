@@ -263,6 +263,8 @@ public class ExportWebGL
         public boolean isTranslucent()
         {
             return blockType == 6
+                || blockType == 8
+                || blockType == 9
                 || blockType == 18
                 || blockType == 20
                 || blockType == 26
