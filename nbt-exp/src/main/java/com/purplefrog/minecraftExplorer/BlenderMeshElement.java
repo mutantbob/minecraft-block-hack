@@ -1220,6 +1220,21 @@ public abstract class BlenderMeshElement
         }
     }
 
+    /**
+     * This is for fences and stuff.  Things that have geometry conditional on their neighbors
+     */
+    public static class ConnectedWidget
+        extends Widget
+    {
+        public final int connectivity;
+
+        public ConnectedWidget(int x, int y, int z, int bt, int blockData, int connectivity)
+        {
+            super(x, y, z, bt, blockData);
+            this.connectivity = connectivity;
+        }
+    }
+
     public static List<XYZUV> rotated(Iterable<XYZUV>points, double[][]matrix)
     {
         List<XYZUV> rval = new ArrayList<XYZUV>();
