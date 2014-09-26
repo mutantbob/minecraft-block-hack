@@ -1,5 +1,8 @@
 package com.purplefrog.minecraftExplorer;
 
+import com.purplefrog.minecraftExplorer.blockmodels.*;
+import org.apache.log4j.*;
+
 import java.io.*;
 import java.util.*;
 
@@ -13,6 +16,8 @@ import java.util.*;
 public abstract class BasicBlockEditor
     implements BlockEditor
 {
+    private static final Logger logger = Logger.getLogger(BasicBlockEditor.class);
+
     @Override
     public void setBlock(int x, int y, int z, int bt)
         throws IOException
@@ -292,6 +297,16 @@ public abstract class BasicBlockEditor
         if (bt==0)
             return; // air doesn't have polys
 
+        if (true) {
+            try {
+                BlockEnvironment env = computeBlockEnvironment(x,y,z);
+                BlockModels.getInstance().modelFor(bt, blockData).getMeshElements(accum, x,y,z, env);
+            } catch (Exception e) {
+                logger.warn("inconceivable", e);
+            }
+            return;
+        }
+
         BlockDatabase.TransparencyClass transparencyClass = BlockDatabase.tClass(bt);
         if (transparencyClass == BlockDatabase.TransparencyClass.Widget ||
             transparencyClass == BlockDatabase.TransparencyClass.OpaqueFunky) {
@@ -317,6 +332,15 @@ public abstract class BasicBlockEditor
                 accum.add(new BlenderMeshElement.Face(x,y,z, bt, blockData, FaceSide.SOUTH));
             }
         }
+    }
+
+    public BlockEnvironment computeBlockEnvironment(int x, int y, int z)
+    {
+        boolean[] culling = new boolean[6];
+        for (BlockEnvironment.Orientation or : BlockEnvironment.Orientation.values()) {
+            culling[or.ordinal()] = BlockDatabase.tClass(getBlockType(x+or.dx,y+or.dy, z+or.dz)) == BlockDatabase.TransparencyClass.Solid ;
+        }
+        return new BlockEnvironment(culling);
     }
 
     public BlenderMeshElement blenderCommandForFunky(int x, int y, int z, int bt, int blockData)

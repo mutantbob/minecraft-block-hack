@@ -124,7 +124,7 @@ public class ExportWebGL
         }
     }
 
-    private void dumpSegment(Writer w, GLStore glStore)
+    public void dumpSegment(Writer w, GLStore glStore)
         throws IOException
     {
         Collections.sort(glStore.faces);
@@ -233,6 +233,12 @@ public class ExportWebGL
             this.blockType = bd.blockType;
         }
 
+        public TextureForGL(String textureName, int blockType)
+        {
+            this.textureName = textureName;
+            this.blockType = blockType;
+        }
+
         @Override
         public int compareTo(TextureForGL arg)
         {
@@ -279,6 +285,20 @@ public class ExportWebGL
 
         public boolean isTranslucent()
         {
+            if ( blockType == -1) {
+                return textureName .startsWith("blocks/potatoes")
+                    || textureName.startsWith("blocks/carrots")
+                    || textureName.startsWith("blocks/iron_bars")
+                    || textureName.startsWith("blocks/ladder")
+                    || textureName.startsWith("blocks/leaves")
+                    || textureName.startsWith("blocks/double_plant_")
+                    || textureName.startsWith("blocks/flower_")
+                    || textureName.startsWith("blocks/torch")
+                    || textureName.startsWith("blocks/redstone_torch")
+                    || textureName.startsWith("blocks/deadbush")
+                    || textureName.startsWith("blocks/glass")
+                    || textureName.startsWith("blocks/wheat");
+            }
             return blockType == 6
                 || blockType == 8
                 || blockType == 9
@@ -335,6 +355,8 @@ public class ExportWebGL
         {
             this.bd = bd;
             this.vertices = vertices;
+            if (vertices.length != 4)
+                throw new IllegalArgumentException("I only do quads");
         }
 
         @Override
