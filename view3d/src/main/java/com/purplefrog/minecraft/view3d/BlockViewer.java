@@ -87,12 +87,13 @@ public class BlockViewer
     public static void blocks8x8parade(BlockModels blockModels, List<BlenderMeshElement> accum)
         throws IOException, JSONException
     {
+        BlockEnvironment env = new BlockEnvironment(new boolean[6]);
         int cols = 8;
-        for (int i=0; i<64; i++) {
-            int bt = i;
+        for (int bt=0; bt<64; bt++) {
             int blockData = 0;
-            int x = 2*(i % cols), y = 0, z = 2*(i / cols);
-            BlockEnvironment env = new BlockEnvironment(new boolean[6]);
+            int x = 2*(bt % cols);
+            int y = 0;
+            int z = 2*(bt / cols);
             blockModels.modelFor(bt, blockData).getMeshElements(accum, x, y, z, env);
         }
     }
