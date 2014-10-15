@@ -3,11 +3,11 @@ package com.purplefrog.minecraft.view3d;
 import com.jogamp.opengl.util.*;
 import com.jogamp.opengl.util.texture.*;
 import com.jogamp.opengl.util.texture.Texture;
-import com.jogamp.opengl.util.texture.awt.*;
 import com.purplefrog.minecraftExplorer.*;
 import com.purplefrog.minecraftExplorer.blockmodels.*;
 import com.sun.j3d.utils.geometry.*;
 import com.sun.j3d.utils.universe.*;
+import org.apache.log4j.*;
 import org.json.*;
 
 import javax.media.j3d.*;
@@ -17,7 +17,6 @@ import javax.media.opengl.glu.*;
 import javax.swing.*;
 import javax.vecmath.*;
 import java.awt.*;
-import java.awt.event.*;
 import java.io.*;
 import java.util.*;
 import java.util.List;
@@ -28,13 +27,17 @@ import java.util.List;
 public class BlockViewer
     implements GLEventListener
 {
+    private static final Logger logger = Logger.getLogger(BlockViewer.class);
 
-
+    private final ExportWebGL.GLStore glStore;
     private boolean quit=false;
     private int w, h;
     private TextureData td;
     private Texture texture;
-    private Rotatron rot = new Rotatron(7.3005);
+    private Rotatron rot = new Rotatron(30);
+    private File textureDir = new File("/home/thoth/src/minecraft-webgl/minecraft-textures");
+    private Map<String, TextureData> textureData = new HashMap<String, TextureData>();
+    private Map<String, Texture> textureMap = new HashMap<String, Texture>();
 
 
     public BlockViewer()
@@ -43,20 +46,41 @@ public class BlockViewer
         File sapling = new File("/home/thoth/src/minecraft-webgl/minecraft-textures/blocks/sapling_birch.png");
         td = TextureIO.newTextureData(GLProfile.getDefault(), sapling, false, "png");
 
-        int bt=1;
-        int blockData=0;
+        BlockModels blockModels = BlockModels.getInstance();
         List<BlenderMeshElement> accum = new ArrayList<BlenderMeshElement>();
-        int x=0, y=0, z=0;
-        BlockEnvironment env = new BlockEnvironment(new boolean[6]);
-        BlockModels.getInstance().modelFor(bt, blockData).getMeshElements(accum, x,y,z, env);
+        if (false) {
+            blocks8x8parade(blockModels, accum);
+        } else {
+            singleBlock(blockModels, accum, 2,0);
+        }
 
-        ExportWebGL.GLStore glStore = new ExportWebGL.GLStore();
+        glStore = new ExportWebGL.GLStore();
         for (BlenderMeshElement bme : accum) {
             bme.accumOpenGL(glStore);
         }
-
     }
-    
+
+    public void singleBlock(BlockModels blockModels, List<BlenderMeshElement> accum, int bt, int blockData)
+        throws IOException, JSONException
+    {
+        int x = 0, y = 0, z = 0;
+        BlockEnvironment env = new BlockEnvironment(new boolean[6]);
+        blockModels.modelFor(bt, blockData).getMeshElements(accum, x, y, z, env);
+    }
+
+    public void blocks8x8parade(BlockModels blockModels, List<BlenderMeshElement> accum)
+        throws IOException, JSONException
+    {
+        int cols = 8;
+        for (int i=0; i<64; i++) {
+            int bt = i;
+            int blockData = 0;
+            int x = 2*(i % cols), y = 0, z = 2*(i / cols);
+            BlockEnvironment env = new BlockEnvironment(new boolean[6]);
+            blockModels.modelFor(bt, blockData).getMeshElements(accum, x, y, z, env);
+        }
+    }
+
     public static void main(String[] argv)
         throws IOException, JSONException
     {
@@ -93,8 +117,40 @@ public class BlockViewer
 
         texture = new Texture(gl, td);
 
+        for (ExportWebGL.GLFace face : glStore.faces) {
+            Texture t = getTextureFor(gl, face.bd.textureName);
+        }
+
     }
-   
+
+    private Texture getTextureFor(GL2 gl, String textureName)
+    {
+        Texture rval = textureMap.get(textureName);
+        if (null==rval) {
+            try {
+                rval = new Texture(gl, getTextureDataFor(textureName));
+                textureMap.put(textureName, rval);
+                rval.enable(gl);
+            } catch (IOException e) {
+                logger.warn("failed to load texture for "+textureName, e);
+                return null;
+            }
+        }
+        return rval;
+    }
+
+    private TextureData getTextureDataFor(String textureName)
+        throws IOException
+    {
+        TextureData rval;
+        rval = textureData.get(textureName);
+        if (rval == null) {
+            rval = TextureIO.newTextureData(GLProfile.getDefault(), new File(textureDir, textureName+".png"), false, "png");
+            textureData.put(textureName, rval);
+        }
+        return rval;
+    }
+
     public void rigMatricesAndStuff(GL2 gl)
     {
         gl.glViewport(0, 0, w, h);
@@ -108,9 +164,12 @@ public class BlockViewer
 
         gl.glShadeModel(gl.GL_SMOOTH);
         gl.glClearColor(0.0f, 0.2f, 0.0f, 0.0f);
-//        gl.glClearDepth(1000.0f);
-//        gl.glEnable(gl.GL_DEPTH_TEST);
-//        gl.glDepthFunc(gl.GL_LEQUAL);
+
+        gl.glClearDepth(1000.0f);
+        gl.glEnable(gl.GL_DEPTH_TEST);
+        gl.glDepthFunc(gl.GL_LEQUAL);
+
+        gl.glEnable(GL.GL_CULL_FACE);
 
         gl.glHint(gl.GL_PERSPECTIVE_CORRECTION_HINT, gl.GL_NICEST);
     }
@@ -118,35 +177,49 @@ public class BlockViewer
     @Override
     public void dispose(GLAutoDrawable glAutoDrawable)
     {
+        textureMap.clear();
+
         System.out.println("dispose()");
 
     }
 
     public void display(GLAutoDrawable drawable) {
-        System.out.println("display()");
+//        System.out.println("display()");
         GL2 gl2 = (GL2) drawable.getGL();
         gl2.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
 
-//        gl2.glTexParameteri(GL2.GL_TEXTURE_2D, GL2.GL_TEXTURE_MAG_FILTER, gl2.GL_NEAREST);
-//        gl2.glTexParameteri(GL2.GL_TEXTURE_2D, GL2.GL_TEXTURE_MIN_FILTER, gl2.GL_NEAREST);
+        gl2.glTexParameteri(GL2.GL_TEXTURE_2D, GL2.GL_TEXTURE_MAG_FILTER, gl2.GL_NEAREST);
+        gl2.glTexParameteri(GL2.GL_TEXTURE_2D, GL2.GL_TEXTURE_MIN_FILTER, gl2.GL_NEAREST);
 
         gl2.glMatrixMode( GL2.GL_MODELVIEW );
         gl2.glLoadIdentity();
-        gl2.glTranslated(0, 0, -7);
+        gl2.glTranslated(0, 0, -24);
 
-        if (true) {
+        gl2.glRotated(5, 1,0,0);
+        gl2.glRotated(rot.getDegrees(), 0,1,0);
 
-            gl2.glRotated(
-                rot.getDegrees(), 0,1,0);
-        }
-
-        gl2.glTranslated(-0.5, -0.5, 0);
+        gl2.glTranslated(-7.5, -1.5, -7.5);
 
 
 //        texture.bind(gl2);
 
-        if (false) {
-            TextureSquare.OneSquare.plain(gl2);
+        if (true) {
+            for (ExportWebGL.GLFace face : glStore.faces) {
+                Texture t = getTextureFor(gl2, face.bd.textureName);
+                if (t==null) {
+                    continue;
+                }
+                t.bind(gl2);
+
+                gl2.glBegin(GL2.GL_QUADS);
+                for (int idx : face.vertices) {
+                    XYZUV vi = glStore.vertices.get(idx);
+                    gl2.glVertex3d(vi.x, vi.y, vi.z);
+                    gl2.glTexCoord2d(vi.u, vi.v);
+                }
+                gl2.glEnd();
+
+            }
         } else {
             gl2.glBegin(GL2.GL_QUADS);
             gl2.glColor3f(1, 0, 0);
