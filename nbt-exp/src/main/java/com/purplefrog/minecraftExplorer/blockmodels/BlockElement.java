@@ -15,6 +15,13 @@ public class BlockElement
     public final Map<String, FaceSpec> faces;
     private RotationSpec rot;
 
+    public static double[] uvSquare = {
+        0, 0,
+        0, 1,
+        1, 1,
+        1, 0
+    };
+
     public BlockElement(Point3Di from, Point3Di to, Map<String, FaceSpec> faces, RotationSpec rot)
     {
         this.from = from;
@@ -25,12 +32,6 @@ public class BlockElement
 
     public void getPolys(List<GLPoly> polys, OneBlockModel textureBrain, BlockEnvironment env)
     {
-        double[] uvSquare = {
-            0, 0,
-            0, 1,
-            1, 1,
-            1, 0,
-        };
 
         double resolution=16;
         double minx = from.x/resolution;
