@@ -14,9 +14,15 @@ import java.util.*;
 public class OneBlockModel
 {
     private static final Logger logger = Logger.getLogger(OneBlockModel.class);
+    private final int yRotation;
 
     protected Map<String, String> textures =new TreeMap<String, String>();
     private List<BlockElement> elements = new ArrayList<BlockElement>();
+
+    public OneBlockModel(int yRotation)
+    {
+        this.yRotation = yRotation;
+    }
 
     public void getMeshElements(List<BlenderMeshElement> accum, int x, int y, int z, BlockEnvironment env)
     {
@@ -25,7 +31,21 @@ public class OneBlockModel
             element.getPolys(polys, this, env);
         }
 
+        if (polys.isEmpty())
+            return;
+
+        if (yRotation != 0) {
+            RotationSpec spec = new RotationSpec(new Point3D(8,8,8), "y", yRotation, false);
+            for (GLPoly poly : polys) {
+                for (int i = 0; i < poly.verts.length; i++) {
+                    poly.verts[i] = spec.transform(poly.verts[i]);
+                }
+            }
+//            System.out.println(yRotation);
+        }
+
         for (GLPoly poly : polys) {
+
             BlenderMeshElement me = new BaconMeshElement(poly, x,y,z);
             accum.add(me);
         }
@@ -96,7 +116,7 @@ public class OneBlockModel
         if (null != parent) {
             rval = parseModel(resources, parent, yRotation);
         } else {
-            rval = new OneBlockModel();
+            rval = new OneBlockModel(yRotation);
         }
         rval.load(root);
 
