@@ -169,6 +169,9 @@ public class BlockViewer
         gl.glEnable(GL.GL_CULL_FACE);
 
         gl.glHint(gl.GL_PERSPECTIVE_CORRECTION_HINT, gl.GL_NICEST);
+
+        gl.glAlphaFunc(GL.GL_GREATER, 0.5f);
+        gl.glEnable(GL2.GL_ALPHA_TEST);
     }
 
     @Override
