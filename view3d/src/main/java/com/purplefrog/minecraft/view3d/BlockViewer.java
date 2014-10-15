@@ -59,7 +59,7 @@ public class BlockViewer
         }
     }
 
-    public void singleBlock(BlockModels blockModels, List<BlenderMeshElement> accum, int bt, int blockData)
+    public static void singleBlock(BlockModels blockModels, List<BlenderMeshElement> accum, int bt, int blockData)
         throws IOException, JSONException
     {
         int x = 0, y = 0, z = 0;
@@ -67,7 +67,7 @@ public class BlockViewer
         blockModels.modelFor(bt, blockData).getMeshElements(accum, x, y, z, env);
     }
 
-    public void blocks8x8parade(BlockModels blockModels, List<BlenderMeshElement> accum)
+    public static void blocks8x8parade(BlockModels blockModels, List<BlenderMeshElement> accum)
         throws IOException, JSONException
     {
         int cols = 8;
