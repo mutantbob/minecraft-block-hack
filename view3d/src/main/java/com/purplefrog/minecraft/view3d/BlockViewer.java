@@ -34,10 +34,10 @@ public class BlockViewer
     private int w, h;
     private TextureData td;
     private Texture texture;
-    private Rotatron rot = new Rotatron(30);
     private File textureDir = new File("/home/thoth/src/minecraft-webgl/minecraft-textures");
     private Map<String, TextureData> textureData = new HashMap<String, TextureData>();
     private Map<String, Texture> textureMap = new HashMap<String, Texture>();
+    protected ModelViewSetter modelView;
 
 
     public BlockViewer()
@@ -50,8 +50,11 @@ public class BlockViewer
         List<BlenderMeshElement> accum = new ArrayList<BlenderMeshElement>();
         if (false) {
             blocks8x8parade(blockModels, accum);
+            modelView = new ModelViewSetter(-7.5, -1.5, -7.5, 5, 0, 0, -20, 24);
+
         } else {
             singleBlock(blockModels, accum, 2,0);
+            modelView = new ModelViewSetter(-0.5, -1.5, -0.5, 10, 0, 0, -12, 10);
         }
 
         glStore = new ExportWebGL.GLStore();
@@ -287,6 +290,47 @@ public class BlockViewer
         {
             new SphereDemo();
 
+        }
+    }
+
+    public static class ModelViewSetter
+    {
+        protected final double pitch;
+        protected final double cx;
+        protected final double cy;
+        protected final double cz;
+        protected final double camx;
+        protected final double camy;
+        protected final double camz;
+        private Rotatron rot;
+
+        public ModelViewSetter(double cx, double cy, double cz, double pitch, int camx, int camy, int camz, int periodSeconds)
+        {
+            this.pitch = pitch;
+            this.cx = cx;
+            this.cy = cy;
+            this.cz = cz;
+            this.camx = camx;
+            this.camy = camy;
+            this.camz = camz;
+            rot = new Rotatron(periodSeconds);
+        }
+
+        /**
+         * call this right after
+         * <pre>
+         gl2.glMatrixMode( GL2.GL_MODELVIEW );
+         gl2.glLoadIdentity();
+         * </pre>
+         */
+        public void invoke(GL2 gl2)
+        {
+            gl2.glTranslated(camx, camy, camz);
+
+            gl2.glRotated(pitch, 1, 0, 0);
+            gl2.glRotated(rot.getDegrees(), 0, 1, 0);
+
+            gl2.glTranslated(cx, cy, cz);
         }
     }
 }
