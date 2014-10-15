@@ -144,6 +144,10 @@ public class BlockViewer
         if (null==rval) {
             try {
                 rval = new Texture(gl, getTextureDataFor(textureName));
+
+                gl.glTexParameteri(GL2.GL_TEXTURE_2D, GL2.GL_TEXTURE_MAG_FILTER, GL2.GL_NEAREST);
+                gl.glTexParameteri(GL2.GL_TEXTURE_2D, GL2.GL_TEXTURE_MIN_FILTER, GL2.GL_NEAREST);
+
                 textureMap.put(textureName, rval);
                 rval.enable(gl);
             } catch (IOException e) {
@@ -205,9 +209,6 @@ public class BlockViewer
 //        System.out.println("display()");
         GL2 gl2 = (GL2) drawable.getGL();
         gl2.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
-
-        gl2.glTexParameteri(GL2.GL_TEXTURE_2D, GL2.GL_TEXTURE_MAG_FILTER, gl2.GL_NEAREST);
-        gl2.glTexParameteri(GL2.GL_TEXTURE_2D, GL2.GL_TEXTURE_MIN_FILTER, gl2.GL_NEAREST);
 
         gl2.glMatrixMode( GL2.GL_MODELVIEW );
         gl2.glLoadIdentity();
