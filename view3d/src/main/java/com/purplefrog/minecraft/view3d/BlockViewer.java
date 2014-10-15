@@ -208,6 +208,10 @@ public class BlockViewer
     public void display(GLAutoDrawable drawable) {
 //        System.out.println("display()");
         GL2 gl2 = (GL2) drawable.getGL();
+        if (true && ! (gl2 instanceof DebugGL2)) {
+            gl2 = new DebugGL2(gl2);
+//            drawable.setGL(new DebugGL2(gl2));
+        }
         gl2.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
 
         gl2.glMatrixMode( GL2.GL_MODELVIEW );
