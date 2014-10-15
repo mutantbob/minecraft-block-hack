@@ -44,18 +44,35 @@ public class BlockViewer
     {
         BlockModels blockModels = BlockModels.getInstance();
         List<BlenderMeshElement> accum = new ArrayList<BlenderMeshElement>();
-        if (false) {
+        if (true) {
+            blocksPerData(blockModels, accum, BlockDatabase.BLOCK_TYPE_TORCH);
+            modelView = new ModelViewSetter(-3.5, -1.5, -3.5, 5, 0, 0, -12, 30);
+
+        } else if (true) {
             blocks8x8parade(blockModels, accum);
             modelView = new ModelViewSetter(-7.5, -1.5, -7.5, 5, 0, 0, -20, 24);
 
         } else {
-            singleBlock(blockModels, accum, 2,0);
+            singleBlock(blockModels, accum, 17,0);
             modelView = new ModelViewSetter(-0.5, -1.5, -0.5, 10, 0, 0, -12, 10);
         }
 
         glStore = new ExportWebGL.GLStore();
         for (BlenderMeshElement bme : accum) {
             bme.accumOpenGL(glStore);
+        }
+    }
+
+    public static void blocksPerData(BlockModels blockModels, List<BlenderMeshElement> accum, int bt)
+        throws IOException, JSONException
+    {
+        BlockEnvironment env = new BlockEnvironment(new boolean[6]);
+        int cols = 4;
+        for (int blockData=0; blockData<16; blockData++) {
+            int x = 2*(blockData % cols);
+            int y = 0;
+            int z = 2*(blockData / cols);
+            blockModels.modelFor(bt, blockData).getMeshElements(accum, x, y, z, env);
         }
     }
 
