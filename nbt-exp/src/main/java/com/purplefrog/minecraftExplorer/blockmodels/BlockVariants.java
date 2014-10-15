@@ -43,16 +43,19 @@ public class BlockVariants
         return x.get(idx);
     }
 
-    public List<OneBlockModel> matchVariant(int blockType, int blocKData)
+    public List<OneBlockModel> matchVariant(int blockType, int blockData)
     {
 //        if (true)
 //            return null;
 
         for (OneBlockModel.Named variant : variants) {
             if (variant.name.startsWith("facing=")) {
-                if (variant.name.equals("facing="+ facingName(blockType, blocKData))) {
+                if (variant.name.equals("facing="+ facingName(blockType, blockData))) {
                     return variant.model;
                 }
+            } else if (variant.name.startsWith("axis=")) {
+                if (variant.name.equals("axis="+axisName(blockType, blockData)))
+                    return variant.model;
             }
         }
 
@@ -62,9 +65,18 @@ public class BlockVariants
         return null;
     }
 
+    public final static String[] LOG_FACING = "y z x none".split(" +");
+    private String axisName(int blockType, int blockData)
+    {
+        int idx = 3&(blockData >> 2);
+        return LOG_FACING[idx];
+    }
+
     public static String facingName(int blockType, int blockData)
     {
-        if (blockType == BlockDatabase.BLOCK_TYPE_TORCH) {
+        if (blockType == BlockDatabase.BLOCK_TYPE_DISPENSER) {
+            return getOrNull(blockData&7, "down", "up", "north", "south", "east", "west");
+        } else if (blockType == BlockDatabase.BLOCK_TYPE_TORCH) {
             return getOrNull(blockData, torch_facings);
         } else if (blockType == BlockDatabase.BLOCK_TYPE_LADDER) {
             return getOrNull(blockData, null, null, "north", "south", "west", "east");

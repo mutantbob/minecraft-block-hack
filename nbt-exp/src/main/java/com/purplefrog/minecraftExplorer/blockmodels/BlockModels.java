@@ -16,6 +16,7 @@ public class BlockModels
 
 
     Map<Integer, BlockVariants> cache = new TreeMap<Integer, BlockVariants>();
+    Map<Integer, BlockVariants> cache2 = new TreeMap<Integer, BlockVariants>();
     private BlockModels()
     {
     }
@@ -28,11 +29,23 @@ public class BlockModels
         return singleton;
     }
 
-    public OneBlockModel modelFor(int blockType, int blocKData)
+    public OneBlockModel modelFor(int blockType, int blockData)
         throws IOException, JSONException
     {
-
+        int combo = (blockType<<8) | (blockData&0xff);
         BlockVariants rval;
+
+        rval = cache2.get(combo);
+        if (rval==null) {
+            String tag = tagFor2(blockType, blockData);
+
+            if (tag != null) {
+                rval = OneBlockModel.parse(new Resources(), tag);
+                cache2.put(combo, rval);
+                return rval.getVariant(blockType, blockData);
+            }
+        }
+
         rval = cache.get(blockType);
         if (null==rval){
             String tag = tagFor(blockType);
@@ -41,7 +54,27 @@ public class BlockModels
             cache.put(blockType, rval);
         }
 
-        return rval.getVariant(blockType, blocKData);
+        return rval.getVariant(blockType, blockData);
+    }
+
+    public static String[] LOGS = ("oak_log spruce_log birch_log jungle_log").split(" +");
+    public static String[] WOODS = ("oak spruce birch jungle acacia dark_oak oak oak").split(" +");
+
+    public static String tagFor2(int blockType, int blockData)
+    {
+
+        switch (blockType) {
+            case 5:
+                return WOODS[blockData&7]+"_planks";
+            case 6:
+                return WOODS[blockData&7]+"_sapling";
+            case 17:
+                return LOGS[blockData&3];
+            case 18:
+                return WOODS[blockData&3]+"_leaves";
+        }
+
+        return null;
     }
 
     private static String tagFor(int blockType)
