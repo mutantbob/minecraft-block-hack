@@ -32,8 +32,6 @@ public class BlockViewer
     private final ExportWebGL.GLStore glStore;
     private boolean quit=false;
     private int w, h;
-    private TextureData td;
-    private Texture texture;
     private File textureDir = new File("/home/thoth/src/minecraft-webgl/minecraft-textures");
     private Map<String, TextureData> textureData = new HashMap<String, TextureData>();
     private Map<String, Texture> textureMap = new HashMap<String, Texture>();
@@ -43,9 +41,6 @@ public class BlockViewer
     public BlockViewer()
         throws IOException, JSONException
     {
-        File sapling = new File("/home/thoth/src/minecraft-webgl/minecraft-textures/blocks/sapling_birch.png");
-        td = TextureIO.newTextureData(GLProfile.getDefault(), sapling, false, "png");
-
         BlockModels blockModels = BlockModels.getInstance();
         List<BlenderMeshElement> accum = new ArrayList<BlenderMeshElement>();
         if (false) {
@@ -117,8 +112,6 @@ public class BlockViewer
         }
 
         rigMatricesAndStuff(gl);
-
-        texture = new Texture(gl, td);
 
         for (ExportWebGL.GLFace face : glStore.faces) {
             Texture t = getTextureFor(gl, face.bd.textureName);
