@@ -8,6 +8,8 @@ import org.json.*;
  */
 public class RotationSpec
 {
+    private final double cosine;
+    private final double sine;
     public Point3D origin;
     public String axis;
     public double angle;
@@ -19,6 +21,10 @@ public class RotationSpec
         this.axis = axis;
         this.angle = angle;
         this.rescale = rescale;
+
+        double theta = angle*Math.PI/180;
+        cosine = Math.cos(theta);
+        sine = Math.sin(theta);
     }
 
     public static RotationSpec parse(JSONObject spec)
@@ -38,9 +44,6 @@ public class RotationSpec
 
     public Point3D transform(Point3D vert)
     {
-        double theta = angle*Math.PI/180;
-        double cosine = Math.cos(theta);
-        double sine = Math.sin(theta);
         double resolution = 16;
         double ox = origin.x / resolution;
         double x0 = vert.x - ox;
