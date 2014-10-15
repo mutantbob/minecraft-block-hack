@@ -13,9 +13,18 @@ public class BlockDatabase
 {
     public final static BlockPlusData chiseledStone = new BlockPlusData(98, 3);
     public static final int BLOCK_TYPE_TNT = 46;
+    public static final int BLOCK_TYPE_TORCH = 50;
+    public static final int BLOCK_TYPE_LADDER = 65;
     public static final int BLOCK_TYPE_GLOWSTONE = 89;
     public static final int BLOCK_TYPE_IRON_BARS = 101;
     public static final int BLOCK_TYPE_GLASS_PANE = 102;
+    public static final int BLOCK_TYPE_PUMPKIN_STEM = 104;
+    public static final int BLOCK_TYPE_MELON_STEM = 105;
+    public static final int BLOCK_TYPE_STONE_BRICK_STAIRS = 109;
+    public static final int BLOCK_TYPE_PUMPKIN = 86;
+    public static final int BLOCK_TYPE_QUARTZ_STAIRS = 156;
+    public static final int BLOCK_TYPE_TRAPDOOR = 96;
+
     public static Map<Integer, int[]> unknownBlockTypes = new TreeMap<Integer, int[]>();
 
     public static int lightLevel(int blockType)
