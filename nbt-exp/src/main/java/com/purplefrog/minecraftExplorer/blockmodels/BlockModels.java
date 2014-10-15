@@ -1,6 +1,7 @@
 package com.purplefrog.minecraftExplorer.blockmodels;
 
 
+import com.purplefrog.minecraftExplorer.*;
 import org.json.*;
 
 import java.io.*;
@@ -64,13 +65,13 @@ public class BlockModels
     {
 
         switch (blockType) {
-            case 5:
+            case BlockDatabase.BLOCK_TYPE_PLANKS:
                 return WOODS[blockData&7]+"_planks";
-            case 6:
+            case BlockDatabase.BLOCK_TYPE_SAPLING:
                 return WOODS[blockData&7]+"_sapling";
-            case 17:
+            case BlockDatabase.BLOCK_TYPE_LOG:
                 return LOGS[blockData&3];
-            case 18:
+            case BlockDatabase.BLOCK_TYPE_LEAVES:
                 return WOODS[blockData&3]+"_leaves";
         }
 

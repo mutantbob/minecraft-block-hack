@@ -12,6 +12,11 @@ import java.util.*;
 public class BlockDatabase
 {
     public final static BlockPlusData chiseledStone = new BlockPlusData(98, 3);
+
+    public static final int BLOCK_TYPE_PLANKS = 5;
+    public static final int BLOCK_TYPE_SAPLING = 6;
+    public static final int BLOCK_TYPE_LOG = 17;
+    public static final int BLOCK_TYPE_LEAVES = 18;
     public static final int BLOCK_TYPE_DISPENSER = 23;
     public static final int BLOCK_TYPE_TNT = 46;
     public static final int BLOCK_TYPE_TORCH = 50;
