@@ -144,6 +144,10 @@ public class BlockViewer
         if (null==rval) {
             try {
                 rval = new Texture(gl, getTextureDataFor(textureName));
+
+                gl.glTexParameteri(GL2.GL_TEXTURE_2D, GL2.GL_TEXTURE_MAG_FILTER, GL2.GL_NEAREST);
+                gl.glTexParameteri(GL2.GL_TEXTURE_2D, GL2.GL_TEXTURE_MIN_FILTER, GL2.GL_NEAREST);
+
                 textureMap.put(textureName, rval);
                 rval.enable(gl);
             } catch (IOException e) {
