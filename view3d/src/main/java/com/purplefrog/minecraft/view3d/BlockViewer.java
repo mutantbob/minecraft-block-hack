@@ -3,6 +3,7 @@ package com.purplefrog.minecraft.view3d;
 import com.jogamp.opengl.util.*;
 import com.jogamp.opengl.util.texture.*;
 import com.jogamp.opengl.util.texture.Texture;
+import com.purplefrog.jwavefrontobj.*;
 import com.purplefrog.minecraftExplorer.*;
 import com.purplefrog.minecraftExplorer.blockmodels.*;
 import com.sun.j3d.utils.geometry.*;
@@ -189,51 +190,82 @@ public class BlockViewer
 
         gl2.glMatrixMode( GL2.GL_MODELVIEW );
         gl2.glLoadIdentity();
-        gl2.glTranslated(0, 0, -24);
+        modelView.invoke(gl2);
 
-        gl2.glRotated(5, 1,0,0);
-        gl2.glRotated(rot.getDegrees(), 0,1,0);
-
-        gl2.glTranslated(-7.5, -1.5, -7.5);
-
-
-//        texture.bind(gl2);
-
-        if (true) {
-            for (ExportWebGL.GLFace face : glStore.faces) {
-                Texture t = getTextureFor(gl2, face.bd.textureName);
-                if (t==null) {
-                    continue;
-                }
-                t.bind(gl2);
-
-                gl2.glBegin(GL2.GL_QUADS);
-                for (int idx : face.vertices) {
-                    XYZUV vi = glStore.vertices.get(idx);
-                    gl2.glVertex3d(vi.x, vi.y, vi.z);
-                    gl2.glTexCoord2d(vi.u, vi.v);
-                }
-                gl2.glEnd();
-
-            }
-        } else {
-            gl2.glBegin(GL2.GL_QUADS);
-            gl2.glColor3f(1, 0, 0);
-            gl2.glVertex2f(0, 0);
-
-            gl2.glColor3f(1, 1, 0);
-            gl2.glVertex2f(1, 0);
-
-            gl2.glColor3f(0, 1, 0);
-            gl2.glVertex2f(1, 1);
-
-            gl2.glColor3f(0, 0, 1);
-            gl2.glVertex2f(0, 1);
-
-            gl2.glEnd();
+        for (ExportWebGL.GLFace face : glStore.faces) {
+            renderFace1(gl2, face);
         }
 
         gl2.glFlush();
+    }
+
+    public void rainbowSquare(GL2 gl2)
+    {
+        gl2.glBegin(GL2.GL_QUADS);
+        gl2.glColor3f(1, 0, 0);
+        gl2.glVertex2f(0, 0);
+
+        gl2.glColor3f(1, 1, 0);
+        gl2.glVertex2f(1, 0);
+
+        gl2.glColor3f(0, 1, 0);
+        gl2.glVertex2f(1, 1);
+
+        gl2.glColor3f(0, 0, 1);
+        gl2.glVertex2f(0, 1);
+
+        gl2.glEnd();
+    }
+
+    public void testFaces(GL2 gl2)
+    {
+        OneBlockModel bm = new OneBlockModel(0);
+        String textureName = "blocks/grass_side";
+        renderFace2(gl2, BlockElement.polyDown(bm, 0, 1, 0, 0, 1, new FaceSpec("blocks/dirt", "down", 0)));
+        FaceSpec side = new FaceSpec(textureName, null, 0);
+        renderFace2(gl2, BlockElement.polyNorth(bm, 0, 1, 0, 1, 0, side));
+        renderFace2(gl2, BlockElement.polySouth(bm, 0, 1, 0, 1, 1, side));
+        renderFace2(gl2, BlockElement.polyEast(bm, 1, 0, 1, 0, 1, side));
+        renderFace2(gl2, BlockElement.polyWest(bm, 0, 0, 1, 0, 1, side));
+        renderFace2(gl2, BlockElement.polyUp(bm, 0, 1, 1, 0, 1, new FaceSpec("blocks/grass_top", "up", 0)));
+    }
+
+    public void renderFace2(GL2 gl2, GLPoly bacon)
+    {
+        Texture t = getTextureFor(gl2, bacon.texture);
+        t.bind(gl2);
+        gl2.glBegin(GL2.GL_QUADS);
+
+        for (int i = 0; i < bacon.verts.length; i++) {
+            Point3D vert = bacon.verts[i];
+            gl2.glTexCoord2d(bacon.uvs[i * 2], 1 - bacon.uvs[i * 2 + 1]);
+            gl2.glVertex3d(vert.x, vert.y, vert.z);
+        }
+
+        gl2.glEnd();
+    }
+
+    public void renderFace1(GL2 gl2, ExportWebGL.GLFace face)
+    {
+        Texture t = getTextureFor(gl2, face.bd.textureName);
+        if (t==null) {
+            return;
+        }
+        t.bind(gl2);
+
+        gl2.glBegin(GL2.GL_QUADS);
+        for (int idx : face.vertices) {
+            XYZUV vi = glStore.vertices.get(idx);
+            gl2.glTexCoord2d(vi.u, vi.v);
+            gl2.glVertex3d(vi.x, vi.y, vi.z);
+        }
+        gl2.glEnd();
+    }
+
+    public static void copyXYZUV(GL2 gl2, XYZUV vi)
+    {
+        gl2.glTexCoord2d(vi.u, vi.v);
+        gl2.glVertex3d(vi.x, vi.y, vi.z);
     }
 
     public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
