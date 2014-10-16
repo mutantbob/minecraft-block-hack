@@ -13,6 +13,7 @@ import java.util.*;
  */
 public class BlockModels
 {
+    public static final OneBlockModel AIR = new OneBlockModel(0);
     private static BlockModels singleton;
 
 
@@ -33,6 +34,10 @@ public class BlockModels
     public OneBlockModel modelFor(int blockType, int blockData)
         throws IOException, JSONException
     {
+        if (blockType==0 || blockType == BlockDatabase.BLOCK_TYPE_PISTON_EXTENSION) {
+            return AIR;
+        }
+
         int combo = (blockType<<8) | (blockData&0xff);
         BlockVariants rval;
 
@@ -142,6 +147,10 @@ public class BlockModels
                 return "bed";
             case 27:
                 return "golden_rail";
+            case 28:
+                return "detector_rail";
+            case 29:
+                return "sticky_piston";
             case 30:
                 return "web";
             case 31:
@@ -155,6 +164,7 @@ public class BlockModels
                 return "piston_head";
             case 35:
                 return "white_wool";
+            // 36 special case
             case 37:
                 return "dandelion";
             case 38:
