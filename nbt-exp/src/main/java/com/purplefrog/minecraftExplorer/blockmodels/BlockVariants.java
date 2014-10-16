@@ -74,7 +74,9 @@ public class BlockVariants
 
     public boolean matches(String part, int blockType, int blockData, BlockEnvironment env)
     {
-        if (part.startsWith("facing=")) {
+        if (part.equals("normal")) {
+            return true; // XXX
+        } else if (part.startsWith("facing=")) {
             return part.equals("facing="+ facingName(blockType, blockData));
         } else if (part.startsWith("axis=")) {
             return part.equals("axis="+axisName(blockType, blockData));
@@ -82,6 +84,24 @@ public class BlockVariants
             return part.equals("half=" + halfName(blockType, blockData));
         } else if (part.startsWith("shape=")) {
             return part.equals("shape=straight"); // XXX
+        } else if (part.startsWith("snowy=")) {
+            return false; // XXX
+        } else if (part.startsWith("moisture=")) {
+            int moisture = 0;
+            try {
+                moisture = Integer.parseInt(part.substring(9));
+            } catch (NumberFormatException e) {
+                logger.warn("bad blockstate variant criteria "+part);
+            }
+            return blockData == moisture;
+        } else if (part.startsWith("age=")) {
+            int age = 0;
+            try {
+                age = Integer.parseInt(part.substring(4));
+            } catch (NumberFormatException e) {
+                logger.warn("bad blockstate variant criteria "+part);
+            }
+            return blockData == age;
         } else if (part.startsWith("north=")||
             part.startsWith("south=")||
             part.startsWith("east=")||
@@ -96,6 +116,8 @@ public class BlockVariants
             boolean actual = env.fenceConnectivity[dir.ordinal()];
             String actual_ = Boolean.toString(actual);
             return tail.equals(actual_);
+        } else if (part.startsWith("powered=")) {
+            return false; // XXX
         } else {
             System.err.println("unrecognized variant criteria "+part);
             return false;
