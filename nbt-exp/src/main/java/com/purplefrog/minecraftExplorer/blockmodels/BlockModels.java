@@ -31,7 +31,7 @@ public class BlockModels
         return singleton;
     }
 
-    public OneBlockModel modelFor(int blockType, int blockData)
+    public OneBlockModel modelFor(int blockType, int blockData, BlockEnvironment env)
         throws IOException, JSONException
     {
         if (blockType==0 || blockType == BlockDatabase.BLOCK_TYPE_PISTON_EXTENSION) {
@@ -48,7 +48,7 @@ public class BlockModels
             if (tag != null) {
                 rval = OneBlockModel.parse(new Resources(), tag);
                 cache2.put(combo, rval);
-                return rval.getVariant(blockType, blockData);
+                return rval.getVariant(blockType, blockData, env);
             }
         }
 
@@ -60,7 +60,7 @@ public class BlockModels
             cache.put(blockType, rval);
         }
 
-        return rval.getVariant(blockType, blockData);
+        return rval.getVariant(blockType, blockData, env);
     }
 
     public static String[] LOGS = ("oak_log spruce_log birch_log jungle_log").split(" +");

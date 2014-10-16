@@ -1,6 +1,7 @@
 package com.purplefrog.minecraftExplorer.blockmodels;
 
 import com.purplefrog.minecraftExplorer.*;
+import org.apache.log4j.*;
 
 import java.util.*;
 
@@ -9,6 +10,8 @@ import java.util.*;
  */
 public class BlockVariants
 {
+    private static final Logger logger = Logger.getLogger(BlockVariants.class);
+
     private final List<OneBlockModel.Named> variants;
 
     public BlockVariants(List<OneBlockModel.Named> v2)
@@ -27,10 +30,10 @@ public class BlockVariants
         "up"
     };
 
-    public OneBlockModel getVariant(int blockType, int blocKData)
+    public OneBlockModel getVariant(int blockType, int blocKData, BlockEnvironment env)
     {
 
-        List<OneBlockModel> x = matchVariant(blockType, blocKData);
+        List<OneBlockModel> x = matchVariant(blockType, blocKData, env);
 
         if (null==x) {
 
@@ -43,13 +46,13 @@ public class BlockVariants
         return x.get(idx);
     }
 
-    public List<OneBlockModel> matchVariant(int blockType, int blockData)
+    public List<OneBlockModel> matchVariant(int blockType, int blockData, BlockEnvironment env)
     {
 //        if (true)
 //            return null;
 
         for (OneBlockModel.Named variant : variants) {
-            if (matchAll(variant.name, blockType, blockData))
+            if (matchAll(variant.name, blockType, blockData, env))
                 return variant.model;
         }
 
@@ -59,17 +62,17 @@ public class BlockVariants
         return null;
     }
 
-    public boolean matchAll(String variantSpec, int blockType, int blockData)
+    public boolean matchAll(String variantSpec, int blockType, int blockData, BlockEnvironment env)
     {
         String[] parts = variantSpec.split(",");
         for (String part : parts) {
-            if (!matches(part, blockType, blockData))
+            if (!matches(part, blockType, blockData, env))
                 return false;
         }
         return true;
     }
 
-    public boolean matches(String part, int blockType, int blockData)
+    public boolean matches(String part, int blockType, int blockData, BlockEnvironment env)
     {
         if (part.startsWith("facing=")) {
             return part.equals("facing="+ facingName(blockType, blockData));
@@ -79,6 +82,20 @@ public class BlockVariants
             return part.equals("half=" + halfName(blockType, blockData));
         } else if (part.startsWith("shape=")) {
             return part.equals("shape=straight"); // XXX
+        } else if (part.startsWith("north=")||
+            part.startsWith("south=")||
+            part.startsWith("east=")||
+            part.startsWith("up=")||
+            part.startsWith("down=")||
+            part.startsWith("west=")) {
+
+            int split = part.indexOf('=');
+            BlockEnvironment.Orientation dir = BlockEnvironment.Orientation.valueOf(part.substring(0, split));
+
+            String tail = part.substring(split +1);
+            boolean actual = env.fenceConnectivity[dir.ordinal()];
+            String actual_ = Boolean.toString(actual);
+            return tail.equals(actual_);
         } else {
             System.err.println("unrecognized variant criteria "+part);
             return false;

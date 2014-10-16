@@ -7,10 +7,12 @@ public class BlockEnvironment
 {
 
     private boolean[] culling;
+    public boolean[] fenceConnectivity;
 
-    public BlockEnvironment(boolean [] culling)
+    public BlockEnvironment(boolean [] culling, boolean[] fenceConnectivity)
     {
         this.culling = culling;
+        this.fenceConnectivity = fenceConnectivity;
     }
 
     public boolean notCulled(String cullface)

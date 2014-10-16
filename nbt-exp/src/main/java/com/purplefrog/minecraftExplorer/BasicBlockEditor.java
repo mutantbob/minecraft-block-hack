@@ -300,7 +300,7 @@ public abstract class BasicBlockEditor
         if (true) {
             try {
                 BlockEnvironment env = computeBlockEnvironment(x,y,z);
-                BlockModels.getInstance().modelFor(bt, blockData).getMeshElements(accum, x,y,z, env);
+                BlockModels.getInstance().modelFor(bt, blockData, env).getMeshElements(accum, x,y,z, env);
             } catch (Exception e) {
                 logger.warn("inconceivable", e);
             }
@@ -336,11 +336,18 @@ public abstract class BasicBlockEditor
 
     public BlockEnvironment computeBlockEnvironment(int x, int y, int z)
     {
+        boolean[] fenceConnnectivity = new boolean[6];
         boolean[] culling = new boolean[6];
         for (BlockEnvironment.Orientation or : BlockEnvironment.Orientation.values()) {
-            culling[or.ordinal()] = BlockDatabase.tClass(getBlockType(x+or.dx,y+or.dy, z+or.dz)) == BlockDatabase.TransparencyClass.Solid ;
+            int bt2 = getBlockType(x + or.dx, y + or.dy, z + or.dz);
+            int i = or.ordinal();
+            culling[i] = BlockDatabase.tClass(bt2) == BlockDatabase.TransparencyClass.Solid ;
+            fenceConnnectivity[i] = culling[i] ||
+                ( bt2!=BlockDatabase.BLOCK_TYPE_PUMPKIN_STEM
+                    && bt2 != BlockDatabase.BLOCK_TYPE_MELON_STEM
+                    && bt2 == getBlockType(x, y, z) );
         }
-        return new BlockEnvironment(culling);
+        return new BlockEnvironment(culling, fenceConnnectivity);
     }
 
     public BlenderMeshElement blenderCommandForFunky(int x, int y, int z, int bt, int blockData)

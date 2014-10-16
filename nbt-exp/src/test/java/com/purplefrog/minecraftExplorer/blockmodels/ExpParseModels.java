@@ -24,9 +24,9 @@ public class ExpParseModels
         boolean[] culling = new boolean[6];
         culling[BlockEnvironment.Orientation.up.ordinal()] = true;
 
-        BlockEnvironment isolation = new BlockEnvironment(culling);
+        BlockEnvironment isolation = new BlockEnvironment(culling, culling);
         if (false) {
-            OneBlockModel m = db.modelFor(1, 0);
+            OneBlockModel m = db.modelFor(1, 0, isolation);
             m.getMeshElements(me, 1,10,100, isolation);
         } else {
 
@@ -36,7 +36,7 @@ public class ExpParseModels
                 int x = i%16;
                 int y = i/16;
 
-                db.modelFor(i,0).getMeshElements(me, x*2, 0, y*2, isolation);
+                db.modelFor(i,0, isolation).getMeshElements(me, x*2, 0, y*2, isolation);
 //                System.out.println(i+" "+me.size());
             }
         }

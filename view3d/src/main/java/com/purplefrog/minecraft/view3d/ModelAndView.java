@@ -19,6 +19,7 @@ import java.util.List;
 public class ModelAndView
 {
     private static final Logger logger = Logger.getLogger(ModelAndView.class);
+    public static final BlockEnvironment ISOLATION = new BlockEnvironment(new boolean[6], new boolean[6]);
 
     private File textureDir = new File("/home/thoth/src/minecraft-webgl/minecraft-textures");
     private Map<String, TextureData> textureData = new HashMap<String, TextureData>();
@@ -87,13 +88,12 @@ public class ModelAndView
     public static void blocksPerData(BlockModels blockModels, List<BlenderMeshElement> accum, int bt)
         throws IOException, JSONException
     {
-        BlockEnvironment env = new BlockEnvironment(new boolean[6]);
         int cols = 4;
         for (int blockData=0; blockData<16; blockData++) {
             int x = 2*(blockData % cols);
             int y = 0;
             int z = 2*(blockData / cols);
-            blockModels.modelFor(bt, blockData).getMeshElements(accum, x, y, z, env);
+            blockModels.modelFor(bt, blockData, ISOLATION).getMeshElements(accum, x, y, z, ISOLATION);
         }
     }
 
@@ -101,8 +101,7 @@ public class ModelAndView
         throws IOException, JSONException
     {
         int x = 0, y = 0, z = 0;
-        BlockEnvironment env = new BlockEnvironment(new boolean[6]);
-        blockModels.modelFor(bt, blockData).getMeshElements(accum, x, y, z, env);
+        blockModels.modelFor(bt, blockData, ISOLATION).getMeshElements(accum, x, y, z, ISOLATION);
     }
 
     public static void cullTest(BlockModels blockModels, List<BlenderMeshElement> accum, int bt, int blockData)
@@ -111,22 +110,21 @@ public class ModelAndView
         for (int i=0; i<6; i++) {
             boolean[] culling = new boolean[6];
             culling[i] = true;
-            BlockEnvironment env = new BlockEnvironment(culling);
-            blockModels.modelFor(bt, blockData).getMeshElements(accum, i*2, 0, 0, env);
+            BlockEnvironment env = new BlockEnvironment(culling, culling);
+            blockModels.modelFor(bt, blockData, env).getMeshElements(accum, i*2, 0, 0, env);
         }
     }
 
     public static void blocks8x8parade(BlockModels blockModels, List<BlenderMeshElement> accum, int baseBT)
         throws IOException, JSONException
     {
-        BlockEnvironment env = new BlockEnvironment(new boolean[6]);
         int cols = 8;
         for (int i=0; i<64; i++) {
             int blockData = 0;
             int x = 2*(i % cols);
             int y = 0;
             int z = 2*(i / cols);
-            blockModels.modelFor(i+ baseBT, blockData).getMeshElements(accum, x, y, z, env);
+            blockModels.modelFor(i+ baseBT, blockData, ISOLATION).getMeshElements(accum, x, y, z, ISOLATION);
         }
     }
 
