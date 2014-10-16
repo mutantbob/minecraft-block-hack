@@ -72,11 +72,11 @@ public class FaceSpec
         String cullface = spec.optString("cullface", null);
         double rotation = spec.optDouble("rotation", 0);
         JSONArray uv16 = spec.optJSONArray("uv");
-        double[] uv = normalize16(uv16);
+        double[] uv = minecraftToOpenGL(uv16);
         return new FaceSpec(textureName, cullface,rotation, uv);
     }
 
-    public static double[] normalize16(JSONArray uv16)
+    public static double[] minecraftToOpenGL(JSONArray uv16)
         throws JSONException
     {
         double[] uv;
@@ -87,6 +87,12 @@ public class FaceSpec
             for (int i=0; i<uv.length; i++) {
                 uv[i] = uv16.getDouble(i)/16;
             }
+
+            // I can't think of a better place to "fix" this
+            double miny = uv[1];
+            double maxy = uv[3];
+            uv[1] = 1-maxy;
+            uv[3] = 1-miny;
         }
         return uv;
     }
