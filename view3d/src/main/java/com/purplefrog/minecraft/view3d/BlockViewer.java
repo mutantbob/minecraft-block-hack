@@ -225,21 +225,24 @@ public class BlockViewer
         {
             gl2.glLineWidth(2.5f);
             double q=-0.5;
+            gl2.glBegin(GL2.GL_LINES);
             gl2.glColor3f(1, 0, 0);
-            gl2.glBegin(GL2.GL_LINES);
-            gl2.glVertex3d(1+q,0+q,0+q);
+            gl2.glVertex3d(1 + q, 0 + q, 0 + q);
+            gl2.glColor3f(1, 0, 0);
             gl2.glVertex3d(0+q, 0+q, 0+q);
             gl2.glEnd();
 
+            gl2.glBegin(GL2.GL_LINES);
             gl2.glColor3f(0, 1, 0);
-            gl2.glBegin(GL2.GL_LINES);
-            gl2.glVertex3d(0+q,1+q,0+q);
+            gl2.glVertex3d(0 + q, 1 + q, 0 + q);
+            gl2.glColor3f(0, 1, 0);
             gl2.glVertex3d(0+q, 0+q, 0+q);
             gl2.glEnd();
 
-            gl2.glColor3f(0, 0, 1);
             gl2.glBegin(GL2.GL_LINES);
-            gl2.glVertex3d(0+q,0+q,1+q);
+            gl2.glColor3f(0, 0, 1);
+            gl2.glVertex3d(0 + q, 0 + q, 1 + q);
+            gl2.glColor3f(0, 0, 1);
             gl2.glVertex3d(0+q, 0+q, 0+q);
             gl2.glEnd();
 
