@@ -8,12 +8,12 @@ import org.json.*;
  */
 public class RotationSpec
 {
-    private final double cosine;
-    private final double sine;
-    public Point3D origin;
-    public String axis;
-    public double angle;
-    public boolean rescale;
+    public final double cosine;
+    public final double sine;
+    public final Point3D origin;
+    public final String axis;
+    public final double angle;
+    public final boolean rescale;
 
     public RotationSpec(Point3D origin, String axis, double angle, boolean rescale)
     {
