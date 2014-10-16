@@ -49,7 +49,7 @@ public class BlockViewer
             modelView = new ModelViewSetter(-3.5, -1.5, -3.5, 5, 0, 0, -12, 30);
 
         } else if (true) {
-            blocks8x8parade(blockModels, accum);
+            blocks8x8parade(blockModels, accum, 64);
             modelView = new ModelViewSetter(-7.5, -1.5, -7.5, 5, 0, 0, -20, 24);
 
         } else {
@@ -84,17 +84,17 @@ public class BlockViewer
         blockModels.modelFor(bt, blockData).getMeshElements(accum, x, y, z, env);
     }
 
-    public static void blocks8x8parade(BlockModels blockModels, List<BlenderMeshElement> accum)
+    public static void blocks8x8parade(BlockModels blockModels, List<BlenderMeshElement> accum, int baseBT)
         throws IOException, JSONException
     {
         BlockEnvironment env = new BlockEnvironment(new boolean[6]);
         int cols = 8;
-        for (int bt=0; bt<64; bt++) {
+        for (int i=0; i<64; i++) {
             int blockData = 0;
-            int x = 2*(bt % cols);
+            int x = 2*(i % cols);
             int y = 0;
-            int z = 2*(bt / cols);
-            blockModels.modelFor(bt, blockData).getMeshElements(accum, x, y, z, env);
+            int z = 2*(i / cols);
+            blockModels.modelFor(i+ baseBT, blockData).getMeshElements(accum, x, y, z, env);
         }
     }
 
