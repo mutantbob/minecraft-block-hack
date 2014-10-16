@@ -77,7 +77,7 @@ public class BlockVariants
         if (part.equals("normal")) {
             return true; // XXX
         } else if (part.startsWith("facing=")) {
-            return part.equals("facing="+ facingName(blockType, blockData));
+            return part.equals("facing="+ facingName(blockType, blockData, env));
         } else if (part.startsWith("axis=")) {
             return part.equals("axis="+axisName(blockType, blockData));
         } else if (part.startsWith("half=")) {
@@ -131,7 +131,7 @@ public class BlockVariants
         return LOG_FACING[idx];
     }
 
-    public static String facingName(int blockType, int blockData)
+    public static String facingName(int blockType, int blockData, BlockEnvironment env)
     {
         if (blockType == BlockDatabase.BLOCK_TYPE_DISPENSER) {
             return getOrNull(blockData&7, "down", "up", "north", "south", "east", "west");
@@ -146,7 +146,13 @@ public class BlockVariants
             return getOrNull(blockData, "south", "west", "north", "east");
         } else if (blockType == BlockDatabase.BLOCK_TYPE_PUMPKIN_STEM
             ||blockType == BlockDatabase.BLOCK_TYPE_MELON_STEM) {
-            return "south"; // XXX wrong
+            for (BlockEnvironment.Orientation or : new BlockEnvironment.Orientation[] {
+                BlockEnvironment.Orientation.north, BlockEnvironment.Orientation.south, BlockEnvironment.Orientation.east, BlockEnvironment.Orientation.west
+            }) {
+                if (env.fenceConnectivity[or.ordinal()])
+                    return or.name();
+            }
+            return "up";
         } else if (blockType == BlockDatabase.BLOCK_TYPE_TRAPDOOR) {
             return getOrNull(blockData, "south,half=bottom,open=false",
                 "north,half=bottom,open=false",
