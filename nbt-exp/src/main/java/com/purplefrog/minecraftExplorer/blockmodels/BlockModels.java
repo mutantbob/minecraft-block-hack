@@ -60,6 +60,11 @@ public class BlockModels
 
     public static String[] LOGS = ("oak_log spruce_log birch_log jungle_log").split(" +");
     public static String[] WOODS = ("oak spruce birch jungle acacia dark_oak oak oak").split(" +");
+    public static String[] SANDSTONE = "sandstone chiseled_sandstone smooth_sandstone sandstone".split(" +");
+    public static String[] TALL_GRASS = "dead_bush tall_grass fern dead_bush".split(" +");
+    public static String[] WOOL = "white orange magenta light_blue yellow lime pink gray silver cyan purple blue brown green red black".split(" +");
+    public static String[] POPPY = ("poppy blue_orchid allium houstonia red_tulip orange_tulip white_tulip pink_tulip " +
+        "oxeye_daisy poppy poppy poppy poppy poppy poppy poppy").split(" +");
 
     public static String tagFor2(int blockType, int blockData)
     {
@@ -73,6 +78,15 @@ public class BlockModels
                 return LOGS[blockData&3];
             case BlockDatabase.BLOCK_TYPE_LEAVES:
                 return WOODS[blockData&3]+"_leaves";
+            case BlockDatabase.BLOCK_TYPE_SANDSTONE:
+                return SANDSTONE[blockData&3];
+            case BlockDatabase.BLOCK_TYPE_TALL_GRASS:
+                return TALL_GRASS[blockData&3];
+            case BlockDatabase.BLOCK_TYPE_WOOL:
+                return WOOL[blockData]+"_wool";
+            case BlockDatabase.BLOCK_TYPE_POPPY:
+                return POPPY[blockData];
+
         }
 
         return null;

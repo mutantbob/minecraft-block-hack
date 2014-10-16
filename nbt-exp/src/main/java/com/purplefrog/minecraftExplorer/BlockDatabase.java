@@ -18,6 +18,8 @@ public class BlockDatabase
     public static final int BLOCK_TYPE_LOG = 17;
     public static final int BLOCK_TYPE_LEAVES = 18;
     public static final int BLOCK_TYPE_DISPENSER = 23;
+    public static final int BLOCK_TYPE_SANDSTONE = 24;
+    public static final int BLOCK_TYPE_PISTON_EXTENSION = 36;
     public static final int BLOCK_TYPE_TNT = 46;
     public static final int BLOCK_TYPE_TORCH = 50;
     public static final int BLOCK_TYPE_LADDER = 65;
@@ -30,6 +32,9 @@ public class BlockDatabase
     public static final int BLOCK_TYPE_PUMPKIN = 86;
     public static final int BLOCK_TYPE_QUARTZ_STAIRS = 156;
     public static final int BLOCK_TYPE_TRAPDOOR = 96;
+    public static final int BLOCK_TYPE_TALL_GRASS = 31;
+    public static final int BLOCK_TYPE_WOOL = 35;
+    public static final int BLOCK_TYPE_POPPY = 38;
 
     public static Map<Integer, int[]> unknownBlockTypes = new TreeMap<Integer, int[]>();
 
