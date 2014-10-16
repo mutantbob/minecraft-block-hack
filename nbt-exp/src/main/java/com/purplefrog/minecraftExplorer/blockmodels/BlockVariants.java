@@ -49,20 +49,40 @@ public class BlockVariants
 //            return null;
 
         for (OneBlockModel.Named variant : variants) {
-            if (variant.name.startsWith("facing=")) {
-                if (variant.name.equals("facing="+ facingName(blockType, blockData))) {
-                    return variant.model;
-                }
-            } else if (variant.name.startsWith("axis=")) {
-                if (variant.name.equals("axis="+axisName(blockType, blockData)))
-                    return variant.model;
-            }
+            if (matchAll(variant.name, blockType, blockData))
+                return variant.model;
         }
 
         if (variants.size()==1 && variants.get(0).name.equals("normal"))
             return null;
 
         return null;
+    }
+
+    public boolean matchAll(String variantSpec, int blockType, int blockData)
+    {
+        String[] parts = variantSpec.split(",");
+        for (String part : parts) {
+            if (!matches(part, blockType, blockData))
+                return false;
+        }
+        return true;
+    }
+
+    public boolean matches(String part, int blockType, int blockData)
+    {
+        if (part.startsWith("facing=")) {
+            return part.equals("facing="+ facingName(blockType, blockData));
+        } else if (part.startsWith("axis=")) {
+            return part.equals("axis="+axisName(blockType, blockData));
+        } else if (part.startsWith("half=")) {
+            return part.equals("half=" + halfName(blockType, blockData));
+        } else if (part.startsWith("shape=")) {
+            return part.equals("shape=straight"); // XXX
+        } else {
+            System.err.println("unrecognized variant criteria "+part);
+            return false;
+        }
     }
 
     public final static String[] LOG_FACING = "y z x none".split(" +");
@@ -108,6 +128,16 @@ public class BlockVariants
         } else if (blockType==26) {
             // XXX
             return null;
+        }
+
+        return null;
+    }
+
+    public static String halfName(int blockType, int blockData)
+    {
+        if (blockType == BlockDatabase.BLOCK_TYPE_STONE_BRICK_STAIRS
+            || blockType == BlockDatabase.BLOCK_TYPE_QUARTZ_STAIRS) {
+            return getOrNull(1&(blockData>>3), "bottom", "top");
         }
 
         return null;
