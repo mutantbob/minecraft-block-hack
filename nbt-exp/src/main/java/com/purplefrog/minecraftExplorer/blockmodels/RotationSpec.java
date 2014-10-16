@@ -53,8 +53,8 @@ public class RotationSpec
         double z0 = vert.z - oz;
         double x2=x0,y2=y0,z2=z0;
         if (axis.equals("y")) {
-            x2 =x0 * cosine + z0*sine;
-            z2 = z0*cosine - x0*sine;
+            x2 =x0 * cosine - z0*sine;
+            z2 = x0*sine + z0*cosine;
         } else if (axis.equals("x")) {
             y2 = y0*cosine -z0*sine;
             z2 = y0*sine + z0*cosine;
