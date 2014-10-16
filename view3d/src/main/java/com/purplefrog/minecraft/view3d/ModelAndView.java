@@ -32,18 +32,44 @@ public class ModelAndView
     {
         BlockModels blockModels = BlockModels.getInstance();
         List<BlenderMeshElement> accum = new ArrayList<BlenderMeshElement>();
-        if (false) {
-            int bt = BlockDatabase.BLOCK_TYPE_END_PORTAL_FRAME;
-            blocksPerData(blockModels, accum, bt);
-            modelView = new ModelViewSetter(-3.5, -1.5, -3.5, 5, 0, 0, -12, 30);
 
-        } else if (true) {
-            blocks8x8parade(blockModels, accum, 64);
-            modelView = new ModelViewSetter(-7.5, -1.5, -7.5, 5, 0, 0, -20, 24);
+        switch (2) {
+            case 3:
 
-        } else {
-            singleBlock(blockModels, accum, BlockDatabase.BLOCK_TYPE_END_PORTAL_FRAME,0);
-            modelView = new ModelViewSetter(-0.5, -1.5, -0.5, 10, 0, 0, -6, 120);
+            {
+                MinecraftWorld world = new MinecraftWorld(WorldPicker.pickSaveDir());
+                BasicBlockEditor editor = new AnvilBlockEditor(world);
+
+                int x1 = -485, y1=60, z1=130, x2=-426, y2=80, z2=190;
+
+                for (int y=y1; y<=y2; y++) {
+                    for (int x = x1; x<=x2; x++) {
+                        for (int z=z1; z<=z2; z++) {
+                            editor.getBlenderMeshElements(accum, x,y,z);
+                        }
+                    }
+                }
+                modelView = new ModelViewSetter(-(x1+x2)/2.0, -(y1+y2)/2.0, -(z1+z2)/2.0,
+                    5,
+                    0,0, -Math.max(x2-x1, z2-z1)*1.2,
+                    30);
+            }
+                break;
+            case 2:
+                int bt = BlockDatabase.BLOCK_TYPE_QUARTZ_STAIRS;
+                blocksPerData(blockModels, accum, bt);
+                modelView = new ModelViewSetter(-3.5, -1.5, -3.5, 5, 0, 0, -12, 30);
+
+                break;
+            case 1:
+                blocks8x8parade(blockModels, accum, 64);
+                modelView = new ModelViewSetter(-7.5, -1.5, -7.5, 5, 0, 0, -20, 24);
+
+                break;
+            default:
+                singleBlock(blockModels, accum, BlockDatabase.BLOCK_TYPE_TRAPDOOR, 0);
+                modelView = new ModelViewSetter(-0.5, -1.5, -0.5, 10, 0, 0, -6, 120);
+                break;
         }
 
         glStore = new ExportWebGL.GLStore();
@@ -208,7 +234,7 @@ public class ModelAndView
         protected final double camz;
         private Rotatron rot;
 
-        public ModelViewSetter(double cx, double cy, double cz, double pitch, int camx, int camy, int camz, int periodSeconds)
+        public ModelViewSetter(double cx, double cy, double cz, double pitch, double camx, double camy, double camz, double periodSeconds)
         {
             this.pitch = pitch;
             this.cx = cx;

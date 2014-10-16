@@ -71,7 +71,7 @@ public class BlockViewer
         gl.glLoadIdentity();
 
         GLU glu=new GLU();
-        glu.gluPerspective(45.0f, ((float) w /(float)h), 0.1f, 100.0f);
+        glu.gluPerspective(45.0f, ((float) w /(float)h), 0.1f, 1000.0f);
 
         gl.glMatrixMode(gl.GL_MODELVIEW);
 
