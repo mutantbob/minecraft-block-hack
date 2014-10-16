@@ -25,6 +25,57 @@ public class BlockEnvironment
         return !culling[idx];
     }
 
+    public BlockEnvironment rotated90()
+    {
+        return new BlockEnvironment(rotated90(culling), rotated90(fenceConnectivity));
+    }
+
+    public BlockEnvironment rotated180()
+    {
+        return new BlockEnvironment(rotated180(culling), rotated180(fenceConnectivity));
+    }
+
+    public BlockEnvironment rotated270()
+    {
+        return new BlockEnvironment(rotated270(culling), rotated270(fenceConnectivity));
+    }
+
+    private boolean[] rotated270(boolean[] dirs)
+    {
+        return new boolean[] {
+            dirs[0],
+            dirs[1],
+            dirs[4],
+            dirs[5],
+            dirs[3],
+            dirs[2],
+        };
+    }
+
+    private boolean[] rotated180(boolean[] dirs)
+    {
+        return new boolean[] {
+            dirs[0],
+            dirs[1],
+            dirs[3],
+            dirs[2],
+            dirs[5],
+            dirs[4],
+        };
+    }
+
+    private boolean[] rotated90(boolean[] dirs)
+    {
+        return new boolean[] {
+            dirs[0],
+            dirs[1],
+            dirs[5],
+            dirs[4],
+            dirs[2],
+            dirs[3],
+        };
+    }
+
     public enum Orientation
     {
         up(0,1,0),

@@ -26,6 +26,17 @@ public class OneBlockModel
 
     public void getMeshElements(List<BlenderMeshElement> accum, int x, int y, int z, BlockEnvironment env)
     {
+        switch ( (yRotation+45)%360 / 90) {
+            case 1:
+                env = env.rotated90();
+                break;
+            case 2:
+                env = env.rotated180();
+                break;
+            case 3:
+                env = env.rotated270();
+                break;
+        }
         List<GLPoly> polys = new ArrayList<GLPoly>();
         for (BlockElement element : elements) {
             element.getPolys(polys, this, env);
