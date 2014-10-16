@@ -66,6 +66,12 @@ public class ModelAndView
                 modelView = new ModelViewSetter(-7.5, -1.5, -7.5, 5, 0, 0, -20, 24);
 
                 break;
+            case 4:
+            {
+                cullTest(blockModels,  accum, 1, 0);
+                modelView = new ModelViewSetter(-5.5, -1.5, -0.5, 10, 0, 0, -12, 10);
+            }
+            break;
             default:
                 singleBlock(blockModels, accum, BlockDatabase.BLOCK_TYPE_TRAPDOOR, 0);
                 modelView = new ModelViewSetter(-0.5, -1.5, -0.5, 10, 0, 0, -6, 120);
@@ -97,6 +103,17 @@ public class ModelAndView
         int x = 0, y = 0, z = 0;
         BlockEnvironment env = new BlockEnvironment(new boolean[6]);
         blockModels.modelFor(bt, blockData).getMeshElements(accum, x, y, z, env);
+    }
+
+    public static void cullTest(BlockModels blockModels, List<BlenderMeshElement> accum, int bt, int blockData)
+        throws IOException, JSONException
+    {
+        for (int i=0; i<6; i++) {
+            boolean[] culling = new boolean[6];
+            culling[i] = true;
+            BlockEnvironment env = new BlockEnvironment(culling);
+            blockModels.modelFor(bt, blockData).getMeshElements(accum, i*2, 0, 0, env);
+        }
     }
 
     public static void blocks8x8parade(BlockModels blockModels, List<BlenderMeshElement> accum, int baseBT)
