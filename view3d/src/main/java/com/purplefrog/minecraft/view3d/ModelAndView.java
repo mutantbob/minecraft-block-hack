@@ -41,15 +41,11 @@ public class ModelAndView
                 MinecraftWorld world = new MinecraftWorld(WorldPicker.pickSaveDir());
                 BasicBlockEditor editor = new AnvilBlockEditor(world);
 
-                int x1 = -485, y1=60, z1=130, x2=-426, y2=80, z2=190;
+//                int x1 = -485, y1=60, z1=130, x2=-426, y2=80, z2=190;
+//                int x1 = -485, y1=60, z1=159, x2=-448, y2=80, z2=190;
+                int x1 = -448, y1=60, z1=159, x2=-439, y2=80, z2=180;
 
-                for (int y=y1; y<=y2; y++) {
-                    for (int x = x1; x<=x2; x++) {
-                        for (int z=z1; z<=z2; z++) {
-                            editor.getBlenderMeshElements(accum, x,y,z);
-                        }
-                    }
-                }
+                convertWorld(accum, editor, x1, y1, z1, x2, y2, z2);
                 modelView = new ModelViewSetter(-(x1+x2)/2.0, -(y1+y2)/2.0, -(z1+z2)/2.0,
                     5,
                     0,0, -Math.max(x2-x1, z2-z1)*1.2,
@@ -82,6 +78,17 @@ public class ModelAndView
         glStore = new ExportWebGL.GLStore();
         for (BlenderMeshElement bme : accum) {
             bme.accumOpenGL(glStore);
+        }
+    }
+
+    public void convertWorld(List<BlenderMeshElement> accum, BasicBlockEditor editor, int x1, int y1, int z1, int x2, int y2, int z2)
+    {
+        for (int y=y1; y<=y2; y++) {
+            for (int x = x1; x<=x2; x++) {
+                for (int z=z1; z<=z2; z++) {
+                    editor.getBlenderMeshElements(accum, x,y,z);
+                }
+            }
         }
     }
 
