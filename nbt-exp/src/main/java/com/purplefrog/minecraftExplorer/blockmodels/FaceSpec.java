@@ -7,18 +7,26 @@ import org.json.*;
  */
 public class FaceSpec
 {
+    public final static double[] DEFAULT_UVSQUARE = {
+        0, 0,
+        0, 1,
+        1, 1,
+        1, 0
+    };
     public final String textureName;
     public final String cullface;
     public final double rotate;
+    private double[] uv;
     private final double sine;
     private final double cosine;
 
-    public FaceSpec(String textureName, String cullface, double rotate)
+    public FaceSpec(String textureName, String cullface, double rotate, double[] uvMinMax)
     {
 
         this.textureName = textureName;
         this.cullface = cullface;
         this.rotate = rotate;
+        this.uv = expandUV(uvMinMax);
 
         if (rotate==0) {
             sine=0;
@@ -38,13 +46,49 @@ public class FaceSpec
         }
     }
 
+    private double[] expandUV(double[] uvMinMax)
+    {
+        if (uvMinMax ==null)
+            return null;
+
+        final double minX = uvMinMax[0];
+        final double minY = uvMinMax[1];
+        final double maxX = uvMinMax[2];
+        final double maxY = uvMinMax[3];
+        double[] rval = new double[] {
+            minX, minY,
+            minX, maxY,
+            maxX, maxY,
+            maxX, minY,
+        };
+
+        return rval;
+    }
+
     public static FaceSpec parse(JSONObject spec)
         throws JSONException
     {
         String textureName = spec.getString("texture");
         String cullface = spec.optString("cullface", null);
         double rotation = spec.optDouble("rotation", 0);
-        return new FaceSpec(textureName, cullface,rotation);
+        JSONArray uv16 = spec.optJSONArray("uv");
+        double[] uv = normalize16(uv16);
+        return new FaceSpec(textureName, cullface,rotation, uv);
+    }
+
+    public static double[] normalize16(JSONArray uv16)
+        throws JSONException
+    {
+        double[] uv;
+        if (uv16 == null) {
+            uv=null;
+        } else {
+            uv = new double[uv16.length()];
+            for (int i=0; i<uv.length; i++) {
+                uv[i] = uv16.getDouble(i)/16;
+            }
+        }
+        return uv;
     }
 
     public double[] rotated(double[] uvSquare)
@@ -66,5 +110,10 @@ public class FaceSpec
         }
 
         return rval;
+    }
+
+    public double[] getUV()
+    {
+        return rotated(uv==null ? DEFAULT_UVSQUARE : uv);
     }
 }

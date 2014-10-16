@@ -15,13 +15,6 @@ public class BlockElement
     public final Map<String, FaceSpec> faces;
     private RotationSpec rot;
 
-    public static double[] uvSquare = {
-        0, 0,
-        0, 1,
-        1, 1,
-        1, 0
-    };
-
     public BlockElement(Point3Di from, Point3Di to, Map<String, FaceSpec> faces, RotationSpec rot)
     {
         this.from = from;
@@ -93,7 +86,7 @@ public class BlockElement
         double y1 = miny;
         double y2 = maxy;
         return new GLPoly(giraffe(2, 1, maxx, x1, y1, x1, y2, x2, y2, x2, y1),
-            spec.rotated(uvSquare), textureBrain.resolveTexture(spec.textureName));
+            spec.getUV(), textureBrain.resolveTexture(spec.textureName));
     }
 
     public static GLPoly polyWest(OneBlockModel textureBrain, double minx, double miny, double maxy, double minz, double maxz, FaceSpec spec)
@@ -104,7 +97,7 @@ public class BlockElement
         double y2 = maxy;
 
         return new GLPoly(giraffe(2, 1, minx, x2, y1, x2, y2, x1, y2, x1, y1),
-            spec.rotated(uvSquare), textureBrain.resolveTexture(spec.textureName));
+            spec.getUV(), textureBrain.resolveTexture(spec.textureName));
     }
 
     public static GLPoly polySouth(OneBlockModel textureBrain, double minx, double maxx, double miny, double maxy, double maxz, FaceSpec spec)
@@ -114,7 +107,7 @@ public class BlockElement
         double y1 = miny;
         double y2 = maxy;
         return new GLPoly(giraffe(0, 1, maxz, x2, y1, x2, y2, x1, y2, x1, y1),
-            spec.rotated(uvSquare), textureBrain.resolveTexture(spec.textureName));
+            spec.getUV(), textureBrain.resolveTexture(spec.textureName));
     }
 
     public static GLPoly polyNorth(OneBlockModel textureBrain, double minx, double maxx, double miny, double maxy, double minz, FaceSpec spec)
@@ -124,7 +117,7 @@ public class BlockElement
         double y1 = miny;
         double y2 = maxy;
         return new GLPoly(giraffe(0, 1, minz, x1, y1, x1, y2, x2, y2, x2, y1),
-            spec.rotated(uvSquare), textureBrain.resolveTexture(spec.textureName));
+            spec.getUV(), textureBrain.resolveTexture(spec.textureName));
     }
 
     public static GLPoly polyUp(OneBlockModel textureBrain, double minx, double maxx, double maxy, double minz, double maxz, FaceSpec spec)
@@ -134,7 +127,7 @@ public class BlockElement
         double z2 = maxz;
         double z1 = minz;
         return new GLPoly(giraffe(0, 2, maxy, x1, z1, x1, z2, x2, z2, x2, z1),
-            spec.rotated(uvSquare), textureBrain.resolveTexture(spec.textureName));
+            spec.getUV(), textureBrain.resolveTexture(spec.textureName));
     }
 
     public static GLPoly polyDown(OneBlockModel textureBrain, double minx, double maxx, double miny, double minz, double maxz, FaceSpec spec)
@@ -144,7 +137,7 @@ public class BlockElement
         double z1 = minz;
         double z2 = maxz;
         return new GLPoly(giraffe(0, 2, miny, x1, z1, x1, z2, x2, z2, x2, z1),
-            spec.rotated(uvSquare), textureBrain.resolveTexture(spec.textureName));
+            spec.getUV(), textureBrain.resolveTexture(spec.textureName));
     }
 
     private GLPoly rotated(GLPoly glPoly)

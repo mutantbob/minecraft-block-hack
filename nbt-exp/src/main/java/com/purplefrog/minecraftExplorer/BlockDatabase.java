@@ -30,6 +30,7 @@ public class BlockDatabase
     public static final int BLOCK_TYPE_MELON_STEM = 105;
     public static final int BLOCK_TYPE_STONE_BRICK_STAIRS = 109;
     public static final int BLOCK_TYPE_PUMPKIN = 86;
+    public static final int BLOCK_TYPE_END_PORTAL_FRAME = 120;
     public static final int BLOCK_TYPE_QUARTZ_STAIRS = 156;
     public static final int BLOCK_TYPE_TRAPDOOR = 96;
     public static final int BLOCK_TYPE_TALL_GRASS = 31;

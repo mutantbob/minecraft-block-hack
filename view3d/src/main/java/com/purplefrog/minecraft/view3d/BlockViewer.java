@@ -45,7 +45,8 @@ public class BlockViewer
         BlockModels blockModels = BlockModels.getInstance();
         List<BlenderMeshElement> accum = new ArrayList<BlenderMeshElement>();
         if (true) {
-            blocksPerData(blockModels, accum, BlockDatabase.BLOCK_TYPE_TORCH);
+            int bt = BlockDatabase.BLOCK_TYPE_END_PORTAL_FRAME;
+            blocksPerData(blockModels, accum, bt);
             modelView = new ModelViewSetter(-3.5, -1.5, -3.5, 5, 0, 0, -12, 30);
 
         } else if (true) {
@@ -274,13 +275,13 @@ public class BlockViewer
     {
         OneBlockModel bm = new OneBlockModel(0);
         String textureName = "blocks/grass_side";
-        renderFace2(gl2, BlockElement.polyDown(bm, 0, 1, 0, 0, 1, new FaceSpec("blocks/dirt", "down", 0)));
-        FaceSpec side = new FaceSpec(textureName, null, 0);
+        renderFace2(gl2, BlockElement.polyDown(bm, 0, 1, 0, 0, 1, new FaceSpec("blocks/dirt", "down", 0, null)));
+        FaceSpec side = new FaceSpec(textureName, null, 0, null);
         renderFace2(gl2, BlockElement.polyNorth(bm, 0, 1, 0, 1, 0, side));
         renderFace2(gl2, BlockElement.polySouth(bm, 0, 1, 0, 1, 1, side));
         renderFace2(gl2, BlockElement.polyEast(bm, 1, 0, 1, 0, 1, side));
         renderFace2(gl2, BlockElement.polyWest(bm, 0, 0, 1, 0, 1, side));
-        renderFace2(gl2, BlockElement.polyUp(bm, 0, 1, 1, 0, 1, new FaceSpec("blocks/grass_top", "up", 0)));
+        renderFace2(gl2, BlockElement.polyUp(bm, 0, 1, 1, 0, 1, new FaceSpec("blocks/grass_top", "up", 0, null)));
     }
 
     public void renderFace2(GL2 gl2, GLPoly bacon)
