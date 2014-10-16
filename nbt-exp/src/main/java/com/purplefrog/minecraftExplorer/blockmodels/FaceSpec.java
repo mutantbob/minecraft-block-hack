@@ -41,8 +41,8 @@ public class FaceSpec
             sine=-1;
             cosine=0;
         } else {
-            sine = Math.sin(rotate * 3.14159 / 180);
-            cosine = Math.cos(rotate * 3.14159 / 180);
+            sine = Math.sin(rotate * Math.PI / 180);
+            cosine = Math.cos(rotate * Math.PI / 180);
         }
     }
 
