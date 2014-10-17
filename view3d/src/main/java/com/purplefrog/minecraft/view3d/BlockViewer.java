@@ -177,7 +177,8 @@ public class BlockViewer
         gl2.glMatrixMode( GL2.GL_MODELVIEW );
         gl2.glLoadIdentity();
 
-        mv.display(gl2);
+        mv.display2(gl2);
+//        mv.display3(gl2,shaderProgram);
 
         {
             gl2.glLineWidth(2.5f);

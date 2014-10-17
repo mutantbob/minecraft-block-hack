@@ -1,5 +1,7 @@
 package com.purplefrog.minecraft.view3d;
 
+import com.jogamp.common.nio.*;
+import com.jogamp.opengl.util.*;
 import com.jogamp.opengl.util.texture.*;
 import com.jogamp.opengl.util.texture.Texture;
 import com.purplefrog.jwavefrontobj.*;
@@ -10,6 +12,7 @@ import org.json.*;
 
 import javax.media.opengl.*;
 import java.io.*;
+import java.nio.*;
 import java.util.*;
 import java.util.List;
 
@@ -60,6 +63,23 @@ public class ModelAndView
 
                 house1(accum);
                 break;
+            case 6:
+            {
+                int x =0;
+                double y=0;
+                int z=0;
+
+                GLPoly poly = new GLPoly(new Point3D[]{new Point3D(x, y, z + 0.5), new Point3D( 1, 0, 0.5), new Point3D( 1, 1, 0.5), new Point3D(0, 1,  0.5)},
+                    FaceSpec.DEFAULT_UVSQUARE, "blocks/dirt");
+                for (x=-10; x<10; x++) {
+                    for (z=-10; z<10; z++) {
+                        accum.add(new OneBlockModel.BaconMeshElement(poly, x, (int) y, z));
+                    }
+                }
+                modelView = new ModelViewSetter(-0.5, -1.5, -0.5, 10, 0, 0, -6, 10);
+            }
+            break;
+
             default:
                 singleBlock(blockModels, accum, BlockDatabase.BLOCK_TYPE_TRAPDOOR, 0);
                 modelView = new ModelViewSetter(-0.5, -1.5, -0.5, 10, 0, 0, -6, 120);
@@ -229,6 +249,61 @@ public class ModelAndView
 
     }
 
+    public void display2(GL2 gl2)
+    {
+        modelView.invoke(gl2);
+
+        if (true) {
+            gl2.glEnable(GL2.GL_VERTEX_ARRAY);
+            gl2.glEnable(GL2.GL_TEXTURE_COORD_ARRAY);
+        } else {
+            gl2.glEnableClientState(GL2.GL_VERTEX_ARRAY);
+            gl2.glEnableClientState(GL2.GL_TEXTURE_COORD_ARRAY);
+        }
+
+        for (ExportWebGL.GLFace face : glStore.faces) {
+
+            renderFace4(gl2, face);
+        }
+
+
+        gl2.glDisable(GL2.GL_VERTEX_ARRAY);
+        gl2.glDisable(GL2.GL_TEXTURE_COORD_ARRAY);
+    }
+
+    /**
+     * use a GLSL shader program
+     */
+    public void display3(GL2 gl2, int shaderProgram)
+    {
+        modelView.invoke(gl2);
+
+        gl2.glEnableClientState(GL2.GL_VERTEX_ARRAY);
+        gl2.glEnableClientState(GL2.GL_TEXTURE_COORD_ARRAY);
+
+        try {
+            int mvpm_idx = gl2.glGetUniformLocation(shaderProgram, "u_modelViewProjMatrix");
+            gl2.glUniformMatrix4fv(mvpm_idx, 1, false, modelView.getMatrix(), 0);
+        } catch (GLException e) {
+            // ignore it
+        }
+
+        int tint_idx = gl2.glGetUniformLocation(shaderProgram, "u_tint");
+        int tex_idx = gl2.glGetUniformLocation(shaderProgram, "tex0");
+
+        gl2.glUniform4fv(tint_idx, 1, new float[]{1,1,1,1}, 0);
+        gl2.glUniform1i(tex_idx, 0);
+
+        for (ExportWebGL.GLFace face : glStore.faces) {
+
+            float[] tint = null;
+            if (face.bd.textureName.equals("grass_top"))
+                tint = new float[]{ 0,0.7f,0, 1};
+
+            renderFace3(gl2, face, shaderProgram);
+        }
+    }
+
     public void renderFace2(GL2 gl2, GLPoly bacon)
     {
         Texture t = getTextureFor(gl2, bacon.texture);
@@ -259,6 +334,90 @@ public class ModelAndView
             gl2.glVertex3d(vi.x, vi.y, vi.z);
         }
         gl2.glEnd();
+    }
+
+    public void renderFace3(GL2 gl2, ExportWebGL.GLFace face, int program)
+    {
+        Texture t = getTextureFor(gl2, face.bd.textureName);
+        if (t==null) {
+            return;
+        }
+        t.bind(gl2);
+
+        int vpos_idx = gl2.glGetAttribLocation(program, "vPosition");
+
+
+        FloatBuffer xyz = Buffers.newDirectFloatBuffer(face.vertices.length * 3);
+        FloatBuffer uvs = Buffers.newDirectFloatBuffer(face.vertices.length * 2);
+        ShortBuffer quads = Buffers.newDirectShortBuffer(face.vertices.length);
+
+
+        for (int j=0; j<face.vertices.length; j++) {
+            XYZUV vi = glStore.vertices.get(j);
+            xyz.put(j*3+0, (float) vi.x);
+            xyz.put(j*3+1, (float) vi.y);
+            xyz.put(j*3+2, (float) vi.z);
+
+            uvs.put(j*2, (float) vi.u);
+            uvs.put(j*2+1, (float) vi.v);
+
+            quads.put(j,(short) j);
+        }
+
+//        int[] bufferIdx = new int[3];
+//        gl2.glGenBuffers(bufferIdx.length, bufferIdx, 0);
+
+//        gl2.glBindBuffer(GL2.GL_ARRAY_BUFFER, bufferIdx[0]);
+
+        gl2.glVertexPointer(3, GL2.GL_FLOAT, 0, xyz);
+
+//        gl2.glBindBuffer(GL2.GL_ARRAY_BUFFER, bufferIdx[1]);
+        gl2.glTexCoordPointer(2, GL2.GL_FLOAT, 0, uvs);
+
+
+        gl2.glDrawElements(GL2.GL_QUADS, 1, GL2.GL_UNSIGNED_SHORT, quads);
+
+    }
+
+    public void renderFace4(GL2 gl2, ExportWebGL.GLFace face)
+    {
+        Texture t = getTextureFor(gl2, face.bd.textureName);
+        if (t==null) {
+            return;
+        }
+        t.bind(gl2);
+
+
+        FloatBuffer xyz = Buffers.newDirectFloatBuffer(face.vertices.length * 3);
+        FloatBuffer uvs = Buffers.newDirectFloatBuffer(face.vertices.length * 2);
+        ShortBuffer quads = Buffers.newDirectShortBuffer(face.vertices.length);
+
+
+        for (int j=0; j<face.vertices.length; j++) {
+            XYZUV vi = glStore.vertices.get(face.vertices[j]);
+            xyz.put(j*3+0, (float) vi.x);
+            xyz.put(j*3+1, (float) vi.y);
+            xyz.put(j*3+2, (float) vi.z);
+
+            uvs.put(j*2, (float) vi.u);
+            uvs.put(j*2+1, (float) vi.v);
+
+            quads.put(j,(short) j);
+        }
+
+//        int[] bufferIdx = new int[3];
+//        gl2.glGenBuffers(bufferIdx.length, bufferIdx, 0);
+
+//        gl2.glBindBuffer(GL2.GL_ARRAY_BUFFER, bufferIdx[0]);
+
+        gl2.glVertexPointer(3, GL2.GL_FLOAT, 0, xyz);
+
+//        gl2.glBindBuffer(GL2.GL_ARRAY_BUFFER, bufferIdx[1]);
+        gl2.glTexCoordPointer(2, GL2.GL_FLOAT, 0, uvs);
+
+
+        gl2.glDrawElements(GL2.GL_QUADS, quads.capacity(), GL2.GL_UNSIGNED_SHORT, quads);
+
     }
 
     public static void copyXYZUV(GL2 gl2, XYZUV vi)
@@ -320,6 +479,35 @@ public class ModelAndView
             gl2.glRotated(rot.getDegrees(), 0, 1, 0);
 
             gl2.glTranslated(cx, cy, cz);
+        }
+
+        public float[] getMatrix()
+        {
+            PMVMatrix gl2 = new PMVMatrix();
+
+            gl2.glMatrixMode(GL2.GL_PROJECTION);
+            gl2.glLoadIdentity();
+            gl2.gluPerspective(30, 1, 0.01f, 1000f);
+
+            gl2.glMatrixMode(GL2.GL_MODELVIEW);
+
+            gl2.glTranslatef((float) camx, (float) camy, (float) camz);
+
+            gl2.glRotatef((float) pitch, 1, 0, 0);
+            gl2.glRotatef((float) rot.getDegrees(), 0, 1, 0);
+
+            gl2.glTranslatef((float) cx, (float) cy, (float) cz);
+
+            gl2.update();
+
+            FloatBuffer tmp = gl2.glGetPMvMatrixf();
+
+            float[] rval = new float[16];
+            for (int i=0; i<rval.length; i++) {
+                rval[i] = tmp.get(i);
+            }
+
+            return rval;
         }
     }
 }
