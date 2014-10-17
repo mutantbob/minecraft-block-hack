@@ -69,6 +69,8 @@ public class AnvilBlockEditor
     {
         try {
             Anvil.Section section = getSection(x, y, z);
+            if (section==null)
+                return null;
             return new BlockPlusData(section.getBlocks().get(x,y,z), section.getData().get(x, y, z));
         } catch (IOException e) {
             return null;
