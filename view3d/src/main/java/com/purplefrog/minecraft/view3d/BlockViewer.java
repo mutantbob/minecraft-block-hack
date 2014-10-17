@@ -9,6 +9,7 @@ import javax.media.opengl.glu.*;
 import javax.swing.*;
 import java.awt.*;
 import java.io.*;
+import java.nio.*;
 
 /**
  * Created by thoth on 10/14/14.
@@ -19,10 +20,15 @@ public class BlockViewer
     private boolean quit=false;
     private int w, h;
     ModelAndView mv;
+    protected String vertexShaderSrc;
+    protected String fragmentShaderSrc;
+    private int shaderProgram;
 
     public BlockViewer()
         throws IOException, JSONException
     {
+        vertexShaderSrc = slurp(BlockViewer.class.getResourceAsStream("vertex-shader.glsl"));
+        fragmentShaderSrc = slurp(BlockViewer.class.getResourceAsStream("fragment-shader.glsl"));
         mv = new ModelAndView();
     }
 
@@ -58,10 +64,70 @@ public class BlockViewer
             quit=true;
         }
 
+//        compileAndLoadShaderProgram(gl); XXX
+
         rigMatricesAndStuff(gl);
 
         mv.loadTextures(gl);
 
+    }
+
+    public void compileAndLoadShaderProgram(GL2 gl)
+    {
+        int vertexSP = gl.glCreateShader(GL2.GL_VERTEX_SHADER);
+        gl.glShaderSource(vertexSP, 1, new String[] {vertexShaderSrc}, null);
+        gl.glCompileShader(vertexSP);
+
+        int fragmentSP = gl.glCreateShader(GL2.GL_FRAGMENT_SHADER);
+        gl.glShaderSource(fragmentSP, 1, new String[] {fragmentShaderSrc}, null);
+        gl.glCompileShader(fragmentSP);
+
+        shaderProgram = gl.glCreateProgram();
+        gl.glAttachShader(shaderProgram, vertexSP);
+        gl.glAttachShader(shaderProgram, fragmentSP);
+        gl.glLinkProgramARB(shaderProgram);
+        gl.glValidateProgram(shaderProgram);
+
+        IntBuffer intBuffer = IntBuffer.allocate(1);
+        gl.glGetProgramiv(shaderProgram, GL2.GL_LINK_STATUS,intBuffer);
+        if (intBuffer.get(0)!=1){
+            gl.glGetProgramiv(shaderProgram, GL2.GL_INFO_LOG_LENGTH,intBuffer);
+            int size = intBuffer.get(0);
+            System.err.println("Program link error: ");
+            if (size>0){
+                ByteBuffer byteBuffer = ByteBuffer.allocate(size);
+                gl.glGetProgramInfoLog(shaderProgram, size, intBuffer, byteBuffer);
+                for (byte b:byteBuffer.array()){
+                    System.err.print((char)b);
+                }
+            } else {
+                System.out.println("Unknown");
+            }
+            throw new IllegalStateException("failed to link shaders");
+        }
+        gl.glUseProgram(shaderProgram);
+    }
+
+    public static String slurp(InputStream istr)
+        throws IOException
+    {
+        return slurp(new InputStreamReader(istr));
+    }
+
+    public static String slurp(Reader r)
+        throws IOException
+    {
+        StringBuilder rval = new StringBuilder();
+
+        char[] buf = new char[4<<10];
+        while (true) {
+            int n = r.read(buf);
+            if (n<1)
+                break;
+            rval.append(buf, 0, n);
+        }
+
+        return rval.toString();
     }
 
     public void rigMatricesAndStuff(GL2 gl)
