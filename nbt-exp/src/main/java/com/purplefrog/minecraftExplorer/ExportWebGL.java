@@ -348,6 +348,7 @@ public class ExportWebGL
         implements Comparable<GLFace>
     {
 
+        public static final int NVERTS = 4;
         public final TextureForGL bd;
         public final int[] vertices;
 
@@ -355,7 +356,7 @@ public class ExportWebGL
         {
             this.bd = bd;
             this.vertices = vertices;
-            if (vertices.length != 4)
+            if (vertices.length != NVERTS)
                 throw new IllegalArgumentException("I only do quads");
         }
 

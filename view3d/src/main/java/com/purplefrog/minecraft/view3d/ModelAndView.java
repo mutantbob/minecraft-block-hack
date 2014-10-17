@@ -29,6 +29,7 @@ public class ModelAndView
     private Map<String, Texture> textureMap = new HashMap<String, Texture>();
 
     private final ExportWebGL.GLStore glStore;
+    private final GLBufferSet bufferSet;
     protected ModelViewSetter modelView;
 
     public ModelAndView()
@@ -91,7 +92,7 @@ public class ModelAndView
             bme.accumOpenGL(glStore);
         }
 
-        GLBufferSet bufferSet = new GLBufferSet(glStore);
+        bufferSet = new GLBufferSet(glStore);
     }
 
     public void farm(List<BlenderMeshElement> accum)
@@ -261,9 +262,27 @@ public class ModelAndView
             gl2.glEnableClientState(GL2.GL_TEXTURE_COORD_ARRAY);
         }
 
-        for (ExportWebGL.GLFace face : glStore.faces) {
+        if (true) {
 
-            renderFace4(gl2, face);
+            gl2.glVertexPointer(3, GL2.GL_FLOAT, 0, bufferSet.vertices);
+
+            gl2.glTexCoordPointer(2, GL2.GL_FLOAT, 0, bufferSet.uvs);
+
+            for (Map.Entry<String, ShortBuffer> en : bufferSet.perTexture.entrySet()) {
+                String tname = en.getKey();
+                Texture t = getTextureFor(gl2, tname);
+                if (t==null) {
+                    logger.error("no texture for "+tname);
+                    continue;
+                }
+                t.bind(gl2);
+                ShortBuffer indices = en.getValue();
+                gl2.glDrawElements(GL2.GL_QUADS, indices.limit(), GL2.GL_UNSIGNED_SHORT, indices);
+            }
+        } else {
+            for (ExportWebGL.GLFace face : glStore.faces) {
+                renderFace4(gl2, face);
+            }
         }
 
 
@@ -375,7 +394,7 @@ public class ModelAndView
         gl2.glTexCoordPointer(2, GL2.GL_FLOAT, 0, uvs);
 
 
-        gl2.glDrawElements(GL2.GL_QUADS, 1, GL2.GL_UNSIGNED_SHORT, quads);
+        gl2.glDrawElements(GL2.GL_QUADS, quads.limit(), GL2.GL_UNSIGNED_SHORT, quads);
 
     }
 
