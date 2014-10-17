@@ -86,22 +86,11 @@ public class BlockVariants
             return part.equals("shape=straight"); // XXX
         } else if (part.startsWith("snowy=")) {
             return false; // XXX
-        } else if (part.startsWith("moisture=")) {
-            int moisture = 0;
-            try {
-                moisture = Integer.parseInt(part.substring(9));
-            } catch (NumberFormatException e) {
-                logger.warn("bad blockstate variant criteria "+part);
-            }
-            return blockData == moisture;
-        } else if (part.startsWith("age=")) {
-            int age = 0;
-            try {
-                age = Integer.parseInt(part.substring(4));
-            } catch (NumberFormatException e) {
-                logger.warn("bad blockstate variant criteria "+part);
-            }
-            return blockData == age;
+        } else if (part.startsWith("moisture=")
+            || part.startsWith("age=")
+            || part.startsWith("stage=")) {
+            int arg = numericCriteriaArg(part);
+            return blockData == arg;
         } else if (part.startsWith("north=")||
             part.startsWith("south=")||
             part.startsWith("east=")||
@@ -118,10 +107,29 @@ public class BlockVariants
             return tail.equals(actual_);
         } else if (part.startsWith("powered=")) {
             return false; // XXX
+        } else if (part.startsWith("extended=")) {
+            return false; // XXX
+        } else if (part.startsWith("alt=")) {
+            return false; // XXX
+        } else if (part.startsWith("wet=")) {
+            return part.equals("wet="+(blockData>=7));
+        } else if (part.startsWith("variant=")) {
+            return false; // XXX
         } else {
             System.err.println("unrecognized variant criteria "+part);
             return false;
         }
+    }
+
+    public int numericCriteriaArg(String part)
+    {
+        int arg = 0;
+        try {
+            arg = Integer.parseInt(part.substring(part.indexOf('=')+1));
+        } catch (NumberFormatException e) {
+            logger.warn("bad blockstate variant criteria "+part);
+        }
+        return arg;
     }
 
     public final static String[] LOG_FACING = "y z x none".split(" +");
