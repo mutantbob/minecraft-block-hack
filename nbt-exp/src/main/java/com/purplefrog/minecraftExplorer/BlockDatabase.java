@@ -15,6 +15,10 @@ public class BlockDatabase
 
     public static final int BLOCK_TYPE_PLANKS = 5;
     public static final int BLOCK_TYPE_SAPLING = 6;
+    public static final int BLOCK_TYPE_FLOWING_WATER = 8;
+    public static final int BLOCK_TYPE_WATER = 9;
+    public static final int BLOCK_TYPE_FLOWING_LAVA = 10;
+    public static final int BLOCK_TYPE_LAVA = 11;
     public static final int BLOCK_TYPE_LOG = 17;
     public static final int BLOCK_TYPE_LEAVES = 18;
     public static final int BLOCK_TYPE_DISPENSER = 23;

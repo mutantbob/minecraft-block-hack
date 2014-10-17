@@ -38,6 +38,22 @@ public class BlockModels
             return AIR;
         }
 
+        if (blockType == BlockDatabase.BLOCK_TYPE_WATER
+            || blockType == BlockDatabase.BLOCK_TYPE_FLOWING_WATER) {
+            OneBlockModel rval = new OneBlockModel(0);
+            rval.textures.put("all", "blocks/water_still");
+            rval.elements = Arrays.asList(waterCube());
+            return rval;
+        }
+
+        if (blockType == BlockDatabase.BLOCK_TYPE_LAVA
+            || blockType == BlockDatabase.BLOCK_TYPE_FLOWING_LAVA) {
+            OneBlockModel rval = new OneBlockModel(0);
+            rval.textures.put("all", "blocks/lava_still");
+            rval.elements = Arrays.asList(waterCube());
+            return rval;
+        }
+
         int combo = (blockType<<8) | (blockData&0xff);
         BlockVariants rval;
 
@@ -61,6 +77,17 @@ public class BlockModels
         }
 
         return rval.getVariant(blockType, blockData, env);
+    }
+
+    public static BlockElement waterCube()
+    {
+        Map<String, FaceSpec> faces = new TreeMap<String, FaceSpec>();
+        for (BlockEnvironment.Orientation or : BlockEnvironment.Orientation.values()) {
+            faces.put(or.name(), new FaceSpec("#all", or.name(), 0, new double[]{
+                0,0,1,1.0/32
+            }));
+        }
+        return new BlockElement(new Point3Di(0, 0, 0), new Point3Di(16, 16, 16), faces, null);
     }
 
     public static String[] LOGS = ("oak_log spruce_log birch_log jungle_log").split(" +");

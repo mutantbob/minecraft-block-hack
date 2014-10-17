@@ -16,8 +16,8 @@ public class OneBlockModel
     private static final Logger logger = Logger.getLogger(OneBlockModel.class);
     private final int yRotation;
 
-    protected Map<String, String> textures =new TreeMap<String, String>();
-    private List<BlockElement> elements = new ArrayList<BlockElement>();
+    public Map<String, String> textures =new TreeMap<String, String>();
+    public List<BlockElement> elements = new ArrayList<BlockElement>();
 
     public OneBlockModel(int yRotation)
     {
