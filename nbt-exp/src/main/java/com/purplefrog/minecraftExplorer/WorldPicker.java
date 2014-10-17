@@ -27,7 +27,7 @@ public class WorldPicker
         return new File(savesDir(), "menger-5");
     }
 
-    private static File savesDir()
+    public static File savesDir()
     {
         return new File(System.getProperty("user.home"), ".minecraft/saves");
     }

@@ -34,24 +34,7 @@ public class ModelAndView
         BlockModels blockModels = BlockModels.getInstance();
         List<BlenderMeshElement> accum = new ArrayList<BlenderMeshElement>();
 
-        switch (2) {
-            case 3:
-
-            {
-                MinecraftWorld world = new MinecraftWorld(WorldPicker.pickSaveDir());
-                BasicBlockEditor editor = new AnvilBlockEditor(world);
-
-//                int x1 = -485, y1=60, z1=130, x2=-426, y2=80, z2=190;
-//                int x1 = -485, y1=60, z1=159, x2=-448, y2=80, z2=190;
-                int x1 = -448, y1=60, z1=159, x2=-439, y2=80, z2=180;
-
-                convertWorld(accum, editor, x1, y1, z1, x2, y2, z2);
-                modelView = new ModelViewSetter(-(x1+x2)/2.0, -(y1+y2)/2.0, -(z1+z2)/2.0,
-                    5,
-                    0,0, -Math.max(x2-x1, z2-z1)*1.2,
-                    30);
-            }
-                break;
+        switch (6) {
             case 2:
                 int bt = BlockDatabase.BLOCK_TYPE_QUARTZ_STAIRS;
                 blocksPerData(blockModels, accum, bt);
@@ -63,12 +46,20 @@ public class ModelAndView
                 modelView = new ModelViewSetter(-7.5, -1.5, -7.5, 5, 0, 0, -20, 24);
 
                 break;
+            case 3:
+
+                farm(accum);
+                break;
             case 4:
             {
                 cullTest(blockModels,  accum, 1, 0);
                 modelView = new ModelViewSetter(-5.5, -1.5, -0.5, 10, 0, 0, -12, 10);
             }
             break;
+            case 5:
+
+                house1(accum);
+                break;
             default:
                 singleBlock(blockModels, accum, BlockDatabase.BLOCK_TYPE_TRAPDOOR, 0);
                 modelView = new ModelViewSetter(-0.5, -1.5, -0.5, 10, 0, 0, -6, 120);
@@ -79,6 +70,48 @@ public class ModelAndView
         for (BlenderMeshElement bme : accum) {
             bme.accumOpenGL(glStore);
         }
+
+        GLBufferSet bufferSet = new GLBufferSet(glStore);
+    }
+
+    public void farm(List<BlenderMeshElement> accum)
+    {
+        MinecraftWorld world = new MinecraftWorld(WorldPicker.pickSaveDir());
+        BasicBlockEditor editor = new AnvilBlockEditor(world);
+
+        int x1 = -485, y1=60, z1=130, x2=-426, y2=80, z2=190;
+
+        convertWorld(accum, editor, x1, y1, z1, x2, y2, z2);
+    }
+
+    public void farmHouse(List<BlenderMeshElement> accum)
+    {
+        MinecraftWorld world = new MinecraftWorld(WorldPicker.pickSaveDir());
+        BasicBlockEditor editor = new AnvilBlockEditor(world);
+
+        int x1 = -485, y1=60, z1=159, x2=-448, y2=80, z2=190;
+
+        convertWorld(accum, editor, x1, y1, z1, x2, y2, z2);
+    }
+
+    public void melonPatch(List<BlenderMeshElement> accum)
+    {
+        MinecraftWorld world = new MinecraftWorld(WorldPicker.pickSaveDir());
+        BasicBlockEditor editor = new AnvilBlockEditor(world);
+
+        int x1 = -448, y1=60, z1=159, x2=-439, y2=80, z2=180;
+
+        convertWorld(accum, editor, x1, y1, z1, x2, y2, z2);
+    }
+
+    public void house1(List<BlenderMeshElement> accum)
+    {
+        MinecraftWorld world = new MinecraftWorld(new File(WorldPicker.savesDir(), "2014-Sep-28 v1_8"));
+        BasicBlockEditor editor = new AnvilBlockEditor(world);
+
+        int x1 = 160, y1=50, z1=190, x2=210, y2=90, z2=240;
+
+        convertWorld(accum, editor, x1, y1, z1, x2, y2, z2);
     }
 
     public void convertWorld(List<BlenderMeshElement> accum, BasicBlockEditor editor, int x1, int y1, int z1, int x2, int y2, int z2)
@@ -90,6 +123,10 @@ public class ModelAndView
                 }
             }
         }
+        modelView = new ModelViewSetter(-(x1+x2)/2.0, -(y1+y2)/2.0, -(z1+z2)/2.0,
+            5,
+            0,0, -Math.max(x2-x1, z2-z1)*1.2,
+            30);
     }
 
     public static void blocksPerData(BlockModels blockModels, List<BlenderMeshElement> accum, int bt)
