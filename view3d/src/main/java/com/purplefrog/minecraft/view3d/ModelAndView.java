@@ -325,7 +325,15 @@ public class ModelAndView
     {
         float[] tint;
         if ("blocks/grass_top".equals(tname)
-            || "blocks/grass_side_overlay".equals(tname)) {
+            || "blocks/grass_side_overlay".equals(tname)
+            || "blocks/waterlily".equals(tname)
+            || "blocks/melon_stem_connected".equals(tname)
+            || "blocks/melon_stem_disconnected".equals(tname)
+            || "blocks/pumpkin_stem_connected".equals(tname)
+            || "blocks/pumpkin_stem_disconnected".equals(tname)
+            || "blocks/vine".equals(tname)
+            || tname.startsWith("blocks/leaves_")
+            ) {
             tint = GRASS_TINT;
         } else {
             tint = NO_TINT;
