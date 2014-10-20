@@ -88,7 +88,7 @@ public class ModelAndView
 
         {
 
-            ExportWebGL.GLStore glStore = new ExportWebGL.GLStore();
+            ExportWebGL.GLStore glStore = new ExportWebGL.GLStore(false);
             for (BlenderMeshElement bme : accum) {
                 if (glStore.vertices.size() >= 64000) {
                     bufferSets.add(new GLBufferSet(glStore));

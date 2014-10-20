@@ -371,6 +371,24 @@ public class ExportWebGL
     {
         public List<XYZUV> vertices = new ArrayList<XYZUV>();
         public List<GLFace> faces = new ArrayList<GLFace>();
+        /**
+         * should we check for duplicate vertices and reuse them?  vertex reuse costs CPU and saves memory.
+         */
+        public boolean reuseVertices=true;
+
+        public GLStore()
+        {
+            this(true);
+        }
+
+        /**
+         *
+         * @param reuseVertices should we check for duplicate vertices and reuse them?  vertex reuse costs CPU and saves memory.
+         */
+        public GLStore(boolean reuseVertices)
+        {
+            this.reuseVertices = reuseVertices;
+        }
 
         public int getVertex(double x, double y, double z, double u, double v)
         {
@@ -379,10 +397,12 @@ public class ExportWebGL
 
         public int getVertex(XYZUV coords)
         {
-            for (int i = 0; i < vertices.size(); i++) {
-                XYZUV point3Di = vertices.get(i);
-                if (point3Di.equals(coords))
-                    return i;
+            if (reuseVertices) {
+                for (int i = 0; i < vertices.size(); i++) {
+                    XYZUV point3Di = vertices.get(i);
+                    if (point3Di.equals(coords))
+                        return i;
+                }
             }
 
             int rval = vertices.size();
