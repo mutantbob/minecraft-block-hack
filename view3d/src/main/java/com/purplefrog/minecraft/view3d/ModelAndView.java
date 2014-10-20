@@ -28,8 +28,7 @@ public class ModelAndView
     private Map<String, TextureData> textureData = new HashMap<String, TextureData>();
     private Map<String, Texture> textureMap = new HashMap<String, Texture>();
 
-    private final ExportWebGL.GLStore glStore;
-    private final GLBufferSet bufferSet;
+    private final List<GLBufferSet> bufferSets = new ArrayList<GLBufferSet>();
     protected ModelViewSetter modelView;
 
     public ModelAndView()
@@ -87,12 +86,21 @@ public class ModelAndView
                 break;
         }
 
-        glStore = new ExportWebGL.GLStore();
-        for (BlenderMeshElement bme : accum) {
-            bme.accumOpenGL(glStore);
+        {
+
+            ExportWebGL.GLStore glStore = new ExportWebGL.GLStore();
+            for (BlenderMeshElement bme : accum) {
+                if (glStore.vertices.size() >= 64000) {
+                    bufferSets.add(new GLBufferSet(glStore));
+                    glStore.clear();
+                }
+
+                bme.accumOpenGL(glStore);
+            }
+
+            bufferSets.add(new GLBufferSet(glStore));
         }
 
-        bufferSet = new GLBufferSet(glStore);
     }
 
     public void farm(List<BlenderMeshElement> accum)
@@ -200,8 +208,10 @@ public class ModelAndView
 
     public void loadTextures(GL2 gl)
     {
-        for (ExportWebGL.GLFace face : glStore.faces) {
-            Texture t = getTextureFor(gl, face.bd.textureName);
+        for (GLBufferSet bs : bufferSets) {
+            for (String tname : bs.perTexture.keySet()) {
+                getTextureFor(gl, tname);
+            }
         }
     }
 
@@ -276,29 +286,32 @@ public class ModelAndView
 
         //
 
-        int uv_idx = gl2.glGetAttribLocation(shaderProgram, "vTexCoord");
-
-        gl2.glVertexPointer(3, GL.GL_FLOAT, 0, bufferSet.vertices);
-        gl2.glEnableVertexAttribArray(uv_idx);
-        gl2.glVertexAttribPointer(uv_idx, 2, GL.GL_FLOAT, false, 0, bufferSet.uvs);
+        gl2.glActiveTexture(GL2.GL_TEXTURE0+ TEXTURE_NUMBER);
 
         //
 
-        gl2.glActiveTexture(GL2.GL_TEXTURE0+ TEXTURE_NUMBER);
+        int uv_idx = gl2.glGetAttribLocation(shaderProgram, "vTexCoord");
 
-        for (Map.Entry<String, ShortBuffer> en : bufferSet.perTexture.entrySet()) {
-            String tname = en.getKey();
-            Texture t = getTextureFor(gl2, tname);
-            if (t==null) {
-                logger.error("no texture for "+tname);
-                continue;
+        for (GLBufferSet bufferSet : bufferSets) {
+
+            gl2.glVertexPointer(3, GL.GL_FLOAT, 0, bufferSet.vertices);
+            gl2.glEnableVertexAttribArray(uv_idx);
+            gl2.glVertexAttribPointer(uv_idx, 2, GL.GL_FLOAT, false, 0, bufferSet.uvs);
+
+            for (Map.Entry<String, ShortBuffer> en : bufferSet.perTexture.entrySet()) {
+                String tname = en.getKey();
+                Texture t = getTextureFor(gl2, tname);
+                if (t==null) {
+                    logger.error("no texture for "+tname);
+                    continue;
+                }
+                t.bind(gl2);
+
+                gl2.glUniform4fv(tint_idx, 1, getTint(tname), 0);
+
+                ShortBuffer indices = en.getValue();
+                gl2.glDrawElements(GL2.GL_QUADS, indices.limit(), GL2.GL_UNSIGNED_SHORT, indices);
             }
-            t.bind(gl2);
-
-            gl2.glUniform4fv(tint_idx, 1, getTint(tname), 0);
-
-            ShortBuffer indices = en.getValue();
-            gl2.glDrawElements(GL2.GL_QUADS, indices.limit(), GL2.GL_UNSIGNED_SHORT, indices);
         }
 
         gl2.glDisable(GL2.GL_VERTEX_ARRAY);
