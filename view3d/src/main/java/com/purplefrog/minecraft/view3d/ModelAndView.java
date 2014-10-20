@@ -303,12 +303,7 @@ public class ModelAndView
         gl2.glEnable(GL2.GL_VERTEX_ARRAY);
         gl2.glEnable(GL2.GL_TEXTURE_COORD_ARRAY);
 
-        float[] tint = {1, 1, 1, 1};
-
         int tint_idx = gl2.glGetUniformLocation(shaderProgram, "u_tint");
-        if (tint_idx>=0) {
-            gl2.glUniform4fv(tint_idx, 1, tint, 0);
-        }
 
         int TEXTURE_NUMBER = 0;
 
@@ -330,31 +325,18 @@ public class ModelAndView
 
         //
 
-        int vert_idx = gl2.glGetAttribLocation(shaderProgram, "vPosition");
         int uv_idx = gl2.glGetAttribLocation(shaderProgram, "vTexCoord");
 
         gl2.glBindBuffer(GL2.GL_ARRAY_BUFFER, vboHandle);
-        gl2.glBufferData(GL.GL_ARRAY_BUFFER,  bufferSet.vertices.limit()*4, bufferSet.vertices, GL.GL_STATIC_DRAW);
-        if (false) {
-            gl2.glVertexAttribPointer(vert_idx, 3, GL.GL_FLOAT, false, 0, 0);
-            gl2.glEnableVertexAttribArray(1);
-        } else {
-            gl2.glVertexPointer(3, GL.GL_FLOAT, 0, 0);
-        }
+        gl2.glBufferData(GL.GL_ARRAY_BUFFER, bufferSet.vertices.limit() * 4, bufferSet.vertices, GL.GL_STATIC_DRAW);
+        gl2.glVertexPointer(3, GL.GL_FLOAT, 0, 0);
 
         //
 
         gl2.glBindBuffer(GL2.GL_ARRAY_BUFFER, vboHandle2);
-        gl2.glBufferData(GL.GL_ARRAY_BUFFER,  bufferSet.uvs.limit()*4, bufferSet.uvs, GL.GL_STATIC_DRAW);
-        if (false)
-            gl2.glVertexAttribPointer(uv_idx, 2, GL.GL_FLOAT, false, 0, bufferSet.uvs);
-        else if (true) {
-            gl2.glEnableVertexAttribArray(uv_idx);
-            gl2.glVertexAttribPointer(uv_idx, 2, GL.GL_FLOAT, false, 0, 0);
-        } else {
-            gl2.glTexCoordPointer(2, GL.GL_FLOAT, 0, 0);
-        }
-
+        gl2.glBufferData(GL.GL_ARRAY_BUFFER, bufferSet.uvs.limit() * 4, bufferSet.uvs, GL.GL_STATIC_DRAW);
+        gl2.glEnableVertexAttribArray(uv_idx);
+        gl2.glVertexAttribPointer(uv_idx, 2, GL.GL_FLOAT, false, 0, 0);
         //
 
         gl2.glActiveTexture(GL2.GL_TEXTURE0+ TEXTURE_NUMBER);
@@ -368,9 +350,7 @@ public class ModelAndView
             }
             t.bind(gl2);
 
-
-            tint = getTint(tname);
-            gl2.glUniform4fv(tint_idx, 1, tint, 0);
+            gl2.glUniform4fv(tint_idx, 1, getTint(tname), 0);
 
             ShortBuffer indices = en.getValue();
             gl2.glDrawElements(GL2.GL_QUADS, indices.limit(), GL2.GL_UNSIGNED_SHORT, indices);
