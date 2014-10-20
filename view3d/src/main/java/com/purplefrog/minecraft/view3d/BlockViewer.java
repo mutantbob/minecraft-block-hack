@@ -111,7 +111,6 @@ public class BlockViewer
             }
             throw new IllegalStateException("failed to link shaders");
         }
-        gl.glUseProgram(shaderProgram);
     }
 
     public static String slurp(InputStream istr)
@@ -183,8 +182,11 @@ public class BlockViewer
         gl2.glMatrixMode( GL2.GL_MODELVIEW );
         gl2.glLoadIdentity();
 
+        gl2.glUseProgram(shaderProgram);
 //        mv.display2(gl2);
         mv.display3(gl2,shaderProgram);
+
+        gl2.glUseProgramObjectARB(0);
 
         drawAxes(gl2, 0, 0, 0);
 
