@@ -1,3 +1,5 @@
+#version 110
+
 uniform mat4 u_modelViewProjMatrix;
 uniform vec4 u_tint;
 
@@ -10,7 +12,7 @@ varying vec4 v_tint;
 
 void main()
 {
-    gl_Position = u_modelViewProjMatrix * vPosition;
+    gl_Position = ftransform();
     v_texCoord = vTexCoord;
     v_tint = u_tint;
 }
