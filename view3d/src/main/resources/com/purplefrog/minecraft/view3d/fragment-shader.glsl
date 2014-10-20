@@ -1,3 +1,5 @@
+#version 110
+
     precision mediump float;
 
     uniform sampler2D tex0;
@@ -7,6 +9,6 @@
 
     void main()
     {
-        vec2 texCoord = vec2(v_texCoord.s, 1.0 - v_texCoord.t);
+        vec2 texCoord = vec2(v_texCoord.s, v_texCoord.t);
         gl_FragColor = texture2D(tex0, texCoord)*v_tint;
     }
