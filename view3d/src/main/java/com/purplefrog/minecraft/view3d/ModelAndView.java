@@ -153,7 +153,7 @@ public class ModelAndView
             }
         }
         modelView = new ModelViewSetter(-(x1+x2)/2.0, -(y1+y2)/2.0, -(z1+z2)/2.0,
-            5,
+            10,
             0,0, -Math.max(x2-x1, z2-z1)*1.2,
             30);
     }
