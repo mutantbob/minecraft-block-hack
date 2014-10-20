@@ -23,10 +23,14 @@ public class BlockDatabase
     public static final int BLOCK_TYPE_LEAVES = 18;
     public static final int BLOCK_TYPE_DISPENSER = 23;
     public static final int BLOCK_TYPE_SANDSTONE = 24;
+    public static final int BLOCK_TYPE_BED = 26;
     public static final int BLOCK_TYPE_PISTON_EXTENSION = 36;
     public static final int BLOCK_TYPE_TNT = 46;
     public static final int BLOCK_TYPE_TORCH = 50;
+    public static final int BLOCK_TYPE_DOOR = 64;
     public static final int BLOCK_TYPE_LADDER = 65;
+    public static final int BLOCK_TYPE_STONE_STAIRS = 67;
+    public static final int BLOCK_TYPE_LEVER = 69;
     public static final int BLOCK_TYPE_GLOWSTONE = 89;
     public static final int BLOCK_TYPE_IRON_BARS = 101;
     public static final int BLOCK_TYPE_GLASS_PANE = 102;

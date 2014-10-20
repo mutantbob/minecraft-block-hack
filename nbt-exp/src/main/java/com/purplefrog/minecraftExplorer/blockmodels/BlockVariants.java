@@ -88,7 +88,11 @@ public class BlockVariants
             return false; // XXX
         } else if (part.startsWith("moisture=")
             || part.startsWith("age=")
-            || part.startsWith("stage=")) {
+            || part.startsWith("stage=")
+            || part.startsWith("layers=")
+            || part.startsWith("bites=")
+            || part.startsWith("level=")
+            ) {
             int arg = numericCriteriaArg(part);
             return blockData == arg;
         } else if (part.startsWith("north=")||
@@ -115,6 +119,24 @@ public class BlockVariants
             return part.equals("wet="+(blockData>=7));
         } else if (part.startsWith("variant=")) {
             return false; // XXX
+        } else if (part.startsWith("has_bottle_0=")) {
+            boolean hasBottle0 = 0 != (blockData & 1);
+            return part.equals("has_bottle_0="+ hasBottle0);
+        } else if (part.startsWith("has_bottle_1=")) {
+            boolean hasBottle1 = 0 != (blockData & 2);
+            return part.equals("has_bottle_1="+ hasBottle1);
+        } else if (part.startsWith("has_bottle_2=")) {
+            boolean hasBottle2 = 0 != (blockData & 4);
+            return part.equals("has_bottle_2="+ hasBottle2);
+        } else if(part.startsWith("delay=")) {
+            int delay = blockData>>2;
+            return delay == numericCriteriaArg(part);
+        } else if (part.startsWith("eye=")) {
+            boolean eye = 0 != (blockData&4);
+            return part.equals("eye="+ eye);
+        } else if (part.startsWith("attached=")) {
+            boolean attached = 0 != (blockData&4);
+            return part.equals("attached="+ attached);
         } else {
             System.err.println("unrecognized variant criteria "+part);
             return false;
@@ -148,7 +170,8 @@ public class BlockVariants
         } else if (blockType == BlockDatabase.BLOCK_TYPE_LADDER) {
             return getOrNull(blockData, null, null, "north", "south", "west", "east");
         } else if (blockType == BlockDatabase.BLOCK_TYPE_STONE_BRICK_STAIRS
-            || blockType == BlockDatabase.BLOCK_TYPE_QUARTZ_STAIRS) {
+            || blockType == BlockDatabase.BLOCK_TYPE_QUARTZ_STAIRS
+            || blockType == BlockDatabase.BLOCK_TYPE_STONE_STAIRS) {
             return getOrNull(blockData&3, "east", "west", "south", "north");
         } else if (blockType == BlockDatabase.BLOCK_TYPE_PUMPKIN) {
             return getOrNull(blockData, "south", "west", "north", "east");
@@ -178,9 +201,13 @@ public class BlockVariants
                 "north,half=top,open=true",
                 "east,half=top,open=true",
                 "west,half=top,open=true");
-        } else if (blockType==26) {
+        } else if (blockType==BlockDatabase.BLOCK_TYPE_BED) {
             // XXX
             return null;
+        } else if (blockType == BlockDatabase.BLOCK_TYPE_DOOR) {
+            return getOrNull(blockData&3, "west", "north", "east", "south");
+        } else if (blockType == BlockDatabase.BLOCK_TYPE_LEVER) {
+            return getOrNull(blockData&7, "east", "west", "south", "north", "down_z", "down_x", "up_z", "up_x");
         }
 
         return null;
