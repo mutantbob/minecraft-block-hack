@@ -23,12 +23,19 @@ public class BlockViewer
     protected String vertexShaderSrc;
     protected String fragmentShaderSrc;
     private int shaderProgram;
+    private int[] vboHandles;
 
     public BlockViewer()
         throws IOException, JSONException
     {
-        vertexShaderSrc = slurp(BlockViewer.class.getResourceAsStream("vertex-shader.glsl"));
-        fragmentShaderSrc = slurp(BlockViewer.class.getResourceAsStream("fragment-shader.glsl"));
+        if (true) {
+            vertexShaderSrc = slurp(BlockViewer.class.getResourceAsStream("vertex-shader.glsl"));
+            fragmentShaderSrc = slurp(BlockViewer.class.getResourceAsStream("fragment-shader.glsl"));
+        } else {
+            vertexShaderSrc = slurp(BlockViewer.class.getResourceAsStream("demo-vertex-1.glsl"));
+            fragmentShaderSrc = slurp(BlockViewer.class.getResourceAsStream("demo-fragment-1.glsl"));
+
+        }
         mv = new ModelAndView();
     }
 
@@ -64,7 +71,7 @@ public class BlockViewer
             quit=true;
         }
 
-//        compileAndLoadShaderProgram(gl); XXX
+        compileAndLoadShaderProgram(gl);
 
         rigMatricesAndStuff(gl);
 
@@ -106,6 +113,11 @@ public class BlockViewer
             throw new IllegalStateException("failed to link shaders");
         }
         gl.glUseProgram(shaderProgram);
+
+        //
+
+        vboHandles = new int[2];
+        gl.glGenBuffers(vboHandles.length, vboHandles, 0);
     }
 
     public static String slurp(InputStream istr)
@@ -177,8 +189,8 @@ public class BlockViewer
         gl2.glMatrixMode( GL2.GL_MODELVIEW );
         gl2.glLoadIdentity();
 
-        mv.display2(gl2);
-//        mv.display3(gl2,shaderProgram);
+//        mv.display2(gl2);
+        mv.display3(gl2,shaderProgram, vboHandles[0], vboHandles[1]);
 
         drawAxes(gl2, 0, 0, 0);
 

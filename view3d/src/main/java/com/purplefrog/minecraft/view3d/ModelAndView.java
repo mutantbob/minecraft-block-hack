@@ -193,6 +193,11 @@ public class ModelAndView
         }
     }
 
+    //
+    //
+    //
+
+
     public void loadTextures(GL2 gl)
     {
         for (ExportWebGL.GLFace face : glStore.faces) {
@@ -200,7 +205,7 @@ public class ModelAndView
         }
     }
 
-    private Texture getTextureFor(GL2 gl, String textureName)
+    public Texture getTextureFor(GL2 gl, String textureName)
     {
         Texture rval = textureMap.get(textureName);
         if (null==rval) {
@@ -293,34 +298,101 @@ public class ModelAndView
     /**
      * use a GLSL shader program
      */
-    public void display3(GL2 gl2, int shaderProgram)
+    public void display3(GL2 gl2, int shaderProgram, int vboHandle, int vboHandle2)
     {
-        modelView.invoke(gl2);
+        gl2.glEnable(GL2.GL_VERTEX_ARRAY);
+        gl2.glEnable(GL2.GL_TEXTURE_COORD_ARRAY);
 
-        gl2.glEnableClientState(GL2.GL_VERTEX_ARRAY);
-        gl2.glEnableClientState(GL2.GL_TEXTURE_COORD_ARRAY);
-
-        try {
-            int mvpm_idx = gl2.glGetUniformLocation(shaderProgram, "u_modelViewProjMatrix");
-            gl2.glUniformMatrix4fv(mvpm_idx, 1, false, modelView.getMatrix(), 0);
-        } catch (GLException e) {
-            // ignore it
-        }
+        float[] tint = {1, 1, 1, 1};
 
         int tint_idx = gl2.glGetUniformLocation(shaderProgram, "u_tint");
-        int tex_idx = gl2.glGetUniformLocation(shaderProgram, "tex0");
-
-        gl2.glUniform4fv(tint_idx, 1, new float[]{1,1,1,1}, 0);
-        gl2.glUniform1i(tex_idx, 0);
-
-        for (ExportWebGL.GLFace face : glStore.faces) {
-
-            float[] tint = null;
-            if (face.bd.textureName.equals("grass_top"))
-                tint = new float[]{ 0,0.7f,0, 1};
-
-            renderFace3(gl2, face, shaderProgram);
+        if (tint_idx>=0) {
+            gl2.glUniform4fv(tint_idx, 1, tint, 0);
         }
+
+        int TEXTURE_NUMBER = 0;
+
+        int tex_idx = gl2.glGetUniformLocation(shaderProgram, "tex0");
+        if (tex_idx>=0) {
+            gl2.glUniform1i(tex_idx, TEXTURE_NUMBER);
+        }
+
+        if (false) {
+            try {
+                int mvpm_idx = gl2.glGetUniformLocation(shaderProgram, "u_modelViewProjMatrix");
+                gl2.glUniformMatrix4fv(mvpm_idx, 1, false, modelView.getMatrix(), 0);
+            } catch (GLException e) {
+                // ignore it
+            }
+        } else {
+            modelView.invoke(gl2);
+        }
+
+        //
+
+        int vert_idx = gl2.glGetAttribLocation(shaderProgram, "vPosition");
+        int uv_idx = gl2.glGetAttribLocation(shaderProgram, "vTexCoord");
+
+        gl2.glBindBuffer(GL2.GL_ARRAY_BUFFER, vboHandle);
+        gl2.glBufferData(GL.GL_ARRAY_BUFFER,  bufferSet.vertices.limit()*4, bufferSet.vertices, GL.GL_STATIC_DRAW);
+        if (false) {
+            gl2.glVertexAttribPointer(vert_idx, 3, GL.GL_FLOAT, false, 0, 0);
+            gl2.glEnableVertexAttribArray(1);
+        } else {
+            gl2.glVertexPointer(3, GL.GL_FLOAT, 0, 0);
+        }
+
+        //
+
+        gl2.glBindBuffer(GL2.GL_ARRAY_BUFFER, vboHandle2);
+        gl2.glBufferData(GL.GL_ARRAY_BUFFER,  bufferSet.uvs.limit()*4, bufferSet.uvs, GL.GL_STATIC_DRAW);
+        if (false)
+            gl2.glVertexAttribPointer(uv_idx, 2, GL.GL_FLOAT, false, 0, bufferSet.uvs);
+        else if (true) {
+            gl2.glEnableVertexAttribArray(uv_idx);
+            gl2.glVertexAttribPointer(uv_idx, 2, GL.GL_FLOAT, false, 0, 0);
+        } else {
+            gl2.glTexCoordPointer(2, GL.GL_FLOAT, 0, 0);
+        }
+
+        //
+
+        gl2.glActiveTexture(GL2.GL_TEXTURE0+ TEXTURE_NUMBER);
+
+        for (Map.Entry<String, ShortBuffer> en : bufferSet.perTexture.entrySet()) {
+            String tname = en.getKey();
+            Texture t = getTextureFor(gl2, tname);
+            if (t==null) {
+                logger.error("no texture for "+tname);
+                continue;
+            }
+            t.bind(gl2);
+
+
+            tint = getTint(tname);
+            gl2.glUniform4fv(tint_idx, 1, tint, 0);
+
+            ShortBuffer indices = en.getValue();
+            gl2.glDrawElements(GL2.GL_QUADS, indices.limit(), GL2.GL_UNSIGNED_SHORT, indices);
+        }
+
+        gl2.glDisable(GL2.GL_VERTEX_ARRAY);
+        gl2.glDisable(GL2.GL_TEXTURE_COORD_ARRAY);
+    }
+
+    public static float[] GRASS_TINT ={ 0,1,0,1};
+    public static float[] NO_TINT = {1,1,1,1};
+
+    public static float[] getTint(String tname)
+    {
+        float[] tint;
+        if ("blocks/grass_top".equals(tname)
+            || "blocks/grass_side_overlay".equals(tname)) {
+            tint = GRASS_TINT;
+        } else {
+            tint = NO_TINT;
+        }
+        return tint;
     }
 
     public void renderFace2(GL2 gl2, GLPoly bacon)
