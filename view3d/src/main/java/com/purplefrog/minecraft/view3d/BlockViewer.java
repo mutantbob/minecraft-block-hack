@@ -23,7 +23,6 @@ public class BlockViewer
     protected String vertexShaderSrc;
     protected String fragmentShaderSrc;
     private int shaderProgram;
-    private int[] vboHandles;
 
     public BlockViewer()
         throws IOException, JSONException
@@ -113,11 +112,6 @@ public class BlockViewer
             throw new IllegalStateException("failed to link shaders");
         }
         gl.glUseProgram(shaderProgram);
-
-        //
-
-        vboHandles = new int[2];
-        gl.glGenBuffers(vboHandles.length, vboHandles, 0);
     }
 
     public static String slurp(InputStream istr)
@@ -190,7 +184,7 @@ public class BlockViewer
         gl2.glLoadIdentity();
 
 //        mv.display2(gl2);
-        mv.display3(gl2,shaderProgram, vboHandles[0], vboHandles[1]);
+        mv.display3(gl2,shaderProgram);
 
         drawAxes(gl2, 0, 0, 0);
 

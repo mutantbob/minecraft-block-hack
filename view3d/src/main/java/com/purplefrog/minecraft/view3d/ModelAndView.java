@@ -298,7 +298,7 @@ public class ModelAndView
     /**
      * use a GLSL shader program
      */
-    public void display3(GL2 gl2, int shaderProgram, int vboHandle, int vboHandle2)
+    public void display3(GL2 gl2, int shaderProgram)
     {
         gl2.glEnable(GL2.GL_VERTEX_ARRAY);
         gl2.glEnable(GL2.GL_TEXTURE_COORD_ARRAY);
@@ -327,16 +327,10 @@ public class ModelAndView
 
         int uv_idx = gl2.glGetAttribLocation(shaderProgram, "vTexCoord");
 
-        gl2.glBindBuffer(GL2.GL_ARRAY_BUFFER, vboHandle);
-        gl2.glBufferData(GL.GL_ARRAY_BUFFER, bufferSet.vertices.limit() * 4, bufferSet.vertices, GL.GL_STATIC_DRAW);
-        gl2.glVertexPointer(3, GL.GL_FLOAT, 0, 0);
-
-        //
-
-        gl2.glBindBuffer(GL2.GL_ARRAY_BUFFER, vboHandle2);
-        gl2.glBufferData(GL.GL_ARRAY_BUFFER, bufferSet.uvs.limit() * 4, bufferSet.uvs, GL.GL_STATIC_DRAW);
+        gl2.glVertexPointer(3, GL.GL_FLOAT, 0, bufferSet.vertices);
         gl2.glEnableVertexAttribArray(uv_idx);
-        gl2.glVertexAttribPointer(uv_idx, 2, GL.GL_FLOAT, false, 0, 0);
+        gl2.glVertexAttribPointer(uv_idx, 2, GL.GL_FLOAT, false, 0, bufferSet.uvs);
+
         //
 
         gl2.glActiveTexture(GL2.GL_TEXTURE0+ TEXTURE_NUMBER);
