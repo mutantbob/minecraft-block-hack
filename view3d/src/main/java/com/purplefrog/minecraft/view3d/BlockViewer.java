@@ -180,34 +180,37 @@ public class BlockViewer
         mv.display2(gl2);
 //        mv.display3(gl2,shaderProgram);
 
-        {
-            gl2.glLineWidth(2.5f);
-            double q=-0.5;
-            gl2.glBegin(GL2.GL_LINES);
-            gl2.glColor3f(1, 0, 0);
-            gl2.glVertex3d(1 + q, 0 + q, 0 + q);
-            gl2.glColor3f(1, 0, 0);
-            gl2.glVertex3d(0+q, 0+q, 0+q);
-            gl2.glEnd();
-
-            gl2.glBegin(GL2.GL_LINES);
-            gl2.glColor3f(0, 1, 0);
-            gl2.glVertex3d(0 + q, 1 + q, 0 + q);
-            gl2.glColor3f(0, 1, 0);
-            gl2.glVertex3d(0+q, 0+q, 0+q);
-            gl2.glEnd();
-
-            gl2.glBegin(GL2.GL_LINES);
-            gl2.glColor3f(0, 0, 1);
-            gl2.glVertex3d(0 + q, 0 + q, 1 + q);
-            gl2.glColor3f(0, 0, 1);
-            gl2.glVertex3d(0+q, 0+q, 0+q);
-            gl2.glEnd();
-
-            gl2.glColor3f(1,1,1);
-        }
+        drawAxes(gl2, 0, 0, 0);
 
         gl2.glFlush();
+    }
+
+    public static void drawAxes(GL2 gl2, double x, double y, double z)
+    {
+        gl2.glLineWidth(2.5f);
+        double q=-0.5;
+        gl2.glBegin(GL2.GL_LINES);
+        gl2.glColor3f(1, 0, 0);
+        gl2.glVertex3d(x +q+1, y +q, z +q);
+        gl2.glColor3f(1, 0, 0);
+        gl2.glVertex3d(x +q, y +q, 0+q);
+        gl2.glEnd();
+
+        gl2.glBegin(GL2.GL_LINES);
+        gl2.glColor3f(0, 1, 0);
+        gl2.glVertex3d(x + q, y +q+1, z +q);
+        gl2.glColor3f(0, 1, 0);
+        gl2.glVertex3d(x +q, y +q, z +q);
+        gl2.glEnd();
+
+        gl2.glBegin(GL2.GL_LINES);
+        gl2.glColor3f(0, 0, 1);
+        gl2.glVertex3d(x +q, y +q, z +q+1);
+        gl2.glColor3f(0, 0, 1);
+        gl2.glVertex3d(x +q, y +q, z +q);
+        gl2.glEnd();
+
+        gl2.glColor3f(1,1,1);
     }
 
     public void rainbowSquare(GL2 gl2)
