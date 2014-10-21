@@ -148,10 +148,19 @@ public class BlockVariants
             return part.equals("open="+ openValue(blockType, blockData));
         } else if (part.startsWith("in_wall=")) {
             return part.equals("in_wall="+ false); // XXX
+        } else if (part.startsWith("part=")) {
+            return part.equals("part="+partString(blockType, blockData));
         } else {
             System.err.println("unrecognized variant criteria "+part);
             return false;
         }
+    }
+
+    public static String partString(int blockType, int blockData)
+    {
+        if (blockType == BlockDatabase.BLOCK_TYPE_BED)
+            return ( 0 != (8&blockData)) ? "head" : "foot";
+        return null;
     }
 
     public String specialCode(int blockType, int blockData)
@@ -273,9 +282,8 @@ public class BlockVariants
         } else if (blockType == BlockDatabase.BLOCK_TYPE_TRAPDOOR
             || blockType == BlockDatabase.BLOCK_TYPE_IRON_TRAPDOOR) {
             return getOrNull(blockData&3, "north", "south", "west", "east");
-        } else if (blockType==BlockDatabase.BLOCK_TYPE_BED) {
-            // XXX
-            return null;
+//        } else if (blockType==BlockDatabase.BLOCK_TYPE_BED) {
+//            return getOrNull(blockData&3, "north", "east", "south", "west");
         } else if (blockType == BlockDatabase.BLOCK_TYPE_WOODEN_DOOR) {
             return getOrNull(blockData&3, "west", "north", "east", "south");
         } else if (blockType == BlockDatabase.BLOCK_TYPE_LEVER) {
@@ -284,7 +292,8 @@ public class BlockVariants
             return getOrNull(blockData&3, "north", "east", "south", "west");
         } else if (blockType == BlockDatabase.BLOCK_TYPE_HOPPER) {
             return getOrNull(blockData&7, "down", "bogus", "north", "south", "west", "east");
-        } else if (isFenceGate(blockType)) {
+        } else if (isFenceGate(blockType)
+            || blockType == BlockDatabase.BLOCK_TYPE_BED) {
             return getOrNull(blockData&3, "south", "west", "north", "east");
         }
 
