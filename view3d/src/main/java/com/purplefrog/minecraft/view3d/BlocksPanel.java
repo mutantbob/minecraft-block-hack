@@ -23,6 +23,8 @@ public class BlocksPanel
     {
         super(new BorderLayout() );
 
+        Font bigSerif = new Font("serif", Font.PLAIN, 24);
+
         this.bv = bv;
 
         add(canvas, BorderLayout.CENTER);
@@ -51,6 +53,7 @@ public class BlocksPanel
             final JSpinner startW = new JSpinner(new SpinnerNumberModel(
                 53,0, 255, 1
             ));
+            startW.setFont(bigSerif);
             p.add(startW);
             startW.addChangeListener(new ChangeListener()
             {
@@ -77,6 +80,7 @@ public class BlocksPanel
             JPanel p = new JPanel();
 
             final JTextField startW = new JTextField("0", 10);
+            startW.setFont(bigSerif);
             p.add(startW);
             startW.addActionListener(new ActionListener()
             {
