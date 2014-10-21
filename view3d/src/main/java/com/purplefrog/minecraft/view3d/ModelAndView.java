@@ -203,6 +203,7 @@ public class ModelAndView
             || "blocks/double_plant_fern_bottom".equals(tname)
             || "blocks/double_plant_grass_top".equals(tname)
             || "blocks/double_plant_grass_bottom".equals(tname)
+            || "blocks/tallgrass".equals(tname)
             ) {
             tint = GRASS_TINT;
         } else {
