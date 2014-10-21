@@ -83,14 +83,16 @@ public class BlockVariants
         } else if (part.startsWith("half=")) {
             return part.equals("half=" + halfName(blockType, blockData));
         } else if (part.startsWith("shape=")) {
-            return part.equals("shape=straight"); // XXX
+            return part.equals("shape="+ shapeName(blockType, blockData)); // XXX
         } else if (part.startsWith("snowy=")) {
             return false; // XXX
+        } else if (part.startsWith("age=")) {
+            return part.equals("age="+ageValue(blockType, blockData));
         } else if (part.startsWith("moisture=")
-            || part.startsWith("age=")
             || part.startsWith("stage=")
             || part.startsWith("bites=")
             || part.startsWith("level=")
+            || part.startsWith("power=")
             ) {
             int arg = numericCriteriaArg(part);
             return blockData == arg;
@@ -112,7 +114,7 @@ public class BlockVariants
             String actual_ = Boolean.toString(actual);
             return tail.equals(actual_);
         } else if (part.startsWith("powered=")) {
-            return false; // XXX
+            return part.equals("powered="+ poweredValue(blockType,  blockData)); // XXX
         } else if (part.startsWith("extended=")) {
             return false; // XXX
         } else if (part.startsWith("alt=")) {
@@ -139,9 +141,78 @@ public class BlockVariants
         } else if (part.startsWith("attached=")) {
             boolean attached = 0 != (blockData&4);
             return part.equals("attached="+ attached);
+        } else if (part.startsWith("contents=")) {
+            return part.equals("contents="+ contentsString(blockType,  blockData));
+        } else if (part.startsWith("open=")) {
+            return part.equals("open="+ openValue(blockType, blockData));
+        } else if (part.startsWith("in_wall=")) {
+            return part.equals("in_wall="+ false); // XXX
         } else {
             System.err.println("unrecognized variant criteria "+part);
             return false;
+        }
+    }
+
+    public static boolean openValue(int blockType, int blockData)
+    {
+        if (blockType==BlockDatabase.BLOCK_TYPE_TRAPDOOR
+            || blockType == BlockDatabase.BLOCK_TYPE_IRON_TRAPDOOR) {
+            return 0 != (blockData & 4);
+        } else if (isFenceGate(blockType)) {
+            return 0 != (blockData&4);
+        } else {
+            return false;
+        }
+    }
+
+    public boolean poweredValue(int blockType, int blockData)
+    {
+        if (isRail(blockType))
+            return 0 != (blockData&8);
+
+        return false;
+    }
+
+    public static String shapeName(int blockType, int blockData)
+    {
+        if (isRail(blockType)) {
+            return getOrNull(blockData&7, "north_south", "east_west", "ascending_east", "ascending_west", "ascending_north", "ascending_south", "south_east", "south_west", "north_west", "north_east");
+        } else if (isStairs(blockType)) {
+            return "straight";
+        } else {
+            return "straight";
+        }
+    }
+
+    public static boolean isRail(int blockType)
+    {
+        return blockType == BlockDatabase.BLOCK_TYPE_RAIL
+            ||blockType == BlockDatabase.BLOCK_TYPE_ACTIVATOR_RAIL
+            ||blockType == BlockDatabase.BLOCK_TYPE_DETECTOR_RAIL
+            ||blockType == BlockDatabase.BLOCK_TYPE_GOLDEN_RAIL;
+    }
+
+    private String contentsString(int blockType, int blockData)
+    {
+        if (blockType == BlockDatabase.BLOCK_TYPE_FLOWER_POT) {
+            // before 1.7:
+            return getOrNull(blockData, "empty", "rose", "dandelion", "oak_sapling", "spruce_sapling", "birch_sapling", "jungle_sapling", "mushroom_red", "mushroom_brown", "cactus", "dead_bush", "fern", "acacia_sapling", "dark_oak_sapling");
+            // >=1.7 we need the Tile Entity to figure out what is inside
+        } else {
+            return null;
+        }
+    }
+
+    private int ageValue(int blockType, int blockData)
+    {
+        if (blockType == BlockDatabase.BLOCK_TYPE_COCOA) {
+            return (blockData >> 2);
+        } else if (blockType == BlockDatabase.BLOCK_TYPE_WHEAT
+            || blockType == BlockDatabase.BLOCK_TYPE_CARROTS
+            || blockType == BlockDatabase.BLOCK_TYPE_POTATOES) {
+            return blockData;
+        } else {
+            return blockData; // XXX
         }
     }
 
@@ -165,7 +236,8 @@ public class BlockVariants
 
     public static String facingName(int blockType, int blockData, BlockEnvironment env)
     {
-        if (blockType == BlockDatabase.BLOCK_TYPE_DISPENSER) {
+        if (blockType == BlockDatabase.BLOCK_TYPE_DISPENSER
+            || blockType == BlockDatabase.BLOCK_TYPE_DROPPER) {
             return getOrNull(blockData&7, "down", "up", "north", "south", "east", "west");
         } else if (blockType == BlockDatabase.BLOCK_TYPE_TORCH
             || blockType == BlockDatabase.BLOCK_TYPE_UNLIT_REDSTONE_TORCH
@@ -189,33 +261,36 @@ public class BlockVariants
                     return or.name();
             }
             return "up";
-        } else if (blockType == BlockDatabase.BLOCK_TYPE_TRAPDOOR) {
-            return getOrNull(blockData, "south,half=bottom,open=false",
-                "north,half=bottom,open=false",
-                "east,half=bottom,open=false",
-                "west,half=bottom,open=false",
-                "south,half=bottom,open=true",
-                "north,half=bottom,open=true",
-                "east,half=bottom,open=true",
-                "west,half=bottom,open=true",
-                "south,half=top,open=false",
-                "north,half=top,open=false",
-                "east,half=top,open=false",
-                "west,half=top,open=false",
-                "south,half=top,open=true",
-                "north,half=top,open=true",
-                "east,half=top,open=true",
-                "west,half=top,open=true");
+        } else if (blockType == BlockDatabase.BLOCK_TYPE_TRAPDOOR
+            || blockType == BlockDatabase.BLOCK_TYPE_IRON_TRAPDOOR) {
+            return getOrNull(blockData&3, "north", "south", "east", "west");
         } else if (blockType==BlockDatabase.BLOCK_TYPE_BED) {
             // XXX
             return null;
-        } else if (blockType == BlockDatabase.BLOCK_TYPE_DOOR) {
+        } else if (blockType == BlockDatabase.BLOCK_TYPE_WOODEN_DOOR) {
             return getOrNull(blockData&3, "west", "north", "east", "south");
         } else if (blockType == BlockDatabase.BLOCK_TYPE_LEVER) {
             return getOrNull(blockData&7, "east", "west", "south", "north", "down_z", "down_x", "up_z", "up_x");
+        } else if (blockType == BlockDatabase.BLOCK_TYPE_COCOA) {
+            return getOrNull(blockData&3, "north", "east", "south", "west");
+        } else if (blockType == BlockDatabase.BLOCK_TYPE_HOPPER) {
+            return getOrNull(blockData&7, "down", "bogus", "north", "south", "west", "east");
+        } else if (isFenceGate(blockType)) {
+            return getOrNull(blockData&3, "south", "west", "north", "east");
         }
 
         return null;
+    }
+
+    private static boolean isFenceGate(int blockType)
+    {
+        return blockType == BlockDatabase.BLOCK_TYPE_FENCE_GATE
+            || blockType == BlockDatabase.BLOCK_TYPE_SPRUCE_FENCE_GATE
+            || blockType == BlockDatabase.BLOCK_TYPE_BIRCH_FENCE_GATE
+            || blockType == BlockDatabase.BLOCK_TYPE_JUNGLE_FENCE_GATE
+            || blockType == BlockDatabase.BLOCK_TYPE_ACACIA_FENCE_GATE
+            || blockType == BlockDatabase.BLOCK_TYPE_DARK_OAK_FENCE_GATE
+            ;
     }
 
     public static boolean isStairs(int blockType)
@@ -235,11 +310,33 @@ public class BlockVariants
             || blockType == BlockDatabase.BLOCK_TYPE_RED_SANDSTONE_STAIRS;
     }
 
+    public static boolean isDoor(int blockType)
+    {
+        return blockType == BlockDatabase.BLOCK_TYPE_WOODEN_DOOR
+            || blockType == BlockDatabase.BLOCK_TYPE_SPRUCE_DOOR
+            || blockType == BlockDatabase.BLOCK_TYPE_BIRCH_DOOR
+            || blockType == BlockDatabase.BLOCK_TYPE_JUNGLE_DOOR
+            || blockType == BlockDatabase.BLOCK_TYPE_ACACIA_DOOR
+            || blockType == BlockDatabase.BLOCK_TYPE_DARK_OAK_DOOR
+            || blockType == BlockDatabase.BLOCK_TYPE_IRON_DOOR
+            ;
+    }
+
     public static String halfName(int blockType, int blockData)
     {
         if (isStairs(blockType)) {
-            return getOrNull(1&(blockData>>2), "bottom", "top");
-        }
+            return getOrNull(1 & (blockData >> 2), "bottom", "top");
+        } else if (blockType == BlockDatabase.BLOCK_TYPE_WOODEN_SLAB
+            || blockType == BlockDatabase.BLOCK_TYPE_STONE_SLAB
+            || blockType == BlockDatabase.BLOCK_TYPE_STONE_SLAB2) {
+            return getOrNull(1 & (blockData >> 3), "bottom", "top");
+        } else if (blockType == BlockDatabase.BLOCK_TYPE_TRAPDOOR
+            || blockType == BlockDatabase.BLOCK_TYPE_IRON_TRAPDOOR) {
+            return (0 != (blockData & 8)) ? "top" : "bottom";
+        } else if (blockType == BlockDatabase.BLOCK_TYPE_DOUBLE_PLANT) {
+            return ( 0 != (blockData&8)) ? "upper": "lower";
+        } else if (isDoor(blockType))
+            return (0 != (blockData&8)) ? "upper" : "lower";
 
         return null;
     }
