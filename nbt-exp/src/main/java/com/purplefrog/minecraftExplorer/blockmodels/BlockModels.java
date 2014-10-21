@@ -66,8 +66,10 @@ public class BlockModels
             if (tag != null) {
                 rval = OneBlockModel.parse(new Resources(), tag);
                 cache2.put(combo, rval);
-                return rval.getVariant(blockType, blockData, env);
             }
+        }
+        if (rval != null) {
+            return rval.getVariant(blockType, blockData, env);
         }
 
         rval = cache.get(blockType);
