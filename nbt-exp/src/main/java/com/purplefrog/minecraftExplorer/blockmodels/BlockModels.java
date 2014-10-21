@@ -34,7 +34,9 @@ public class BlockModels
     public OneBlockModel modelFor(int blockType, int blockData, BlockEnvironment env)
         throws IOException, JSONException
     {
-        if (blockType==0 || blockType == BlockDatabase.BLOCK_TYPE_PISTON_EXTENSION) {
+        if (blockType==0
+            || blockType == BlockDatabase.BLOCK_TYPE_PISTON_EXTENSION
+            || blockType == BlockDatabase.BLOCK_TYPE_BARRIER) {
             return AIR;
         }
 
