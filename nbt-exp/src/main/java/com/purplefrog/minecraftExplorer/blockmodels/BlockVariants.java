@@ -89,12 +89,14 @@ public class BlockVariants
         } else if (part.startsWith("moisture=")
             || part.startsWith("age=")
             || part.startsWith("stage=")
-            || part.startsWith("layers=")
             || part.startsWith("bites=")
             || part.startsWith("level=")
             ) {
             int arg = numericCriteriaArg(part);
             return blockData == arg;
+        } else if (part.startsWith("layers=")) {
+            int arg = numericCriteriaArg(part);
+            return blockData+1 == arg;
         } else if (part.startsWith("north=")||
             part.startsWith("south=")||
             part.startsWith("east=")||
@@ -165,15 +167,18 @@ public class BlockVariants
     {
         if (blockType == BlockDatabase.BLOCK_TYPE_DISPENSER) {
             return getOrNull(blockData&7, "down", "up", "north", "south", "east", "west");
-        } else if (blockType == BlockDatabase.BLOCK_TYPE_TORCH) {
+        } else if (blockType == BlockDatabase.BLOCK_TYPE_TORCH
+            || blockType == BlockDatabase.BLOCK_TYPE_UNLIT_REDSTONE_TORCH
+            || blockType == BlockDatabase.BLOCK_TYPE_REDSTONE_TORCH) {
             return getOrNull(blockData, torch_facings);
-        } else if (blockType == BlockDatabase.BLOCK_TYPE_LADDER) {
+        } else if (blockType == BlockDatabase.BLOCK_TYPE_LADDER
+            || blockType == BlockDatabase.BLOCK_TYPE_FURNACE
+            || blockType == BlockDatabase.BLOCK_TYPE_LIT_FURNACE) {
             return getOrNull(blockData, null, null, "north", "south", "west", "east");
-        } else if (blockType == BlockDatabase.BLOCK_TYPE_STONE_BRICK_STAIRS
-            || blockType == BlockDatabase.BLOCK_TYPE_QUARTZ_STAIRS
-            || blockType == BlockDatabase.BLOCK_TYPE_STONE_STAIRS) {
+        } else if (isStairs(blockType)) {
             return getOrNull(blockData&3, "east", "west", "south", "north");
-        } else if (blockType == BlockDatabase.BLOCK_TYPE_PUMPKIN) {
+        } else if (blockType == BlockDatabase.BLOCK_TYPE_PUMPKIN
+            || blockType == BlockDatabase.BLOCK_TYPE_LIT_PUMPKIN) {
             return getOrNull(blockData, "south", "west", "north", "east");
         } else if (blockType == BlockDatabase.BLOCK_TYPE_PUMPKIN_STEM
             ||blockType == BlockDatabase.BLOCK_TYPE_MELON_STEM) {
@@ -213,11 +218,27 @@ public class BlockVariants
         return null;
     }
 
+    public static boolean isStairs(int blockType)
+    {
+        return blockType == BlockDatabase.BLOCK_TYPE_OAK_STAIRS
+            || blockType == BlockDatabase.BLOCK_TYPE_STONE_STAIRS
+            || blockType == BlockDatabase.BLOCK_TYPE_BRICK_STAIRS
+            || blockType == BlockDatabase.BLOCK_TYPE_STONE_BRICK_STAIRS
+            || blockType == BlockDatabase.BLOCK_TYPE_NETHER_BRICK_STAIRS
+            || blockType == BlockDatabase.BLOCK_TYPE_SANDSTONE_STAIRS
+            || blockType == BlockDatabase.BLOCK_TYPE_SPRUCE_STAIRS
+            || blockType == BlockDatabase.BLOCK_TYPE_BIRCH_STAIRS
+            || blockType == BlockDatabase.BLOCK_TYPE_JUNGLE_STAIRS
+            || blockType == BlockDatabase.BLOCK_TYPE_QUARTZ_STAIRS
+            || blockType == BlockDatabase.BLOCK_TYPE_ACACIA_STAIRS
+            || blockType == BlockDatabase.BLOCK_TYPE_DARK_OAK_STAIRS
+            || blockType == BlockDatabase.BLOCK_TYPE_RED_SANDSTONE_STAIRS;
+    }
+
     public static String halfName(int blockType, int blockData)
     {
-        if (blockType == BlockDatabase.BLOCK_TYPE_STONE_BRICK_STAIRS
-            || blockType == BlockDatabase.BLOCK_TYPE_QUARTZ_STAIRS) {
-            return getOrNull(1&(blockData>>3), "bottom", "top");
+        if (isStairs(blockType)) {
+            return getOrNull(1&(blockData>>2), "bottom", "top");
         }
 
         return null;
