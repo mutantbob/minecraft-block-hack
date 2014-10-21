@@ -99,6 +99,9 @@ public class BlockModels
     public static String[] WOOL = "white orange magenta light_blue yellow lime pink gray silver cyan purple blue brown green red black".split(" +");
     public static String[] POPPY = ("poppy blue_orchid allium houstonia red_tulip orange_tulip white_tulip pink_tulip " +
         "oxeye_daisy poppy poppy poppy poppy poppy poppy poppy").split(" +");
+    public static String[] PRISMARINE = ("prismarine prismarine_bricks dark_prismarine " +
+        "prismarine prismarine prismarine prismarine prismarine prismarine prismarine prismarine prismarine prismarine prismarine prismarine prismarine").split(" +");
+    public static String[] DOUBLE_PLANT = "sunflower syringa double_grass double_fern double_rose paeonia sunflower sunflower".split(" +");
 
     public static String tagFor2(int blockType, int blockData)
     {
@@ -120,7 +123,28 @@ public class BlockModels
                 return WOOL[blockData]+"_wool";
             case BlockDatabase.BLOCK_TYPE_RED_FLOWER:
                 return POPPY[blockData];
-
+            case BlockDatabase.BLOCK_TYPE_STAINED_GLASS:
+                return WOOL[blockData]+"_stained_glass";
+            case BlockDatabase.BLOCK_TYPE_GLASS_PANE:
+                return WOOL[blockData]+"_stained_glass_pane";
+            case BlockDatabase.BLOCK_TYPE_WOODEN_SLAB:
+                return WOODS[blockData&7]+"_slab";
+            case BlockDatabase.BLOCK_TYPE_DOUBLE_WOODEN_SLAB:
+                return WOODS[blockData&7]+"_double_slab";
+            case BlockDatabase.BLOCK_TYPE_STAINED_HARDENED_CLAY:
+                return WOOL[blockData]+"_stained_hardened_clay";
+            case BlockDatabase.BLOCK_TYPE_STAINED_GLASS_PANE:
+                return WOOL[blockData]+"_stained_glass_pane";
+            case BlockDatabase.BLOCK_TYPE_LEAVES2:
+                return BlockVariants.getOrNull(blockData&3, "acacia", "dark_oak", "oak", "oak")+"_leaves";
+            case BlockDatabase.BLOCK_TYPE_LOG2:
+                return BlockVariants.getOrNull(blockData &3, "acacia", "dark_oak", "oak", "oak")+"_log";
+            case BlockDatabase.BLOCK_TYPE_PRISMARINE:
+                return PRISMARINE[blockData&3];
+            case BlockDatabase.BLOCK_TYPE_CARPET:
+                return WOOL[blockData]+"_carpet";
+            case BlockDatabase.BLOCK_TYPE_DOUBLE_PLANT:
+                return DOUBLE_PLANT[blockData&7];
         }
 
         return null;
