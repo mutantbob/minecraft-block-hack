@@ -12,12 +12,14 @@ import java.util.*;
  */
 public class ModelAndViews
 {
+    public static final BlockEnvironment ISOLATION = new BlockEnvironment(new boolean[6], new boolean[6]);
+
     public static ModelAndView blocksPerData(int bt)
         throws IOException, JSONException
     {
         List<BlenderMeshElement> accum = new ArrayList<BlenderMeshElement>();
         BlockModels blockModels = BlockModels.getInstance();
-        ModelAndView.blocksPerData(blockModels, accum, bt);
+        blocksPerData(blockModels, accum, bt);
         ModelAndView.ModelViewSetter modelView = new ModelAndView.ModelViewSetter(-3.5, -1.5, -3.5, 5, 0, 0, -12, 30);
         return new ModelAndView(accum, modelView);
     }
@@ -27,7 +29,7 @@ public class ModelAndViews
     {
         List<BlenderMeshElement> accum = new ArrayList<BlenderMeshElement>();
         BlockModels blockModels = BlockModels.getInstance();
-        ModelAndView.blocks8x8parade(blockModels, accum, baseBT);
+        blocks8x8parade(blockModels, accum, baseBT);
         ModelAndView.ModelViewSetter modelView = new ModelAndView.ModelViewSetter(-7.5, -1.5, -7.5, 10, 0, 0, -20, 24);
         return new ModelAndView(accum, modelView);
     }
@@ -46,7 +48,7 @@ public class ModelAndViews
 
         convertWorld(accum, editor, x1, y1, z1, x2, y2, z2);
 
-        ModelAndView.ModelViewSetter modelView = ModelAndView.viewForBox(x1, y1, z1, x2, y2, z2);
+        ModelAndView.ModelViewSetter modelView = viewForBox(x1, y1, z1, x2, y2, z2);
 
         return new ModelAndView(accum, modelView);
     }
@@ -61,4 +63,96 @@ public class ModelAndViews
             }
         }
     }
+
+    public static ModelAndView.ModelViewSetter viewForBox(int x1, int y1, int z1, int x2, int y2, int z2)
+    {
+        return new ModelAndView.ModelViewSetter(-(x1+x2)/2.0, -(y1+y2)/2.0, -(z1+z2)/2.0,
+            10,
+            0,0, -Math.max(x2-x1, z2-z1)*1.2,
+            30);
+    }
+
+    public static void blocksPerData(BlockModels blockModels, List<BlenderMeshElement> accum, int bt)
+        throws IOException, JSONException
+    {
+        int cols = 4;
+        for (int blockData=0; blockData<16; blockData++) {
+            int x = 2*(blockData % cols);
+            int y = 0;
+            int z = 2*(blockData / cols);
+            blockModels.modelFor(bt, blockData, ISOLATION).getMeshElements(accum, x, y, z, ISOLATION);
+        }
+    }
+
+    public static void singleBlock(BlockModels blockModels, List<BlenderMeshElement> accum, int bt, int blockData)
+        throws IOException, JSONException
+    {
+        int x = 0, y = 0, z = 0;
+        blockModels.modelFor(bt, blockData, ISOLATION).getMeshElements(accum, x, y, z, ISOLATION);
+    }
+
+    public static void cullTest(BlockModels blockModels, List<BlenderMeshElement> accum, int bt, int blockData)
+        throws IOException, JSONException
+    {
+        for (int i=0; i<6; i++) {
+            boolean[] culling = new boolean[6];
+            culling[i] = true;
+            BlockEnvironment env = new BlockEnvironment(culling, culling);
+            blockModels.modelFor(bt, blockData, env).getMeshElements(accum, i*2, 0, 0, env);
+        }
+    }
+
+    public static void blocks8x8parade(BlockModels blockModels, List<BlenderMeshElement> accum, int baseBT)
+        throws IOException, JSONException
+    {
+        int cols = 8;
+        for (int i=0; i<64; i++) {
+            int blockData = 0;
+            int x = 2*(i % cols);
+            int y = 0;
+            int z = 2*(i / cols);
+            blockModels.modelFor(i+ baseBT, blockData, ISOLATION).getMeshElements(accum, x, y, z, ISOLATION);
+        }
+    }
+
+    public static ModelAndView farmHouse()
+    {
+        MinecraftWorld world = new MinecraftWorld(WorldPicker.pickSaveDir());
+        BasicBlockEditor editor = new AnvilBlockEditor(world);
+
+        int x1 = -485, y1=60, z1=159, x2=-448, y2=80, z2=190;
+
+        List<BlenderMeshElement> accum = new ArrayList<BlenderMeshElement>();
+        convertWorld(accum, editor, x1, y1, z1, x2, y2, z2);
+        ModelAndView.ModelViewSetter modelView = ModelAndViews.viewForBox(x1, y1, z1, x2, y2, z2);
+        return new ModelAndView(accum, modelView);
+    }
+
+    public static ModelAndView melonPatch()
+    {
+        MinecraftWorld world = new MinecraftWorld(WorldPicker.pickSaveDir());
+        BasicBlockEditor editor = new AnvilBlockEditor(world);
+
+        int x1 = -448, y1=60, z1=159, x2=-439, y2=80, z2=180;
+
+        List<BlenderMeshElement> accum = new ArrayList<BlenderMeshElement>();
+        convertWorld(accum, editor, x1, y1, z1, x2, y2, z2);
+        ModelAndView.ModelViewSetter modelView = ModelAndViews.viewForBox(x1, y1, z1, x2, y2, z2);
+        return new ModelAndView(accum, modelView);
+    }
+
+    public static ModelAndView house1()
+    {
+        MinecraftWorld world = new MinecraftWorld(new File(WorldPicker.savesDir(), "2014-Sep-28 v1_8"));
+        BasicBlockEditor editor = new AnvilBlockEditor(world);
+
+        int x1 = 160, y1=50, z1=190, x2=210, y2=90, z2=240;
+
+        List<BlenderMeshElement> accum = new ArrayList<BlenderMeshElement>();
+        convertWorld(accum, editor, x1, y1, z1, x2, y2, z2);
+        
+        ModelAndView.ModelViewSetter modelView = ModelAndViews.viewForBox(x1, y1, z1, x2, y2, z2);
+        return new ModelAndView(accum, modelView);
+    }
+
 }

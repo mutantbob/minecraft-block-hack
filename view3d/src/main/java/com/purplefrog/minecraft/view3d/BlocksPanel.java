@@ -34,21 +34,6 @@ public class BlocksPanel
 
         {
             JPanel p = new JPanel();
-            p.add(new JLabel("Farm"));
-            tabs.addTab("farm", p);
-
-            perTab.put(p, new Runnable()
-            {
-                @Override
-                public void run()
-                {
-                    pickFarm();
-                }
-            });
-        }
-
-        {
-            JPanel p = new JPanel();
 
             final JSpinner startW = new JSpinner(new SpinnerNumberModel(
                 53,0, 255, 1
@@ -103,6 +88,68 @@ public class BlocksPanel
             });
         }
 
+        {
+            JPanel p = new JPanel();
+            p.add(new JLabel("Farm"));
+            tabs.addTab("farm", p);
+
+            perTab.put(p, new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    pickFarm();
+                }
+            });
+        }
+
+        {
+            JPanel p = new JPanel();
+            p.add(new JLabel("melon patch"));
+            tabs.addTab("melon patch", p);
+
+            perTab.put(p, new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    pickMelonPatch();
+                }
+            });
+        }
+
+        {
+            JPanel p = new JPanel();
+            p.add(new JLabel("farm house"));
+            tabs.addTab("farm house", p);
+
+            perTab.put(p, new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    pickFarmHouse();
+                }
+            });
+        }
+
+        {
+            JPanel p = new JPanel();
+            p.add(new JLabel("house 1"));
+            tabs.addTab("house 1", p);
+
+            perTab.put(p, new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    pickHouse1();
+                }
+            });
+        }
+
+        //
+
         tabs.addChangeListener(new ChangeListener()
         {
             @Override
@@ -115,13 +162,40 @@ public class BlocksPanel
             }
         });
 
-        tabs.setSelectedIndex(1);
+        tabs.setSelectedIndex(0);
     }
 
     public void pickFarm()
     {
         try {
             bv.setDataSet(ModelAndViews.farm());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void pickFarmHouse()
+    {
+        try {
+            bv.setDataSet(ModelAndViews.farmHouse());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void pickMelonPatch()
+    {
+        try {
+            bv.setDataSet(ModelAndViews.melonPatch());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void pickHouse1()
+    {
+        try {
+            bv.setDataSet(ModelAndViews.house1());
         } catch (Exception e) {
             e.printStackTrace();
         }
