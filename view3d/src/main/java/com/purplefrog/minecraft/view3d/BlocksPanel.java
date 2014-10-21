@@ -114,6 +114,8 @@ public class BlocksPanel
                 SwingUtilities.invokeLater(r);
             }
         });
+
+        tabs.setSelectedIndex(1);
     }
 
     public void pickFarm()
