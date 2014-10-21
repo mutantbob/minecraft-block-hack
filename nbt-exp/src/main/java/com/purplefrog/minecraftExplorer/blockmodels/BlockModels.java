@@ -94,6 +94,7 @@ public class BlockModels
         return new BlockElement(new Point3Di(0, 0, 0), new Point3Di(16, 16, 16), faces, null);
     }
 
+    public static String[] STONES = "stone granite smooth_granite diorite smooth_diorite andesite smooth_andesite".split(" +");
     public static String[] LOGS = ("oak_log spruce_log birch_log jungle_log").split(" +");
     public static String[] WOODS = ("oak spruce birch jungle acacia dark_oak oak oak").split(" +");
     public static String[] SANDSTONE = "sandstone chiseled_sandstone smooth_sandstone sandstone".split(" +");
@@ -104,11 +105,19 @@ public class BlockModels
     public static String[] PRISMARINE = ("prismarine prismarine_bricks dark_prismarine " +
         "prismarine prismarine prismarine prismarine prismarine prismarine prismarine prismarine prismarine prismarine prismarine prismarine prismarine").split(" +");
     public static String[] DOUBLE_PLANT = "sunflower syringa double_grass double_fern double_rose paeonia sunflower sunflower".split(" +");
+    public static String[] DOUBLE_STONE_SLABS = ("stone_double_slab sandstone_double_slab wood_old_double_slab cobblestone_double_slab " +
+        "brick_double_slab stone_brick_double_slab nether_brick_double_slab quartz_double_slab " +
+        "stone_double_slab sandstone_double_slab quartz_double_slab").split(" +");
+    public static String[] STONE_SLABS = ("stone_slab sandstone_slab wood_old_slab cobblestone_slab " +
+         "brick_slab stone_brick_slab nether_brick_slab quartz_slab ").split(" +");
+
 
     public static String tagFor2(int blockType, int blockData)
     {
 
         switch (blockType) {
+            case BlockDatabase.BLOCK_TYPE_STONE:
+                return STONES[blockData%STONES.length];
             case BlockDatabase.BLOCK_TYPE_PLANKS:
                 return WOODS[blockData&7]+"_planks";
             case BlockDatabase.BLOCK_TYPE_SAPLING:
@@ -147,6 +156,10 @@ public class BlockModels
                 return WOOL[blockData]+"_carpet";
             case BlockDatabase.BLOCK_TYPE_DOUBLE_PLANT:
                 return DOUBLE_PLANT[blockData&7];
+            case BlockDatabase.BLOCK_TYPE_DOUBLE_STONE_SLAB:
+                return DOUBLE_STONE_SLABS[blockData % DOUBLE_STONE_SLABS.length];
+            case BlockDatabase.BLOCK_TYPE_STONE_SLAB:
+                return STONE_SLABS[blockData % STONE_SLABS.length];
         }
 
         return null;

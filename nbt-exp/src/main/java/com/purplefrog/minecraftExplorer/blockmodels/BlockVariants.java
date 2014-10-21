@@ -74,8 +74,9 @@ public class BlockVariants
 
     public boolean matches(String part, int blockType, int blockData, BlockEnvironment env)
     {
-        if (part.equals("normal")) {
-            return true; // XXX
+        if ("normal".equals(part)
+            || "all".equals(part)) {
+            return part.equals(specialCode(blockType, blockData));
         } else if (part.startsWith("facing=")) {
             return part.equals("facing="+ facingName(blockType, blockData, env));
         } else if (part.startsWith("axis=")) {
@@ -151,6 +152,14 @@ public class BlockVariants
             System.err.println("unrecognized variant criteria "+part);
             return false;
         }
+    }
+
+    public String specialCode(int blockType, int blockData)
+    {
+        if (blockType==BlockDatabase.BLOCK_TYPE_DOUBLE_STONE_SLAB)
+                   return blockData < 8 ? "normal": "all";
+
+        return "normal";
     }
 
     public static boolean openValue(int blockType, int blockData)
