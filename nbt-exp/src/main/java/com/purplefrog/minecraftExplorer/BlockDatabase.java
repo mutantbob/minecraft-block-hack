@@ -24,7 +24,10 @@ public class BlockDatabase
     public static final int BLOCK_TYPE_DISPENSER = 23;
     public static final int BLOCK_TYPE_SANDSTONE = 24;
     public static final int BLOCK_TYPE_BED = 26;
+    public static final int BLOCK_TYPE_TALL_GRASS = 31;
+    public static final int BLOCK_TYPE_WOOL = 35;
     public static final int BLOCK_TYPE_PISTON_EXTENSION = 36;
+    public static final int BLOCK_TYPE_POPPY = 38;
     public static final int BLOCK_TYPE_TNT = 46;
     public static final int BLOCK_TYPE_TORCH = 50;
     public static final int BLOCK_TYPE_OAK_STAIRS = 53;
@@ -36,15 +39,16 @@ public class BlockDatabase
     public static final int BLOCK_TYPE_LEVER = 69;
     public static final int BLOCK_TYPE_UNLIT_REDSTONE_TORCH = 75;
     public static final int BLOCK_TYPE_REDSTONE_TORCH = 76;
+    public static final int BLOCK_TYPE_PUMPKIN = 86;
     public static final int BLOCK_TYPE_GLOWSTONE = 89;
     public static final int BLOCK_TYPE_LIT_PUMPKIN = 91;
+    public static final int BLOCK_TYPE_TRAPDOOR = 96;
     public static final int BLOCK_TYPE_IRON_BARS = 101;
     public static final int BLOCK_TYPE_GLASS_PANE = 102;
     public static final int BLOCK_TYPE_PUMPKIN_STEM = 104;
     public static final int BLOCK_TYPE_MELON_STEM = 105;
     public static final int BLOCK_TYPE_BRICK_STAIRS = 108;
     public static final int BLOCK_TYPE_STONE_BRICK_STAIRS = 109;
-    public static final int BLOCK_TYPE_PUMPKIN = 86;
     public static final int BLOCK_TYPE_NETHER_BRICK_STAIRS = 114;
     public static final int BLOCK_TYPE_END_PORTAL_FRAME = 120;
     public static final int BLOCK_TYPE_SANDSTONE_STAIRS = 128;
@@ -55,10 +59,6 @@ public class BlockDatabase
     public static final int BLOCK_TYPE_ACACIA_STAIRS = 163;
     public static final int BLOCK_TYPE_DARK_OAK_STAIRS = 164;
     public static final int BLOCK_TYPE_RED_SANDSTONE_STAIRS = 180;
-    public static final int BLOCK_TYPE_TRAPDOOR = 96;
-    public static final int BLOCK_TYPE_TALL_GRASS = 31;
-    public static final int BLOCK_TYPE_WOOL = 35;
-    public static final int BLOCK_TYPE_POPPY = 38;
 
     public static Map<Integer, int[]> unknownBlockTypes = new TreeMap<Integer, int[]>();
 
