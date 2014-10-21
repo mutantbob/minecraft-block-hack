@@ -263,7 +263,7 @@ public class BlockVariants
             return "up";
         } else if (blockType == BlockDatabase.BLOCK_TYPE_TRAPDOOR
             || blockType == BlockDatabase.BLOCK_TYPE_IRON_TRAPDOOR) {
-            return getOrNull(blockData&3, "north", "south", "east", "west");
+            return getOrNull(blockData&3, "north", "south", "west", "east");
         } else if (blockType==BlockDatabase.BLOCK_TYPE_BED) {
             // XXX
             return null;
