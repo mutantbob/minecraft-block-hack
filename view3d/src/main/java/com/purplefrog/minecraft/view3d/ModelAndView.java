@@ -1,6 +1,5 @@
 package com.purplefrog.minecraft.view3d;
 
-import com.jogamp.common.nio.*;
 import com.jogamp.opengl.util.*;
 import com.jogamp.opengl.util.texture.*;
 import com.jogamp.opengl.util.texture.Texture;
@@ -30,6 +29,26 @@ public class ModelAndView
 
     private final List<GLBufferSet> bufferSets = new ArrayList<GLBufferSet>();
     protected ModelViewSetter modelView;
+
+    public ModelAndView(Iterable<BlenderMeshElement> accum, ModelViewSetter modelView)
+    {
+        this.modelView = modelView;
+
+        {
+
+            ExportWebGL.GLStore glStore = new ExportWebGL.GLStore(false);
+            for (BlenderMeshElement bme : accum) {
+                if (glStore.vertices.size() >= 64000) {
+                    bufferSets.add(new GLBufferSet(glStore));
+                    glStore.clear();
+                }
+
+                bme.accumOpenGL(glStore);
+            }
+
+            bufferSets.add(new GLBufferSet(glStore));
+        }
+    }
 
     public ModelAndView()
         throws IOException, JSONException

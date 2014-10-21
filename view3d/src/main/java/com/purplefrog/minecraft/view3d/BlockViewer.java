@@ -54,9 +54,11 @@ public class BlockViewer
         animator.setRunAsFastAsPossible(true);
         animator.start();
 
+        BlocksPanel bp = new BlocksPanel(canvas, blockViewer);
+
         fr.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        fr.getContentPane().add(canvas, BorderLayout.CENTER);
+        fr.getContentPane().add(bp, BorderLayout.CENTER);
         fr.setSize(640,480);
         fr.setVisible(true);
 
@@ -251,4 +253,8 @@ public class BlockViewer
     public void displayChanged(GLAutoDrawable drawable, boolean modeChanged, boolean
         deviceChanged) {}
 
+    public void setDataSet(ModelAndView modelAndView)
+    {
+        this.mv = modelAndView;
+    }
 }
