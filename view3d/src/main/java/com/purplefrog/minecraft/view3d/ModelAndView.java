@@ -299,6 +299,9 @@ public class ModelAndView
 
         for (GLBufferSet bufferSet : bufferSets) {
 
+            if (bufferSet.vertices.limit()<1)
+                continue;
+
             gl2.glVertexPointer(3, GL.GL_FLOAT, 0, bufferSet.vertices);
             gl2.glEnableVertexAttribArray(uv_idx);
             gl2.glVertexAttribPointer(uv_idx, 2, GL.GL_FLOAT, false, 0, bufferSet.uvs);
