@@ -112,11 +112,11 @@ public class BlockModels
                 return WOODS[blockData&3]+"_leaves";
             case BlockDatabase.BLOCK_TYPE_SANDSTONE:
                 return SANDSTONE[blockData&3];
-            case BlockDatabase.BLOCK_TYPE_TALL_GRASS:
+            case BlockDatabase.BLOCK_TYPE_TALLGRASS:
                 return TALL_GRASS[blockData&3];
             case BlockDatabase.BLOCK_TYPE_WOOL:
                 return WOOL[blockData]+"_wool";
-            case BlockDatabase.BLOCK_TYPE_POPPY:
+            case BlockDatabase.BLOCK_TYPE_RED_FLOWER:
                 return POPPY[blockData];
 
         }
