@@ -415,7 +415,45 @@ public class BlockDatabase
         TransparencyClass.OpaqueFunky,
         TransparencyClass.Widget,
         TransparencyClass.Solid,
-
+        TransparencyClass.Solid,
+        TransparencyClass.Widget,  // 160
+        TransparencyClass.Widget,
+        TransparencyClass.Solid,
+        TransparencyClass.OpaqueFunky,
+        TransparencyClass.OpaqueFunky,
+        TransparencyClass.Solid, // 165
+        TransparencyClass.Widget,
+        TransparencyClass.Widget,
+        TransparencyClass.Solid,
+        TransparencyClass.Solid,
+        TransparencyClass.Solid, // 170
+        TransparencyClass.Widget,
+        TransparencyClass.Solid,
+        TransparencyClass.Solid,
+        TransparencyClass.Solid,
+        TransparencyClass.Widget, // 175
+        TransparencyClass.Widget,
+        TransparencyClass.Widget,
+        TransparencyClass.Widget,
+        TransparencyClass.Solid,
+        TransparencyClass.OpaqueFunky, // 180
+        TransparencyClass.Solid,
+        TransparencyClass.OpaqueFunky,
+        TransparencyClass.Widget,
+        TransparencyClass.Widget,
+        TransparencyClass.Widget, // 185
+        TransparencyClass.Widget,
+        TransparencyClass.Widget,
+        TransparencyClass.Widget,
+        TransparencyClass.Widget,
+        TransparencyClass.Widget, // 190
+        TransparencyClass.Widget,
+        TransparencyClass.Widget,
+        TransparencyClass.Widget,
+        TransparencyClass.Widget,
+        TransparencyClass.Widget,
+        TransparencyClass.Widget,
+        TransparencyClass.Widget,
     };
 
     public static boolean transparent(int blockType)
