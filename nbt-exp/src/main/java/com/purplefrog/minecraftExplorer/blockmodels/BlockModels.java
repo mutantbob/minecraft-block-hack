@@ -13,7 +13,7 @@ import java.util.*;
  */
 public class BlockModels
 {
-    public static final OneBlockModel AIR = new OneBlockModel(0);
+    public static final OneBlockModel AIR = new OneBlockModel(0, 0);
     private static BlockModels singleton;
 
 
@@ -40,7 +40,7 @@ public class BlockModels
 
         if (blockType == BlockDatabase.BLOCK_TYPE_WATER
             || blockType == BlockDatabase.BLOCK_TYPE_FLOWING_WATER) {
-            OneBlockModel rval = new OneBlockModel(0);
+            OneBlockModel rval = new OneBlockModel(0, 0);
             rval.textures.put("all", "blocks/water_still");
             rval.elements = Arrays.asList(waterCube());
             return rval;
@@ -48,7 +48,7 @@ public class BlockModels
 
         if (blockType == BlockDatabase.BLOCK_TYPE_LAVA
             || blockType == BlockDatabase.BLOCK_TYPE_FLOWING_LAVA) {
-            OneBlockModel rval = new OneBlockModel(0);
+            OneBlockModel rval = new OneBlockModel(0, 0);
             rval.textures.put("all", "blocks/lava_still");
             rval.elements = Arrays.asList(waterCube());
             return rval;

@@ -360,7 +360,7 @@ public class ModelAndView
 
     public void testFaces(GL2 gl2)
     {
-        OneBlockModel bm = new OneBlockModel(0);
+        OneBlockModel bm = new OneBlockModel(0, 0);
         String textureName = "blocks/grass_side";
         renderFace2(gl2, BlockElement.polyDown(bm, 0, 1, 0, 0, 1, new FaceSpec("blocks/dirt", "down", 0, null)));
         FaceSpec side = new FaceSpec(textureName, null, 0, null);

@@ -15,13 +15,15 @@ public class OneBlockModel
 {
     private static final Logger logger = Logger.getLogger(OneBlockModel.class);
     private final int yRotation;
+    private final int xRotation;
 
     public Map<String, String> textures =new TreeMap<String, String>();
     public List<BlockElement> elements = new ArrayList<BlockElement>();
 
-    public OneBlockModel(int yRotation)
+    public OneBlockModel(int yRotation, int xRotation)
     {
         this.yRotation = yRotation;
+        this.xRotation = xRotation;
     }
 
     public void getMeshElements(List<BlenderMeshElement> accum, int x, int y, int z, BlockEnvironment env)
@@ -45,13 +47,15 @@ public class OneBlockModel
         if (polys.isEmpty())
             return;
 
+        if (xRotation != 0) {
+            RotationSpec spec = new RotationSpec(new Point3D(8,8,8), "x", xRotation, false);
+            transformVertices(polys, spec);
+//            System.out.println(yRotation);
+        }
+
         if (yRotation != 0) {
             RotationSpec spec = new RotationSpec(new Point3D(8,8,8), "y", yRotation, false);
-            for (GLPoly poly : polys) {
-                for (int i = 0; i < poly.verts.length; i++) {
-                    poly.verts[i] = spec.transform(poly.verts[i]);
-                }
-            }
+            transformVertices(polys, spec);
 //            System.out.println(yRotation);
         }
 
@@ -59,6 +63,15 @@ public class OneBlockModel
 
             BlenderMeshElement me = new BaconMeshElement(poly, x,y,z);
             accum.add(me);
+        }
+    }
+
+    public static void transformVertices(List<GLPoly> polys, RotationSpec spec)
+    {
+        for (GLPoly poly : polys) {
+            for (int i = 0; i < poly.verts.length; i++) {
+                poly.verts[i] = spec.transform(poly.verts[i]);
+            }
         }
     }
 
@@ -109,12 +122,13 @@ public class OneBlockModel
         throws JSONException, FileNotFoundException
     {
         int y = spec.optInt("y", 0);
+        int x = spec.optInt("x", 0);
 
         String model = spec.getString("model");
-        return parseModel(resources, "block/"+model, y);
+        return parseModel(resources, "block/"+model, y, x);
     }
 
-    public static OneBlockModel parseModel(BlockModels.Resources resources, String modelName, int yRotation)
+    public static OneBlockModel parseModel(BlockModels.Resources resources, String modelName, int yRotation, int xRotation)
         throws JSONException, FileNotFoundException
     {
         InputStream istr = resources.getBlockModel(modelName);
@@ -125,9 +139,9 @@ public class OneBlockModel
 
         OneBlockModel rval;
         if (null != parent) {
-            rval = parseModel(resources, parent, yRotation);
+            rval = parseModel(resources, parent, yRotation, xRotation);
         } else {
-            rval = new OneBlockModel(yRotation);
+            rval = new OneBlockModel(yRotation, xRotation);
         }
         rval.load(root);
 
