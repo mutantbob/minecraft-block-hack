@@ -152,7 +152,12 @@ public class ModelAndView
                 }
             }
         }
-        modelView = new ModelViewSetter(-(x1+x2)/2.0, -(y1+y2)/2.0, -(z1+z2)/2.0,
+        modelView = viewForBox(x1, y1, z1, x2, y2, z2);
+    }
+
+    public static ModelViewSetter viewForBox(int x1, int y1, int z1, int x2, int y2, int z2)
+    {
+        return new ModelViewSetter(-(x1+x2)/2.0, -(y1+y2)/2.0, -(z1+z2)/2.0,
             10,
             0,0, -Math.max(x2-x1, z2-z1)*1.2,
             30);
