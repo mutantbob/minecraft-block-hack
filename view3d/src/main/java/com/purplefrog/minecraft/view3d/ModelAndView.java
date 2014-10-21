@@ -360,6 +360,11 @@ public class ModelAndView
             || "blocks/pumpkin_stem_disconnected".equals(tname)
             || "blocks/vine".equals(tname)
             || tname.startsWith("blocks/leaves_")
+            || "blocks/fern".equals(tname)
+            || "blocks/double_plant_fern_top".equals(tname)
+            || "blocks/double_plant_fern_bottom".equals(tname)
+            || "blocks/double_plant_grass_top".equals(tname)
+            || "blocks/double_plant_grass_bottom".equals(tname)
             ) {
             tint = GRASS_TINT;
         } else {
