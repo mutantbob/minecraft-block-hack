@@ -2,6 +2,7 @@ package com.purplefrog.minecraft.view3d;
 
 import com.purplefrog.minecraftExplorer.*;
 import com.purplefrog.minecraftExplorer.blockmodels.*;
+import com.purplefrog.minecraftExplorer.landscape.*;
 import org.json.*;
 
 import java.io.*;
@@ -165,6 +166,26 @@ public class ModelAndViews
         convertWorld(accum, editor, x1, y1, z1, x2, y2, z2);
         
         ModelViewSetter.LookAt modelView = ModelAndViews.viewForBox(x1, y1, z1, x2, y2, z2);
+        return new ModelAndView(accum, modelView);
+    }
+
+    public static ModelAndView pseudoCanyons()
+        throws IOException
+    {
+        BasicBlockEditor editor = new AnvilBlockEditor(new MinecraftWorld(WorldPicker.menger5()));
+
+        int x0 = 375, y0 = 130, z0 = 250;
+
+        GeometryTree gt = PseudoCanyons.pseudoCanyon1(x0, y0, z0);
+
+        Bounds3Di bounds = PseudoCanyons.plusminus(new Point3Di(x0, y0, z0), 20, 50, 60);
+        editor.apply(gt, bounds);
+
+        ModelViewSetter.LookAt modelView = new ModelViewSetter.LookAt(-x0,-y0,-z0, 20, 0,0,-80, 30);
+
+        List<BlenderMeshElement> accum= new ArrayList<BlenderMeshElement>();
+        convertWorld(accum, editor, bounds.x0, bounds.y0, bounds.z0, bounds.x1, bounds.y1, bounds.z1);
+
         return new ModelAndView(accum, modelView);
     }
 

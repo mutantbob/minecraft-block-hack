@@ -7,6 +7,7 @@ import javax.swing.*;
 import javax.swing.event.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.*;
 import java.util.*;
 
 /**
@@ -159,6 +160,25 @@ public class BlocksPanel
                 public void run()
                 {
                     pickHouse1();
+                }
+            });
+        }
+
+        {
+            JPanel p = new JPanel();
+            p.add(new JLabel("pseudocanyon"));
+            tabs.addTab("pseudocanyon", p);
+
+            perTab.put(p, new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    try {
+                        pick(ModelAndViews.pseudoCanyons());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             });
         }

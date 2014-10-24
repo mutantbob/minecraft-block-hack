@@ -20,6 +20,17 @@ public class PseudoCanyons
 
         int x0=375, y0=130, z0= 250;
 
+        GeometryTree gt = pseudoCanyon1(x0, y0, z0);
+
+        editor.apply(gt, plusminus(new Point3Di(x0,y0,z0), 20, 50, 60));
+
+        editor.relight();
+
+        editor.save();
+    }
+
+    public static GeometryTree pseudoCanyon1(int x0, int y0, int z0)
+    {
         DistortedCellularGauss.D3 dcg = new DistortedCellularGauss.D3(0.3, 1.0,
             0.2, 2, 2, new int[] { 0,1,0}, new int[] { 0,0,1 });
 
@@ -30,21 +41,16 @@ public class PseudoCanyons
 
         F3 base = new Bacon(new GaussMultiNode(new TranslatedF3(dcg, 0.6, 0, 0),
             new TranslatedF3(dcg2, -0.6,0,0)), x0, y0, z0);
-        GeometryTree gt = new F3.GT(base, new GeometryTree.Solid(0), 3.5, new GeometryTree.Solid(2));
-
-        editor.apply(gt, plusminus(new Point3Di(x0,y0,z0), 20, 50, 60));
-
-        editor.relight();
-        editor.save();
+        return new F3.GT(base, new GeometryTree.Solid(0), 3.5, new GeometryTree.Solid(2));
     }
 
-    private static Bounds3Di plusminus(Point3Di center, int dx, int dy, int dz)
+    public static Bounds3Di plusminus(Point3Di center, int dx, int dy, int dz)
     {
         return new Bounds3Di(center.x - dx, center.y -dy, center.z - dz,
             center.x+dx, center.y+dy, center.z+dz);
     }
 
-    private static class Bacon
+    public static class Bacon
         implements F3
     {
         private final F3 dcg;
