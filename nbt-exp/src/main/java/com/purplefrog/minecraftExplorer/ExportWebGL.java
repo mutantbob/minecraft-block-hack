@@ -296,6 +296,11 @@ public class ExportWebGL
         public boolean isTranslucent()
         {
             if ( blockType == -1) {
+
+                if (true)
+                    return textureName.equals("blocks/water_still")
+                        || textureName.equals("blocks/water_flow");
+
                 return textureName .startsWith("blocks/potatoes")
                     || textureName.startsWith("blocks/carrots")
                     || textureName.startsWith("blocks/iron_bars")
