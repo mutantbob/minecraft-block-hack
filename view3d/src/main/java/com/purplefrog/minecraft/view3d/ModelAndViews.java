@@ -141,6 +141,19 @@ public class ModelAndViews
         return new ModelAndView(accum, modelView);
     }
 
+    public static ModelAndView rocketCastle()
+    {
+        MinecraftWorld world = new MinecraftWorld(WorldPicker.pickSaveDir());
+        BasicBlockEditor editor = new AnvilBlockEditor(world);
+
+        int x1 = -775, y1=60, z1=180, x2=-725, y2=140, z2=230;
+
+        List<BlenderMeshElement> accum = new ArrayList<BlenderMeshElement>();
+        convertWorld(accum, editor, x1, y1, z1, x2, y2, z2);
+        ModelAndView.ModelViewSetter modelView = ModelAndViews.viewForBox(x1, y1, z1, x2, y2, z2);
+        return new ModelAndView(accum, modelView);
+    }
+
     public static ModelAndView house1()
     {
         MinecraftWorld world = new MinecraftWorld(new File(WorldPicker.savesDir(), "2014-Sep-28 v1_8"));

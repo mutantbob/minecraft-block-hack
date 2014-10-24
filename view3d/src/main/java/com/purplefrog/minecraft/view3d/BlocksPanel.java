@@ -135,6 +135,21 @@ public class BlocksPanel
 
         {
             JPanel p = new JPanel();
+            p.add(new JLabel("rocket castle"));
+            tabs.addTab("rocket castle", p);
+
+            perTab.put(p, new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    pick(ModelAndViews.rocketCastle());
+                }
+            });
+        }
+
+        {
+            JPanel p = new JPanel();
             p.add(new JLabel("house 1"));
             tabs.addTab("house 1", p);
 
@@ -163,6 +178,15 @@ public class BlocksPanel
         });
 
         tabs.setSelectedIndex(0);
+    }
+
+    private void pick(ModelAndView modelAndView)
+    {
+        try {
+            bv.setDataSet(modelAndView);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void pickFarm()
