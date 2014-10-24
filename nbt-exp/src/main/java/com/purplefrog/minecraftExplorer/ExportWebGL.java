@@ -134,7 +134,7 @@ public class ExportWebGL
         w.write("//"+glStore.vertices.size()+" vertices; "+glStore.faces.size()+" faces\n");
 
         //
-
+        w.write("// each triple is an X,Y,Z coordinate of a vertex\n");
         w.write("vertex_xyz: [\n");
         for (XYZUV vertex : glStore.vertices) {
             w.write(vertex.x+","+vertex.y+","+vertex.z+",\n");
@@ -143,6 +143,7 @@ public class ExportWebGL
 
         //
 
+        w.write("// each pair is an UV texture coordinate of a vertex\n");
         w.write("vertex_uv : [\n");
         for (XYZUV vertex : glStore.vertices) {
             w.write(vertex.u+","+vertex.v+",\n");
@@ -150,6 +151,7 @@ public class ExportWebGL
         w.write("],\n\n");
 
         //
+
 
         List<UniformFaceTextureExtent> boundaries = new ArrayList<UniformFaceTextureExtent>();
         TextureForGL color = null;
@@ -167,11 +169,19 @@ public class ExportWebGL
             int v1 = face.vertices[1];
             int v2 = face.vertices[2];
             int v3 = face.vertices[3];
-            w.write(join(",",
-                // two triangles for OpenGL
-                v3,v0,v2,
-                v0,v1,v2)+",\n");
-            cursor += 6;
+            if (true) {
+                w.write(join(",",
+                    // two triangles for OpenGL
+                    v3, v0, v2,
+                    v0, v1, v2) + ",\n");
+                cursor += 6;
+            } else {
+                // a single quad
+                w.write(join(",", v0, v1, v2, v3) + ",\n");
+                cursor += 4;
+
+                // XXX quads are not supported by webgl yet
+            }
         }
         w.write("],\n\n");
 
@@ -180,7 +190,7 @@ public class ExportWebGL
         w.write("texture_extents : [\n");
         for (int i = 0; i < boundaries.size(); i++) {
             UniformFaceTextureExtent te = boundaries.get(i);
-            int after  = (i+1<boundaries.size()) ? boundaries.get(i+1).start : glStore.faces.size()*6;
+            int after  = (i+1<boundaries.size()) ? boundaries.get(i+1).start : cursor;
             te.count = after - te.start;
             w.write(te.json()+",\n");
         }
