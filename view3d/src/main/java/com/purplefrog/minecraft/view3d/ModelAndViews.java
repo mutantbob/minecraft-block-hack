@@ -20,7 +20,7 @@ public class ModelAndViews
         List<BlenderMeshElement> accum = new ArrayList<BlenderMeshElement>();
         BlockModels blockModels = BlockModels.getInstance();
         blocksPerData(blockModels, accum, bt);
-        ModelViewSetter modelView = new ModelViewSetter(-3.5, -1.5, -3.5, 5, 0, 0, -12, 30);
+        ModelViewSetter.LookAt modelView = new ModelViewSetter.LookAt(-3.5, -1.5, -3.5, 5, 0, 0, -12, 30);
         return new ModelAndView(accum, modelView);
     }
 
@@ -30,7 +30,7 @@ public class ModelAndViews
         List<BlenderMeshElement> accum = new ArrayList<BlenderMeshElement>();
         BlockModels blockModels = BlockModels.getInstance();
         blocks8x8parade(blockModels, accum, baseBT);
-        ModelViewSetter modelView = new ModelViewSetter(-7.5, -1.5, -7.5, 10, 0, 0, -20, 24);
+        ModelViewSetter.LookAt modelView = new ModelViewSetter.LookAt(-7.5, -1.5, -7.5, 10, 0, 0, -20, 24);
         return new ModelAndView(accum, modelView);
     }
 
@@ -48,7 +48,7 @@ public class ModelAndViews
 
         convertWorld(accum, editor, x1, y1, z1, x2, y2, z2);
 
-        ModelViewSetter modelView = viewForBox(x1, y1, z1, x2, y2, z2);
+        ModelViewSetter.LookAt modelView = viewForBox(x1, y1, z1, x2, y2, z2);
 
         return new ModelAndView(accum, modelView);
     }
@@ -64,9 +64,9 @@ public class ModelAndViews
         }
     }
 
-    public static ModelViewSetter viewForBox(int x1, int y1, int z1, int x2, int y2, int z2)
+    public static ModelViewSetter.LookAt viewForBox(int x1, int y1, int z1, int x2, int y2, int z2)
     {
-        return new ModelViewSetter(-(x1+x2)/2.0, -(y1+y2)/2.0, -(z1+z2)/2.0,
+        return new ModelViewSetter.LookAt(-(x1+x2)/2.0, -(y1+y2)/2.0, -(z1+z2)/2.0,
             10,
             0,0, -Math.max(x2-x1, z2-z1)*1.2,
             30);
@@ -124,7 +124,7 @@ public class ModelAndViews
 
         List<BlenderMeshElement> accum = new ArrayList<BlenderMeshElement>();
         convertWorld(accum, editor, x1, y1, z1, x2, y2, z2);
-        ModelViewSetter modelView = ModelAndViews.viewForBox(x1, y1, z1, x2, y2, z2);
+        ModelViewSetter.LookAt modelView = ModelAndViews.viewForBox(x1, y1, z1, x2, y2, z2);
         return new ModelAndView(accum, modelView);
     }
 
@@ -137,7 +137,7 @@ public class ModelAndViews
 
         List<BlenderMeshElement> accum = new ArrayList<BlenderMeshElement>();
         convertWorld(accum, editor, x1, y1, z1, x2, y2, z2);
-        ModelViewSetter modelView = ModelAndViews.viewForBox(x1, y1, z1, x2, y2, z2);
+        ModelViewSetter.LookAt modelView = ModelAndViews.viewForBox(x1, y1, z1, x2, y2, z2);
         return new ModelAndView(accum, modelView);
     }
 
@@ -150,7 +150,7 @@ public class ModelAndViews
 
         List<BlenderMeshElement> accum = new ArrayList<BlenderMeshElement>();
         convertWorld(accum, editor, x1, y1, z1, x2, y2, z2);
-        ModelViewSetter modelView = ModelAndViews.viewForBox(x1, y1, z1, x2, y2, z2);
+        ModelViewSetter.LookAt modelView = ModelAndViews.viewForBox(x1, y1, z1, x2, y2, z2);
         return new ModelAndView(accum, modelView);
     }
 
@@ -164,7 +164,7 @@ public class ModelAndViews
         List<BlenderMeshElement> accum = new ArrayList<BlenderMeshElement>();
         convertWorld(accum, editor, x1, y1, z1, x2, y2, z2);
         
-        ModelViewSetter modelView = ModelAndViews.viewForBox(x1, y1, z1, x2, y2, z2);
+        ModelViewSetter.LookAt modelView = ModelAndViews.viewForBox(x1, y1, z1, x2, y2, z2);
         return new ModelAndView(accum, modelView);
     }
 

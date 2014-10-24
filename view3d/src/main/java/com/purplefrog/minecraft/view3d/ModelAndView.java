@@ -26,9 +26,9 @@ public class ModelAndView
     private Map<String, Texture> textureMap = new HashMap<String, Texture>();
 
     private final List<GLBufferSet> bufferSets = new ArrayList<GLBufferSet>();
-    protected ModelViewSetter modelView;
+    protected ModelViewSetter.LookAt modelView;
 
-    public ModelAndView(Iterable<BlenderMeshElement> accum, ModelViewSetter modelView)
+    public ModelAndView(Iterable<BlenderMeshElement> accum, ModelViewSetter.LookAt modelView)
     {
         this.modelView = modelView;
 
@@ -51,7 +51,7 @@ public class ModelAndView
     public ModelAndView()
         throws IOException, JSONException
     {
-        this(defaultMesh(), new ModelViewSetter(-7.5, -1.5, -7.5, 10, 0, 0, -20, 20));
+        this(defaultMesh(), new ModelViewSetter.LookAt(-7.5, -1.5, -7.5, 10, 0, 0, -20, 20));
     }
 
     private static Iterable<BlenderMeshElement> defaultMesh()
